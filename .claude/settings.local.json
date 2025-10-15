@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev:*)",
+      "Bash(npm install:*)",
+      "Bash(npx shadcn@latest init:*)",
+      "Bash(rm:*)",
+      "Bash(curl:*)",
+      "Bash(pkill:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm run lint)",
+      "Bash(claude doctor)",
+      "Bash(sed:*)",
+      "Bash(find:*)",
+      "WebFetch(domain:www.webbyawards.com)",
+      "WebFetch(domain:winners.webbyawards.com)",
+      "Bash(claude mcp add:*)",
+      "mcp__chrome-devtools__list_pages",
+      "mcp__chrome-devtools__navigate_page",
+      "mcp__chrome-devtools__take_screenshot",
+      "Bash(timeout 3 sleep 3)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
