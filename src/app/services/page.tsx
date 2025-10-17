@@ -415,7 +415,7 @@ export default function ServicesPage() {
             <div className="flex items-center gap-3">
               <img src="/Owldio.svg" alt="Owldio" className="h-6 w-6 invert" />
               <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
-              <span className="text-xs font-light text-gray-600">© {new Date().getFullYear()}</span>
+              <span className="text-xs font-light text-gray-600">© 2024</span>
             </div>
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">

@@ -319,7 +319,7 @@ const MouseGlow: React.FC = () => {
           
           // 兩側的分流波紋
           const sideWaves = [];
-          for (let side of [-1, 1]) {
+          for (const side of [-1, 1]) {
             const sideAngle = ripple.direction + side * Math.PI / 6; // 左右30度
             const sideX = ripple.x + Math.cos(sideAngle) * spreadDistance * 0.7;
             const sideY = ripple.y + Math.sin(sideAngle) * spreadDistance * 0.7;

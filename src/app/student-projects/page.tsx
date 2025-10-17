@@ -1,16 +1,15 @@
 "use client"
 
-import React, { useState } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Clock, Video, Music, Sparkles, ChevronDown, Play, Star } from "lucide-react";
+import { ArrowRight, Check, Clock, Sparkles, ChevronDown, Play, Star } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
 export default function StudentProjectsPage() {
-  const [activeTab, setActiveTab] = useState("pricing");
 
   return (
     <motion.div 
@@ -390,7 +389,7 @@ export default function StudentProjectsPage() {
                   className="relative group cursor-pointer aspect-video overflow-hidden rounded-lg"
                 >
                   <img 
-                    src={`/pic/${
+                    src={`/${
                       ['IMG_9106.JPG', 'IMG_9089.JPG', 'IMG_9124.JPG',
                        'IMG_9076.JPG', 'IMG_9102.JPG', 'IMG_9117.JPG'][i]
                     }`}
@@ -472,7 +471,7 @@ export default function StudentProjectsPage() {
                       ))}
                     </div>
                     <p className="text-base font-light leading-[1.2] text-gray-300 mb-6">
-                      "{testimonial.quote}"
+                      &ldquo;{testimonial.quote}&rdquo;
                     </p>
                     <div className="flex items-center gap-4">
                       <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-600 to-orange-600"></div>
@@ -548,7 +547,7 @@ export default function StudentProjectsPage() {
             <div className="flex items-center gap-3">
               <img src="/Owldio.svg" alt="Owldio" className="h-6 w-6 invert" />
               <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
-              <span className="text-xs font-light text-gray-600">© {new Date().getFullYear()}</span>
+              <span className="text-xs font-light text-gray-600">© 2024</span>
             </div>
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Check, Star, Clock, Video, Headphones, Wifi, Sparkles, Users } from "lucide-react";
+import { ArrowRight, Check, Clock, Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -473,7 +473,7 @@ export default function PricingPage() {
             <div className="flex items-center gap-3">
               <img src="/Owldio.svg" alt="Owldio" className="h-6 w-6 brightness-0 invert" />
               <span className="text-lg font-light tracking-[0.1em] text-amber-50">OWLDIO</span>
-              <span className="text-xs font-light text-amber-100/40">© {new Date().getFullYear()}</span>
+              <span className="text-xs font-light text-amber-100/40">© 2024</span>
             </div>
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">

@@ -4,15 +4,13 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, Filter, Grid, List, Video, Music, Clock, Star, Users } from "lucide-react";
+import { ArrowRight, Play, Grid, Video, Music, Clock, Star, Users } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
 export default function PortfolioPage() {
   const [selectedFilter, setSelectedFilter] = useState("all");
-  const [viewMode, setViewMode] = useState("grid");
-  const [selectedWork, setSelectedWork] = useState(null);
 
   const categories = [
     { id: "all", name: "全部作品", icon: Grid },
@@ -32,7 +30,7 @@ export default function PortfolioPage() {
       venue: "音樂廳",
       date: "2024.06",
       duration: "90 分鐘",
-      image: "/pic/IMG_9106.JPG",
+      image: "/IMG_9106.JPG",
       video: "/percussion.mp4",
       description: "專業鋼琴獨奏會錄影，完整捕捉演奏者的精湛技巧與音樂表現",
       highlights: ["4K 三機位拍攝", "24軌錄音", "色彩校正", "實況直播"],
@@ -47,7 +45,7 @@ export default function PortfolioPage() {
       venue: "音樂廳",
       date: "2024.05",
       duration: "120 分鐘",
-      image: "/pic/IMG_9089.JPG",
+      image: "/IMG_9089.JPG",
       video: "/percussion.mp4",
       description: "大型管弦樂團演出錄影，多機位拍攝捕捉整個樂團的壯觀氣勢",
       highlights: ["多機位拍攝", "空間錄音", "特殊需求處理"],
@@ -62,7 +60,7 @@ export default function PortfolioPage() {
       venue: "藝文中心",
       date: "2024.04",
       duration: "110 分鐘",
-      image: "/pic/IMG_9124.JPG",
+      image: "/IMG_9124.JPG",
       video: "/percussion.mp4",
       description: "合唱團公演完整錄影，專業的音響設備捕捉每一個声部細節",
       highlights: ["空間音響", "合唱收音", "後製混音"],
@@ -77,7 +75,7 @@ export default function PortfolioPage() {
       venue: "音樂廳",
       date: "2024.03",
       duration: "80 分鐘",
-      image: "/pic/IMG_9076.JPG",
+      image: "/IMG_9076.JPG",
       video: "/percussion.mp4",
       description: "小提琴獨奏會的精綻錄影，近距離捕捉演奏者的每一個細節",
       highlights: ["親密錄音", "近距離拍攝", "細節捕捉"],
@@ -92,7 +90,7 @@ export default function PortfolioPage() {
       venue: "演奏廳",
       date: "2024.02",
       duration: "100 分鐘",
-      image: "/pic/IMG_9102.JPG",
+      image: "/IMG_9102.JPG",
       video: "/percussion.mp4",
       description: "室內樂團演出的完整錄影，專業的音響設備展現最佳效果",
       highlights: ["多組錄製", "快速轉換", "統一品質"],
@@ -107,7 +105,7 @@ export default function PortfolioPage() {
       venue: "演出場地",
       date: "2024.01",
       duration: "95 分鐘",
-      image: "/pic/IMG_9117.JPG",
+      image: "/IMG_9117.JPG",
       video: "/percussion.mp4",
       description: "爵士樂團現場演出錄影，捕捉現場的熱烈氣氛與音樂魅力",
       highlights: ["現場氛圍", "動態收音", "節奏感"],
@@ -213,7 +211,7 @@ export default function PortfolioPage() {
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: i * 0.1 }}
                   className="group relative cursor-pointer"
-                  onClick={() => setSelectedWork(work)}
+                  onClick={() => console.log('Selected work:', work.title)}
                 >
                   <div className="relative overflow-hidden rounded-xl">
                     <img 
@@ -316,7 +314,7 @@ export default function PortfolioPage() {
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.5, delay: i * 0.05 }}
-                  onClick={() => setSelectedWork(work)}
+                  onClick={() => console.log('Selected work:', work.title)}
                   className="group relative cursor-pointer"
                 >
                   <div className="relative overflow-hidden rounded-lg aspect-[4/3]">
@@ -487,7 +485,7 @@ export default function PortfolioPage() {
             <div className="flex items-center gap-3">
               <img src="/Owldio.svg" alt="Owldio" className="h-6 w-6 invert" />
               <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
-              <span className="text-xs font-light text-gray-600">© {new Date().getFullYear()}</span>
+              <span className="text-xs font-light text-gray-600">© 2024</span>
             </div>
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">

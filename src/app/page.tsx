@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from "react";
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, Volume2, VolumeX, ChevronDown } from "lucide-react";
+import { ArrowRight, Play, ChevronDown } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navigation from "@/components/Navigation";
 import BackgroundGradient from "@/components/BackgroundGradient";
@@ -12,30 +12,9 @@ import MistAnimation from "@/components/MistAnimation";
 
 export default function OwldioSite() {
   const [loadingComplete, setLoadingComplete] = useState(false);
-  const [isVideoMuted, setIsVideoMuted] = useState(true);
-  const [activeSection, setActiveSection] = useState(0);
-  const [scrollY, setScrollY] = useState(0);
-
   const handleLoadingComplete = () => {
     setLoadingComplete(true);
   };
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setScrollY(window.scrollY);
-      const sections = document.querySelectorAll('section');
-      const currentSection = Array.from(sections).findIndex(section => {
-        const rect = section.getBoundingClientRect();
-        return rect.top <= 100 && rect.bottom > 100;
-      });
-      if (currentSection !== -1) {
-        setActiveSection(currentSection);
-      }
-    };
-
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   if (!loadingComplete) {
     return <LoadingScreen onAnimationComplete={handleLoadingComplete} />;
@@ -202,7 +181,7 @@ export default function OwldioSite() {
                   className="h-[60%] bg-gradient-to-br from-amber-900/20 to-amber-600/20 rounded-lg overflow-hidden"
                 >
                   <img 
-                    src="/pic/IMG_9089.JPG"
+                    src="/IMG_9089.JPG"
                     alt="Studio"
                     className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
                   />
@@ -212,7 +191,7 @@ export default function OwldioSite() {
                   className="h-[35%] bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg overflow-hidden"
                 >
                   <img 
-                    src="/pic/IMG_9054.JPG"
+                    src="/IMG_9054.JPG"
                     alt="Equipment"
                     className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
                   />
@@ -224,7 +203,7 @@ export default function OwldioSite() {
                   className="h-[45%] bg-gradient-to-br from-amber-600/20 to-orange-600/20 rounded-lg overflow-hidden"
                 >
                   <img 
-                    src="/pic/IMG_9133.JPG"
+                    src="/IMG_9133.JPG"
                     alt="Recording"
                     className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
                   />
@@ -397,12 +376,12 @@ export default function OwldioSite() {
           {/* Masonry Grid Layout */}
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[200px]">
             {[
-              { span: "col-span-2 row-span-2", title: "鋼琴錄音", type: "古典樂", img: "/pic/IMG_9106.JPG" },
-              { span: "col-span-1 row-span-1", title: "爵士演出", type: "爵士樂", img: "/pic/IMG_9124.JPG" },
-              { span: "col-span-1 row-span-2", title: "室內樂錄製", type: "室內樂", img: "/pic/IMG_9076.JPG" },
-              { span: "col-span-1 row-span-1", title: "合唱錄音", type: "合唱團", img: "/pic/IMG_9089.JPG" },
-              { span: "col-span-2 row-span-1", title: "獨奏會錄影", type: "獨奏會", img: "/pic/IMG_9102.JPG" },
-              { span: "col-span-1 row-span-1", title: "弦樂錄製", type: "室內樂", img: "/pic/IMG_9117.JPG" },
+              { span: "col-span-2 row-span-2", title: "鋼琴錄音", type: "古典樂", img: "/IMG_9106.JPG" },
+              { span: "col-span-1 row-span-1", title: "爵士演出", type: "爵士樂", img: "/IMG_9124.JPG" },
+              { span: "col-span-1 row-span-2", title: "室內樂錄製", type: "室內樂", img: "/IMG_9076.JPG" },
+              { span: "col-span-1 row-span-1", title: "合唱錄音", type: "合唱團", img: "/IMG_9089.JPG" },
+              { span: "col-span-2 row-span-1", title: "獨奏會錄影", type: "獨奏會", img: "/IMG_9102.JPG" },
+              { span: "col-span-1 row-span-1", title: "弦樂錄製", type: "室內樂", img: "/IMG_9117.JPG" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -516,7 +495,7 @@ export default function OwldioSite() {
                     ))}
                   </div>
                   <p className="text-lg font-light leading-[1.2] text-gray-300 mb-8">
-                    "{testimonial.quote}"
+                    &ldquo;{testimonial.quote}&rdquo;
                   </p>
                   <div className="flex items-center gap-4">
                     <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-600 to-orange-600"></div>
@@ -672,7 +651,7 @@ export default function OwldioSite() {
           
           <div className="border-t border-zinc-900 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4">
             <p className="text-xs font-light text-gray-600">
-              © {new Date().getFullYear()} Owldio. All rights reserved.
+              © 2024 Owldio. All rights reserved.
             </p>
             <div className="flex gap-6">
               <a href="#" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">

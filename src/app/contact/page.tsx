@@ -508,7 +508,7 @@ const ContactPage = () => {
               <img src="/Owldio.svg" alt="Owldio" className="h-8 w-8 brightness-0 invert" />
             </div>
             <span className="font-light tracking-[0.1em] text-amber-50">Owldio</span>
-            <span className="text-amber-100/60 font-light">© {new Date().getFullYear()}</span>
+            <span className="text-amber-100/60 font-light">© 2024</span>
           </div>
           <div className="flex gap-4 font-light tracking-[0.05em]">
             <Link href="/" className="text-amber-100/80 hover:text-amber-500 transition-colors">首頁</Link>
