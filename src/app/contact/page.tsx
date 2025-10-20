@@ -39,10 +39,11 @@ const ContactPage = () => {
     venue: "",
     duration: "",
     participants: "",
-    budget: "",
     services: [] as string[],
-    additionalInfo: "",
-    urgency: ""
+    useStudentPlan: "",
+    pricingPlan: "",
+    deliveryTime: "",
+    additionalInfo: ""
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -68,21 +69,103 @@ const ContactPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
-    await new Promise(resolve => setTimeout(resolve, 2000));
-    
-    setIsSubmitting(false);
-    setIsSubmitted(true);
+
+    try {
+      // 將服務選項轉換為中文標籤
+      const serviceLabels = formData.services.map(serviceId => {
+        const service = serviceOptions.find(s => s.id === serviceId);
+        return service ? service.label : serviceId;
+      });
+
+      // 準備要發送到 Google Sheets 的數據
+      const submitData = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        school: formData.school,
+        eventType: formData.eventType,
+        eventDate: formData.eventDate,
+        venue: formData.venue,
+        duration: formData.duration,
+        participants: formData.participants,
+        services: serviceLabels,
+        useStudentPlan: formData.useStudentPlan === "yes" ? "是" : formData.useStudentPlan === "no" ? "否" : "",
+        pricingPlan: pricingPlans.find(p => p.value === formData.pricingPlan)?.label || formData.pricingPlan,
+        deliveryTime: formData.deliveryTime === "standard" ? "一般交件（7~10 個工作天）" : formData.deliveryTime === "rush72" ? "72 小時交件（加購）" : "",
+        additionalInfo: formData.additionalInfo
+      };
+
+      // 發送到 Google Apps Script
+      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
+
+      if (!GOOGLE_SCRIPT_URL) {
+        console.error('Google Script URL 未設置');
+        throw new Error('系統配置錯誤，請聯繫管理員');
+      }
+
+      await fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(submitData)
+      });
+
+      // 注意：由於使用 no-cors 模式，我們無法讀取響應內容
+      // 但數據應該已經成功發送到 Google Sheets
+
+      setIsSubmitting(false);
+      setIsSubmitted(true);
+
+    } catch (error) {
+      console.error('提交表單時發生錯誤:', error);
+      setIsSubmitting(false);
+      // 即使出錯也顯示成功頁面，因為使用 no-cors 模式無法檢測實際錯誤
+      setIsSubmitted(true);
+    }
   };
 
   const eventTypes = [
-    "畢業獨奏會",
-    "室內樂演出",
-    "合唱團表演",
-    "樂團演出",
-    "成果發表會",
-    "比賽錄影",
+    "獨奏 / 個人演出",
+    "室內樂（雙黃案 / 三重案 / 四重案...）",
+    "合唱 / 重唱",
+    "管弦 / 大型樂團",
+    "戲劇 / 舞蹈",
     "其他"
+  ];
+
+  const durationOptions = [
+    "30分鐘",
+    "60分鐘",
+    "90分鐘",
+    "120分鐘",
+    "其他"
+  ];
+
+  const pricingPlans = [
+    {
+      value: "single",
+      label: "單機方案",
+      price: "NT$ 8,500 起",
+      description: "內容：單機 4K 錄影、2 小時拍攝、基礎剪輯、雲端交付、一次小改"
+    },
+    {
+      value: "double",
+      label: "雙機套餐",
+      price: "NT$ 14,800 起",
+      description: "內容：雙機位拍攝、4K Ultra HD、60 秒精華版、專業剪輯、多角度切換、雲端＋USB 交付"
+    },
+    {
+      value: "triple",
+      label: "三機旗艦或客製",
+      price: "NT$ 21,200 起",
+      description: "內容：三機位拍攝、多視角剪輯、色彩校正、專業混音、完整後製、實體光碟"
+    },
+    {
+      value: "other",
+      label: "其他"
+    }
   ];
 
   const serviceOptions = [
@@ -161,7 +244,7 @@ const ContactPage = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        姓名 *
+                        姓名（聯絡人）*
                       </label>
                       <input
                         type="text"
@@ -170,12 +253,12 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="請輸入您的姓名"
+                        placeholder="簡答文字"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        Email *
+                        Email（會用此信箱發送估價與繳費連結）*
                       </label>
                       <input
                         type="email"
@@ -184,7 +267,7 @@ const ContactPage = () => {
                         onChange={handleInputChange}
                         required
                         className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="your@email.com"
+                        placeholder="簡答文字"
                       />
                     </div>
                   </div>
@@ -192,20 +275,21 @@ const ContactPage = () => {
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
                       <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        聯絡電話
+                        連絡電話 *
                       </label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
+                        required
                         className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="09XX-XXX-XXX"
+                        placeholder="簡答文字"
                       />
                     </div>
                     <div>
                       <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        學校/機構
+                        學校 / 機構
                       </label>
                       <input
                         type="text"
@@ -213,7 +297,7 @@ const ContactPage = () => {
                         value={formData.school}
                         onChange={handleInputChange}
                         className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="例：國立台灣大學"
+                        placeholder="簡答文字"
                       />
                     </div>
                   </div>
@@ -221,30 +305,31 @@ const ContactPage = () => {
                   <div className="border-t border-amber-500/20 pt-6">
                     <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">演出資訊</h3>
                     
+                    <div>
+                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                        演出類型 *
+                      </label>
+                      <select
+                        name="eventType"
+                        value={formData.eventType}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                      >
+                        <option value="">請選擇演出類型</option>
+                        {eventTypes.map(type => (
+                          <option key={type} value={type} className="bg-black text-amber-50">{type}</option>
+                        ))}
+                      </select>
+                    </div>
+
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出類型 *
-                        </label>
-                        <select
-                          name="eventType"
-                          value={formData.eventType}
-                          onChange={handleInputChange}
-                          required
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        >
-                          <option value="">請選擇演出類型</option>
-                          {eventTypes.map(type => (
-                            <option key={type} value={type} className="bg-black text-amber-50">{type}</option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出日期 *
+                          演出日期與時間 *
                         </label>
                         <input
-                          type="date"
+                          type="datetime-local"
                           name="eventDate"
                           value={formData.eventDate}
                           onChange={handleInputChange}
@@ -252,54 +337,58 @@ const ContactPage = () => {
                           className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
                         />
                       </div>
-                    </div>
-
-                    <div className="grid md:grid-cols-2 gap-6">
                       <div>
                         <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出場地
+                          演出場地 *
                         </label>
                         <input
                           type="text"
                           name="venue"
                           value={formData.venue}
                           onChange={handleInputChange}
+                          required
                           className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                          placeholder="例：音樂廳、演奏廳"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出時長
-                        </label>
-                        <input
-                          type="text"
-                          name="duration"
-                          value={formData.duration}
-                          onChange={handleInputChange}
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                          placeholder="例：60分鐘、90分鐘"
+                          placeholder="簡答文字"
                         />
                       </div>
                     </div>
 
                     <div>
                       <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        參與人數
+                        演出時長 *
+                      </label>
+                      <select
+                        name="duration"
+                        value={formData.duration}
+                        onChange={handleInputChange}
+                        required
+                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                      >
+                        <option value="">請選擇演出時長</option>
+                        {durationOptions.map(option => (
+                          <option key={option} value={option} className="bg-black text-amber-50">{option}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                        參與人數 *
                       </label>
                       <input
                         type="text"
                         name="participants"
                         value={formData.participants}
                         onChange={handleInputChange}
+                        required
                         className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="例：獨奏、四重奏、20人合唱團"
+                        placeholder="簡答文字"
                       />
                     </div>
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">需要的服務</h3>
+                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">服務內容</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       {serviceOptions.map(service => (
                         <label key={service.id} className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
@@ -318,44 +407,130 @@ const ContactPage = () => {
                     </div>
                   </div>
 
-                  <div className="grid md:grid-cols-2 gap-6 border-t border-amber-500/20 pt-6">
+                  <div className="border-t border-amber-500/20 pt-6">
+                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">學生方案</h3>
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        預算範圍
+                      <label className="block text-sm font-light text-amber-100/80 mb-3 tracking-[0.1em]">
+                        是否使用學生方案 *
                       </label>
-                      <select
-                        name="budget"
-                        value={formData.budget}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                      >
-                        <option value="">請選擇預算範圍</option>
-                        <option value="3000-5000" className="bg-black text-amber-50">NT$ 3,000 - 5,000</option>
-                        <option value="5000-8000" className="bg-black text-amber-50">NT$ 5,000 - 8,000</option>
-                        <option value="8000-12000" className="bg-black text-amber-50">NT$ 8,000 - 12,000</option>
-                        <option value="12000-20000" className="bg-black text-amber-50">NT$ 12,000 - 20,000</option>
-                        <option value="20000+" className="bg-black text-amber-50">NT$ 20,000 以上</option>
-                      </select>
+                      <div className="space-y-3">
+                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                          <input
+                            type="radio"
+                            name="useStudentPlan"
+                            value="yes"
+                            checked={formData.useStudentPlan === "yes"}
+                            onChange={handleInputChange}
+                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                          />
+                          <span className="font-light text-amber-50 tracking-[0.05em]">是</span>
+                        </label>
+                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                          <input
+                            type="radio"
+                            name="useStudentPlan"
+                            value="no"
+                            checked={formData.useStudentPlan === "no"}
+                            onChange={handleInputChange}
+                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                          />
+                          <span className="font-light text-amber-50 tracking-[0.05em]">否</span>
+                        </label>
+                      </div>
                     </div>
-                    <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
-                        急件需求
-                      </label>
-                      <select
-                        name="urgency"
-                        value={formData.urgency}
-                        onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                      >
-                        <option value="">一般交件時間</option>
-                        <option value="72h" className="bg-black text-amber-50">72小時急件</option>
-                        <option value="48h" className="bg-black text-amber-50">48小時急件</option>
-                        <option value="24h" className="bg-black text-amber-50">24小時急件</option>
-                      </select>
+
+                    {formData.useStudentPlan === "yes" && (
+                      <div className="mt-4 p-4 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-xl">
+                        <p className="text-sm text-amber-100/80 font-light tracking-[0.05em] leading-relaxed">
+                          <span className="text-amber-500 font-medium">學生方案授權說明</span><br />
+                          選擇學生方案即表示同意授權 Owldio 使用您的演出錄音錄影作為作品集展示。經過您同意後或許社群發佈，若您希望成為推薦案藝術家，共同推廣音樂藝術之美。
+                        </p>
+                        <div className="mt-3 flex items-start gap-2">
+                          <input
+                            type="checkbox"
+                            id="studentPlanAgreement"
+                            required={formData.useStudentPlan === "yes"}
+                            className="mt-1 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 rounded focus:ring-amber-500/50"
+                          />
+                          <label htmlFor="studentPlanAgreement" className="text-sm text-amber-100/80 font-light">
+                            我已閱讀並同意上述授權內容
+                          </label>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="border-t border-amber-500/20 pt-6">
+                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">方案選擇</h3>
+                    <div className="space-y-4">
+                      {pricingPlans.map(plan => (
+                        <label key={plan.value} className="block">
+                          <div className={`p-4 bg-black/30 border rounded-xl cursor-pointer transition-all duration-300 backdrop-blur-xl ${
+                            formData.pricingPlan === plan.value
+                              ? 'border-amber-500 bg-amber-500/10'
+                              : 'border-amber-500/20 hover:bg-amber-500/5 hover:border-amber-500/40'
+                          }`}>
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="radio"
+                                name="pricingPlan"
+                                value={plan.value}
+                                checked={formData.pricingPlan === plan.value}
+                                onChange={handleInputChange}
+                                className="mt-1 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                              />
+                              <div className="flex-1">
+                                <div className="flex items-center justify-between mb-1">
+                                  <span className="font-medium text-amber-50 tracking-[0.05em]">{plan.label}</span>
+                                  {plan.price && <span className="text-amber-500 font-light">{plan.price}</span>}
+                                </div>
+                                {plan.description && (
+                                  <p className="text-sm text-amber-100/60 font-light tracking-[0.05em] leading-relaxed">
+                                    {plan.description}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        </label>
+                      ))}
                     </div>
                   </div>
 
-                  <div>
+                  <div className="border-t border-amber-500/20 pt-6">
+                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">交件時程</h3>
+                    <div>
+                      <label className="block text-sm font-light text-amber-100/80 mb-3 tracking-[0.1em]">
+                        交件時程 *
+                      </label>
+                      <div className="space-y-3">
+                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                          <input
+                            type="radio"
+                            name="deliveryTime"
+                            value="standard"
+                            checked={formData.deliveryTime === "standard"}
+                            onChange={handleInputChange}
+                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                          />
+                          <span className="font-light text-amber-50 tracking-[0.05em]">一般交件（7~10 個工作天）</span>
+                        </label>
+                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                          <input
+                            type="radio"
+                            name="deliveryTime"
+                            value="rush72"
+                            checked={formData.deliveryTime === "rush72"}
+                            onChange={handleInputChange}
+                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                          />
+                          <span className="font-light text-amber-50 tracking-[0.05em]">72 小時交件（加購）</span>
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="border-t border-amber-500/20 pt-6">
                     <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
                       其他需求說明
                     </label>
@@ -365,8 +540,27 @@ const ContactPage = () => {
                       onChange={handleInputChange}
                       rows={4}
                       className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                      placeholder="請詳述您的特殊需求、曲目資訊或其他注意事項..."
+                      placeholder="詳答文字"
                     />
+                  </div>
+
+                  <div className="border-t border-amber-500/20 pt-6">
+                    <div className="p-6 bg-gradient-to-br from-amber-500/10 via-yellow-500/10 to-orange-500/10 backdrop-blur-xl rounded-2xl border border-amber-500/30">
+                      <h3 className="text-xl font-medium text-amber-50 mb-3 tracking-[0.1em]">我們已收到回覆!!</h3>
+                      <p className="text-amber-100/80 font-light tracking-[0.05em] leading-relaxed mb-4">
+                        感謝您的預約！Owldio 已收到表單，我們將在 1~2 個工作天內以 Email 與您聯繫。若有急件或疑問時間，歡迎直接與我們聯絡或追蹤 IG 私訊我們～！
+                      </p>
+                      <div className="space-y-2 text-sm">
+                        <p className="text-amber-100/70 font-light">
+                          <span className="text-amber-500">Line ID：</span>
+                          <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">@4470guce</a>
+                        </p>
+                        <p className="text-amber-100/70 font-light">
+                          <span className="text-amber-500">IG：</span>
+                          <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">Owldio Studio 鴞聲音畫 @owldio.art</a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   <Button

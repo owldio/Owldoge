@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -12,7 +12,7 @@ import BackgroundGradient from "@/components/BackgroundGradient";
 export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState("duo");
 
-  const pricingPlans = [
+  const pricingPlans = useMemo(() => [
     {
       id: "single",
       name: "單機方案",
@@ -67,16 +67,16 @@ export default function PricingPage() {
       gradient: "from-amber-600 to-orange-600",
       popular: false
     }
-  ];
+  ], []);
 
-  const addOns = [
+  const addOns = useMemo(() => [
     { name: "延長錄製", price: "+NT$ 1,200", unit: "/30分鐘", icon: "⏰" },
     { name: "快速交付", price: "+NT$ 2,000", unit: "起", icon: "⚡" },
-    { name: "現場直播", price: "+NT$ 3,500", unit: "", icon: "📡" },
     { name: "精華剪輯", price: "+NT$ 1,800", unit: "", icon: "✂️" },
+    { name: "多軌錄音", price: "+NT$ 2,500", unit: "", icon: "🎵" },
     { name: "特殊需求", price: "可詳談", unit: "", icon: "🎚️" },
     { name: "實體隨身碟", price: "+NT$ 300", unit: "/個", icon: "💾" }
-  ];
+  ], []);
 
   return (
     <div className="min-h-screen bg-black text-amber-50">
@@ -86,17 +86,13 @@ export default function PricingPage() {
 
       <main className="pt-32">
         <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0">
-            <div className="absolute inset-0 bg-black"></div>
-            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-amber-600/5 rounded-full blur-3xl"></div>
-            <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-600/5 rounded-full blur-3xl"></div>
-          </div>
+          <div className="absolute inset-0 bg-black"></div>
 
           <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.5 }}
             >
               <span className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-light tracking-[0.3em] mb-8">
                 TRANSPARENT PRICING
@@ -140,7 +136,7 @@ export default function PricingPage() {
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: i * 0.1 }}
+                  transition={{ duration: 0.4, delay: i * 0.05 }}
                   onClick={() => setSelectedPlan(plan.id)}
                   className={`relative group cursor-pointer ${
                     plan.popular ? 'lg:scale-105' : ''
@@ -159,7 +155,7 @@ export default function PricingPage() {
                       ? 'border-amber-500/50 bg-black/60' 
                       : 'border-amber-500/20 hover:border-amber-500/40'
                   }`}>
-                    <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                    <div className={`absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-amber-500 to-orange-500 rounded-t-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
                     
                     <div className="text-center mb-8">
                       <h3 className="text-2xl font-thin mb-2 tracking-[0.15em] text-amber-50">{plan.name}</h3>
@@ -183,7 +179,7 @@ export default function PricingPage() {
                       </div>
                     </div>
 
-                    <ul className="space-y-4 mb-8">
+                    <ul className="space-y-4 mb-6">
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-center gap-3">
                           <Check className="h-4 w-4 text-amber-500 flex-shrink-0" />
@@ -192,8 +188,16 @@ export default function PricingPage() {
                       ))}
                     </ul>
 
+                    <div className="mb-6 p-4 bg-amber-500/5 backdrop-blur-xl border border-amber-500/20 rounded-lg">
+                      <p className="text-xs font-light text-amber-100/70 text-center tracking-[0.05em] leading-relaxed">
+                        💬 歡迎來電洽談，我們將為您量身打造最適合的方案
+                        <br />
+                        <span className="text-amber-400">首次合作享專屬優惠折扣</span>
+                      </p>
+                    </div>
+
                     <Button
-                      className={`w-full py-4 text-sm font-light tracking-[0.15em] transition-all duration-500 ${
+                      className={`w-full py-4 text-sm font-light tracking-[0.15em] transition-all duration-200 ${
                         plan.popular 
                           ? 'bg-amber-500 hover:bg-amber-600 text-black border-none shadow-xl hover:shadow-amber-500/30'
                           : 'border border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 bg-transparent text-amber-50'
@@ -226,9 +230,18 @@ export default function PricingPage() {
                   <h3 className="text-3xl lg:text-4xl font-thin mb-4 tracking-[0.15em] text-amber-50">
                     學生專屬優惠方案
                   </h3>
-                  <p className="text-lg font-light text-amber-100/60 mb-4 tracking-[0.05em]">
+                  <p className="text-lg font-light text-amber-100/60 mb-6 tracking-[0.05em]">
                     憑學生證享超值價格・支持你的音樂夢想
                   </p>
+                  
+                  <div className="max-w-2xl mx-auto mb-6 p-4 bg-green-500/10 backdrop-blur-xl border border-green-500/30 rounded-lg">
+                    <p className="text-sm font-light text-amber-100/80 text-center tracking-[0.05em] leading-relaxed">
+                      🎯 <span className="text-green-400 font-medium">學生團體預約享額外優惠</span>
+                      <br />
+                      歡迎音樂系所、社團洽談學期合作專案
+                    </p>
+                  </div>
+                  
                   <div className="max-w-2xl mx-auto mb-8">
                     <p className="text-sm font-light text-amber-100/40 leading-relaxed tracking-[0.05em]">
                       ※ 選擇學生方案即表示同意授權 Owldio 使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。
@@ -250,15 +263,13 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-black/50 backdrop-blur-xl relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/50"></div>
-          
-          <div className="relative z-10 max-w-7xl mx-auto px-4">
+        <section className="py-20 bg-black relative">
+          <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.5 }}
               className="text-center mb-20"
             >
               <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
@@ -267,9 +278,21 @@ export default function PricingPage() {
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2] tracking-[0.2em] text-amber-50">
                 加值服務
               </h2>
-              <p className="text-xl font-light text-amber-100/60 max-w-2xl mx-auto tracking-[0.1em]">
+              <p className="text-xl font-light text-amber-100/60 max-w-2xl mx-auto tracking-[0.1em] mb-6">
                 根據需求客製化你的錄製服務
               </p>
+              
+              <motion.div
+                initial={{ opacity: 0, scale: 0.95 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="inline-block px-6 py-3 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-full"
+              >
+                <p className="text-sm font-light text-amber-100/80 tracking-[0.05em]">
+                  💰 <span className="text-amber-400">批量服務享額外折扣</span> • 歡迎來電討論組合優惠
+                </p>
+              </motion.div>
             </motion.div>
 
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto">
@@ -279,11 +302,11 @@ export default function PricingPage() {
                   initial={{ opacity: 0, y: 30 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  whileHover={{ y: -5 }}
+                  transition={{ duration: 0.3, delay: i * 0.03 }}
+                  whileHover={{ y: -3 }}
                   className="group"
                 >
-                  <div className="p-6 bg-black/40 backdrop-blur-xl border border-amber-500/20 hover:border-amber-500/40 rounded-lg transition-all duration-300">
+                  <div className="p-6 bg-black/40 border border-amber-500/20 hover:border-amber-500/40 rounded-lg transition-colors duration-200">
                     <div className="flex items-center justify-between mb-4">
                       <span className="text-2xl">{addon.icon}</span>
                       <span className="text-amber-500 text-lg font-thin tracking-[0.05em]">
@@ -305,7 +328,7 @@ export default function PricingPage() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.5 }}
               className="text-center mb-20"
             >
               <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
@@ -321,7 +344,7 @@ export default function PricingPage() {
                 initial={{ opacity: 0 }}
                 whileInView={{ opacity: 1 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.8 }}
+                transition={{ duration: 0.5 }}
                 className="w-full border-collapse"
               >
                 <thead>
@@ -362,10 +385,8 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="py-20 bg-black/50 backdrop-blur-xl relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/70 to-black/50"></div>
-          
-          <div className="relative z-10 max-w-7xl mx-auto px-4">
+        <section className="py-20 bg-black relative">
+          <div className="max-w-7xl mx-auto px-4">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
