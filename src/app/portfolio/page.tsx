@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, Grid, Video, Music, Clock, Star, Users } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
 export default function PortfolioPage() {
@@ -127,7 +126,6 @@ export default function PortfolioPage() {
       className="min-h-screen bg-black text-white overflow-x-hidden"
     >
       <BackgroundGradient />
-      <MouseGlow />
       {/* Navigation */}
       <Navigation currentPage="portfolio" />
 
@@ -455,7 +453,7 @@ export default function PortfolioPage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-600 hover:bg-amber-700 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-500"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">

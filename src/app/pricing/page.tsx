@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Check, Clock, Sparkles } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
 export default function PricingPage() {
@@ -81,7 +80,6 @@ export default function PricingPage() {
   return (
     <div className="min-h-screen bg-black text-amber-50">
       <BackgroundGradient />
-      <MouseGlow />
       <Navigation currentPage="pricing" />
 
       <main className="pt-32">
@@ -249,7 +247,7 @@ export default function PricingPage() {
                   </div>
                   <Button
                     size="lg"
-                    className="bg-green-500 hover:bg-green-600 text-black px-12 py-4 text-sm font-light tracking-[0.15em] border-none shadow-xl hover:shadow-green-500/20"
+                    className="bg-green-500 hover:bg-green-600 hover:scale-105 text-black px-12 py-4 text-sm font-light tracking-[0.15em] border-none transition-all duration-300"
                     asChild
                   >
                     <Link href="/student-projects">
@@ -461,7 +459,7 @@ export default function PricingPage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-500 hover:bg-amber-600 text-black px-12 py-6 text-sm font-light tracking-[0.15em] transition-all duration-500 border-none shadow-xl hover:shadow-amber-500/30 transform hover:scale-[1.02]"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.15em] transition-all duration-300 border-none"
                 asChild
               >
                 <Link href="/contact">

@@ -6,7 +6,6 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Video, Headphones, Camera, Wifi, Package, Disc, ChevronRight, Check } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
 export default function ServicesPage() {
@@ -83,7 +82,6 @@ export default function ServicesPage() {
       className="min-h-screen bg-black text-white overflow-x-hidden"
     >
       <BackgroundGradient />
-      <MouseGlow />
       {/* Navigation */}
       <Navigation currentPage="services" />
 
@@ -198,6 +196,30 @@ export default function ServicesPage() {
                 </motion.div>
               ))}
             </div>
+
+            {/* Consultation Banner */}
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              whileInView={{ opacity: 1, scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="mt-20 max-w-4xl mx-auto"
+            >
+              <div className="relative overflow-hidden rounded-2xl">
+                <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
+                <div className="relative p-8 lg:p-12 text-center backdrop-blur-sm border border-amber-900/30">
+                  <h3 className="text-3xl lg:text-4xl font-thin mb-4">
+                    專屬服務諮詢
+                  </h3>
+                  <p className="text-lg font-light text-gray-400 mb-6">
+                    歡迎來電洽談，我們將為您量身打造最適合的方案
+                  </p>
+                  <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-xl rounded-full border border-amber-500/20">
+                    <span className="text-sm font-light text-amber-400 tracking-[0.1em]">首次合作享專屬優惠折扣</span>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
           </div>
         </section>
 
@@ -385,7 +407,7 @@ export default function ServicesPage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-500"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">

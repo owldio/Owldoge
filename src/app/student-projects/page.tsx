@@ -58,7 +58,7 @@ export default function StudentProjectsPage() {
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <Button 
                   size="lg"
-                  className="group bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-500"
+                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
                   asChild
                 >
                   <a href="#pricing">
@@ -241,11 +241,11 @@ export default function StudentProjectsPage() {
                       <h4 className="text-lg font-light mb-6 text-amber-500">加購選項</h4>
                       <ul className="space-y-4">
                         {[
-                          { item: "延長錄製", price: "+1,200/30分鐘" },
-                          { item: "多機位拍攝", price: "+2,000" },
-                          { item: "72小時快交", price: "+2,000" },
+                          { item: "延長錄製", price: "+NT$ 1,200/30分鐘" },
+                          { item: "多機位拍攝", price: "+NT$ 2,000" },
+                          { item: "72小時快交", price: "+NT$ 2,000" },
                           { item: "特殊需求", price: "可詳談" },
-                          { item: "實體隨身碟", price: "+200" }
+                          { item: "實體隨身碟", price: "+NT$ 300" }
                         ].map((addon, i) => (
                           <li key={i} className="flex items-center justify-between">
                             <span className="text-sm font-light text-gray-400">{addon.item}</span>
@@ -267,7 +267,7 @@ export default function StudentProjectsPage() {
                   <div className="text-center">
                     <Button
                       size="lg"
-                      className="bg-amber-600 hover:bg-amber-700 text-black px-12 py-4 text-sm font-light tracking-[0.2em]"
+                      className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-4 text-sm font-light tracking-[0.2em] transition-all duration-300"
                       asChild
                     >
                       <Link href="/contact">
@@ -285,23 +285,23 @@ export default function StudentProjectsPage() {
               {[
                 {
                   title: "單機錄影",
-                  price: "NT$ 6,480",
-                  originalPrice: "NT$ 7,200",
+                  price: "NT$ 8,500",
+                  originalPrice: "NT$ 10,500",
                   features: ["單機4K錄影", "2小時拍攝", "基礎剪輯"],
                   color: "from-cyan-600 to-blue-600"
                 },
                 {
                   title: "雙機套餐",
-                  price: "NT$ 10,980",
-                  originalPrice: "NT$ 12,200",
+                  price: "NT$ 14,800",
+                  originalPrice: "NT$ 18,800",
                   features: ["雙機位拍攝", "60秒精華", "專業剪輯"],
                   color: "from-purple-600 to-pink-600",
                   popular: true
                 },
                 {
                   title: "三機旗艦",
-                  price: "NT$ 13,980",
-                  originalPrice: "NT$ 15,800",
+                  price: "NT$ 21,200",
+                  originalPrice: "NT$ 27,200",
                   features: ["三機位拍攝", "完整後製", "色彩校正"],
                   color: "from-amber-600 to-orange-600"
                 }
@@ -510,7 +510,7 @@ export default function StudentProjectsPage() {
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-600 hover:bg-amber-700 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-500"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">

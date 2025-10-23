@@ -23,7 +23,6 @@ import {
   Instagram
 } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import EmailModal from "@/components/EmailModal";
 
@@ -194,7 +193,7 @@ const ContactPage = () => {
             </p>
           </div>
           <Button 
-            className="bg-amber-500 hover:bg-amber-600 text-black font-light tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20"
+            className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-light tracking-[0.1em] border-none transition-all duration-300"
             asChild
           >
             <Link href="/">返回首頁</Link>
@@ -207,7 +206,6 @@ const ContactPage = () => {
   return (
     <div className="min-h-screen bg-black text-amber-50">
       <BackgroundGradient />
-      <MouseGlow />
       <Navigation currentPage="contact" />
 
       <main className="py-32">
@@ -545,20 +543,23 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <div className="p-6 bg-gradient-to-br from-amber-500/10 via-yellow-500/10 to-orange-500/10 backdrop-blur-xl rounded-2xl border border-amber-500/30">
-                      <h3 className="text-xl font-medium text-amber-50 mb-3 tracking-[0.1em]">我們已收到回覆!!</h3>
-                      <p className="text-amber-100/80 font-light tracking-[0.05em] leading-relaxed mb-4">
-                        感謝您的預約！Owldio 已收到表單，我們將在 1~2 個工作天內以 Email 與您聯繫。若有急件或疑問時間，歡迎直接與我們聯絡或追蹤 IG 私訊我們～！
-                      </p>
-                      <div className="space-y-2 text-sm">
-                        <p className="text-amber-100/70 font-light">
-                          <span className="text-amber-500">Line ID：</span>
-                          <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">@4470guce</a>
+                    <div className="relative overflow-hidden rounded-2xl">
+                      <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
+                      <div className="relative p-6 backdrop-blur-sm border border-amber-900/30 rounded-2xl">
+                        <h3 className="text-xl font-thin text-amber-50 mb-3 tracking-[0.1em]">我們已收到回覆!!</h3>
+                        <p className="text-gray-400 font-light tracking-[0.05em] leading-relaxed mb-4">
+                          感謝您的預約！Owldio 已收到表單，我們將在 1~2 個工作天內以 Email 與您聯繫。若有急件或疑問時間，歡迎直接與我們聯絡或追蹤 IG 私訊我們～！
                         </p>
-                        <p className="text-amber-100/70 font-light">
-                          <span className="text-amber-500">IG：</span>
-                          <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">Owldio Studio 鴞聲音畫 @owldio.art</a>
-                        </p>
+                        <div className="space-y-2 text-sm">
+                          <p className="text-gray-400 font-light">
+                            <span className="text-amber-500">Line ID：</span>
+                            <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">@4470guce</a>
+                          </p>
+                          <p className="text-gray-400 font-light">
+                            <span className="text-amber-500">IG：</span>
+                            <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">Owldio Studio 鴞聲音畫 @owldio.art</a>
+                          </p>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -566,7 +567,7 @@ const ContactPage = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 text-lg font-light tracking-[0.15em] bg-amber-500 hover:bg-amber-600 text-black border-none shadow-2xl hover:shadow-amber-500/30 transition-all duration-300 transform hover:scale-[1.02]"
+                    className="w-full py-4 text-lg font-light tracking-[0.15em] bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black border-none transition-all duration-300"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
@@ -677,7 +678,7 @@ const ContactPage = () => {
                   如有急件需求或特殊情況，歡迎直接與我們聯絡
                 </p>
                 <Button 
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-light tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:scale-[1.02]"
+                  className="w-full bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-light tracking-[0.1em] border-none transition-all duration-300"
                   onClick={() => setIsEmailModalOpen(true)}
                 >
                   <Mail className="h-4 w-4 mr-2" />

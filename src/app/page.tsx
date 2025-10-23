@@ -3,11 +3,11 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Play, ChevronDown } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navigation from "@/components/Navigation";
-import BackgroundGradient from "@/components/BackgroundGradient";
 import MistAnimation from "@/components/MistAnimation";
 
 export default function OwldioSite() {
@@ -21,14 +21,12 @@ export default function OwldioSite() {
   }
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.8 }}
       className="min-h-screen bg-black text-white overflow-x-hidden"
     >
-      {/* Background Gradient Effect */}
-      <BackgroundGradient />
       {/* Navigation */}
       <Navigation currentPage="home" />
 
@@ -46,7 +44,7 @@ export default function OwldioSite() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.5 }}
           >
-            <motion.h1 
+            <motion.h1
               className="text-[clamp(3rem,10vw,8rem)] font-thin leading-[1.1] tracking-[-0.02em] mb-10"
               initial={{ letterSpacing: "0.5em", opacity: 0 }}
               animate={{ letterSpacing: "-0.02em", opacity: 1 }}
@@ -76,12 +74,12 @@ export default function OwldioSite() {
             >
               <Button
                 size="lg"
-                className="group bg-amber-500 text-black hover:bg-amber-600 px-12 py-6 text-base font-light tracking-[0.2em] transition-all duration-500"
+                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-6 text-base font-light tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/portfolio">
                   探索作品
-                  <ArrowRight className="ml-3 h-4 w-4 group-hover:translate-x-2 transition-transform" />
+                  <ArrowRight className="ml-3 h-4 w-4" />
                 </Link>
               </Button>
             </motion.div>
@@ -93,7 +91,7 @@ export default function OwldioSite() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 2 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 cursor-pointer group"
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 cursor-pointer"
           onClick={() => {
             // 立即開始滾動，給用戶即時反饋
             const target = window.innerHeight;
@@ -106,12 +104,10 @@ export default function OwldioSite() {
           <motion.div
             animate={{ y: [0, 10, 0] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
-            className="flex flex-col items-center gap-2 transition-all duration-300 group-hover:text-amber-500 group-hover:scale-110"
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.95 }}
+            className="flex flex-col items-center gap-2"
           >
-            <span className="text-xs font-light tracking-[0.3em] text-white/60 group-hover:text-amber-500">SCROLL</span>
-            <ChevronDown className="h-5 w-5 text-white/60 group-hover:text-amber-500" />
+            <span className="text-xs font-light tracking-[0.3em] text-white/60">SCROLL</span>
+            <ChevronDown className="h-5 w-5 text-white/60" />
           </motion.div>
         </motion.div>
       </section>
@@ -176,47 +172,47 @@ export default function OwldioSite() {
           >
             <div className="absolute inset-4 grid grid-cols-2 gap-4">
               <div className="space-y-4">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="h-[60%] bg-gradient-to-br from-amber-900/20 to-amber-600/20 rounded-lg overflow-hidden"
-                >
-                  <img 
+                <div className="h-[60%] bg-gradient-to-br from-amber-900/20 to-amber-600/20 rounded-lg overflow-hidden relative">
+                  <Image
                     src="/IMG_9089.JPG"
                     alt="Studio"
-                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+                    fill
+                    className="object-cover opacity-80"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    loading="lazy"
+                    quality={75}
                   />
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="h-[35%] bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg overflow-hidden"
-                >
-                  <img 
+                </div>
+                <div className="h-[35%] bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg overflow-hidden relative">
+                  <Image
                     src="/IMG_9054.JPG"
                     alt="Equipment"
-                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+                    fill
+                    className="object-cover opacity-80"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    loading="lazy"
+                    quality={75}
                   />
-                </motion.div>
+                </div>
               </div>
               <div className="space-y-4 pt-12">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="h-[45%] bg-gradient-to-br from-amber-600/20 to-orange-600/20 rounded-lg overflow-hidden"
-                >
-                  <img 
+                <div className="h-[45%] bg-gradient-to-br from-amber-600/20 to-orange-600/20 rounded-lg overflow-hidden relative">
+                  <Image
                     src="/IMG_9133.JPG"
                     alt="Recording"
-                    className="w-full h-full object-cover opacity-80 hover:opacity-100 transition-opacity duration-500"
+                    fill
+                    className="object-cover opacity-80"
+                    sizes="(max-width: 768px) 50vw, 25vw"
+                    loading="lazy"
+                    quality={75}
                   />
-                </motion.div>
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  className="h-[50%] bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-lg flex items-center justify-center"
-                >
+                </div>
+                <div className="h-[50%] bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-lg flex items-center justify-center">
                   <div className="text-center p-8">
                     <div className="text-6xl font-thin text-amber-500 mb-2">100+</div>
                     <div className="text-sm font-light tracking-[0.2em] text-gray-400">錄製場次</div>
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
           </motion.div>
@@ -275,15 +271,9 @@ export default function OwldioSite() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ y: -10 }}
-                className="group relative"
+                className="relative"
               >
-                <div className="absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 transition-opacity duration-500 rounded-lg blur-xl"
-                  style={{
-                    backgroundImage: `linear-gradient(to bottom right, var(--tw-gradient-stops))`
-                  }}
-                ></div>
-                <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-zinc-700 rounded-lg p-8 transition-all duration-500">
+                <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-lg p-8">
                   <div className={`w-16 h-px bg-gradient-to-r ${service.color} mb-8`}></div>
                   <h3 className="text-2xl font-light mb-2">{service.title}</h3>
                   <p className="text-xs font-light tracking-[0.2em] text-gray-500 mb-6">
@@ -301,7 +291,7 @@ export default function OwldioSite() {
                       </li>
                     ))}
                   </ul>
-                  <Link href="/pricing" className="block w-full py-3 border border-zinc-700 hover:border-amber-500 hover:text-amber-500 text-sm font-light tracking-[0.2em] transition-all duration-500 text-center">
+                  <Link href="/pricing" className="block w-full py-3 border border-zinc-700 text-sm font-light tracking-[0.2em] text-center">
                     了解詳情
                   </Link>
                 </div>
@@ -342,7 +332,7 @@ export default function OwldioSite() {
               </p>
               <Button
                 size="lg"
-                className="bg-amber-600 hover:bg-amber-700 text-black px-12 py-4 text-sm font-light tracking-[0.2em]"
+                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-4 text-sm font-light tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/student-projects">
@@ -389,27 +379,28 @@ export default function OwldioSite() {
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: i * 0.05 }}
-                className={`${item.span} relative group cursor-pointer overflow-hidden rounded-lg`}
+                className={`${item.span} relative cursor-pointer overflow-hidden rounded-lg group`}
               >
-                <img 
+                <Image
                   src={item.img}
                   alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  fill
+                  className="object-cover transition-transform duration-500 group-hover:scale-110"
+                  sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                  loading="lazy"
+                  quality={75}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent group-hover:from-black/90 group-hover:via-black/50 transition-all duration-500"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-6 z-10 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                   <span className="text-amber-500 text-xs font-light tracking-[0.2em]">
                     {item.type}
                   </span>
                   <h3 className="text-2xl font-light mt-2">{item.title}</h3>
                 </div>
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                  <motion.div
-                    whileHover={{ scale: 1.1 }}
-                    className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center"
-                  >
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10 transition-all duration-300 group-hover:scale-110">
+                  <div className="w-16 h-16 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center group-hover:bg-amber-500 transition-colors duration-300">
                     <Play className="h-6 w-6 text-black ml-1" />
-                  </motion.div>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -425,7 +416,7 @@ export default function OwldioSite() {
             <Button
               variant="outline"
               size="lg"
-              className="border-zinc-700 hover:border-amber-500 hover:text-amber-500 px-12 py-4 text-sm font-light tracking-[0.2em] transition-all duration-500"
+              className="border-zinc-700 text-white px-12 py-4 text-sm font-light tracking-[0.2em]"
               asChild
             >
               <Link href="/portfolio">
@@ -536,17 +527,17 @@ export default function OwldioSite() {
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Button
               size="lg"
-              className="group bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white px-12 py-6 text-base font-medium tracking-[0.1em] transition-all duration-500"
+              className="bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 hover:scale-105 text-white px-12 py-6 text-base font-medium tracking-[0.1em] transition-all duration-300"
               asChild
             >
               <Link href="/contact">
                 立即預約諮詢
-                <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform" />
+                <ArrowRight className="ml-3 h-5 w-5" />
               </Link>
             </Button>
             <Button
               size="lg"
-              className="bg-white/10 hover:bg-white/20 text-amber-400 border-2 border-amber-400/50 hover:border-amber-400 px-12 py-6 text-base font-medium tracking-[0.1em] transition-all duration-500"
+              className="bg-white/10 hover:bg-amber-500/20 text-amber-400 border-2 border-amber-400/50 hover:border-amber-400 hover:scale-105 px-12 py-6 text-base font-medium tracking-[0.1em] transition-all duration-300"
               asChild
             >
               <Link href="/pricing">
@@ -577,7 +568,7 @@ export default function OwldioSite() {
           <div className="grid lg:grid-cols-4 gap-12 mb-12">
             <div>
               <div className="flex items-center gap-3 mb-6">
-                <img src="/Owldio.svg" alt="Owldio" className="h-8 w-8 invert" />
+                <Image src="/Owldio.svg" alt="Owldio" width={32} height={32} className="h-8 w-8 invert" />
                 <span className="text-xl font-light tracking-[0.1em]">OWLDIO</span>
               </div>
               <p className="text-sm font-light text-gray-500 leading-[1.2]">
@@ -592,7 +583,7 @@ export default function OwldioSite() {
               <ul className="space-y-3">
                 {['音樂會錄製', '直播服務', '後製發行', '場地錄音'].map(item => (
                   <li key={item}>
-                    <a href="#" className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors">
+                    <a href="#" className="text-sm font-light text-gray-500">
                       {item}
                     </a>
                   </li>
@@ -605,7 +596,7 @@ export default function OwldioSite() {
               <ul className="space-y-3">
                 {['關於我們', '作品集', '定價方案', '聯絡我們'].map(item => (
                   <li key={item}>
-                    <a href="#" className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors">
+                    <a href="#" className="text-sm font-light text-gray-500">
                       {item}
                     </a>
                   </li>
@@ -616,7 +607,7 @@ export default function OwldioSite() {
             <div>
               <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">CONNECT</h4>
               <div className="space-y-3">
-                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-light text-gray-500 hover:text-amber-500 transition-colors">
+                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-light text-gray-500">
                   owldio.art@gmail.com
                 </a>
                 <div className="flex gap-4 mt-6">
@@ -624,7 +615,7 @@ export default function OwldioSite() {
                     href="https://www.instagram.com/owldio.art/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500 hover:text-amber-500 transition-colors"
+                    className="text-xs font-light text-gray-500"
                   >
                     Instagram
                   </a>
@@ -632,7 +623,7 @@ export default function OwldioSite() {
                     href="https://www.facebook.com/share/19xTqkqM9Y/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500 hover:text-amber-500 transition-colors"
+                    className="text-xs font-light text-gray-500"
                   >
                     Facebook
                   </a>
@@ -640,7 +631,7 @@ export default function OwldioSite() {
                     href="https://youtube.com/@owldioart?si=ypYR6wo0a1LLiGeS"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500 hover:text-amber-500 transition-colors"
+                    className="text-xs font-light text-gray-500"
                   >
                     YouTube
                   </a>
@@ -654,10 +645,10 @@ export default function OwldioSite() {
               © 2024 Owldio. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <a href="#" className="text-xs font-light text-gray-600">
                 隱私政策
               </a>
-              <a href="#" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <a href="#" className="text-xs font-light text-gray-600">
                 服務條款
               </a>
             </div>
