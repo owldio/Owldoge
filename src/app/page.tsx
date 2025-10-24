@@ -426,11 +426,16 @@ export default function OwldioSite() {
             <div>
               <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">SERVICES</h4>
               <ul className="space-y-3">
-                {['音樂會錄製', '直播服務', '後製發行', '場地錄音'].map(item => (
-                  <li key={item}>
-                    <a href="#" className="text-sm font-light text-gray-500">
-                      {item}
-                    </a>
+                {[
+                  { name: '音樂會錄製', href: '/services#concert-recording' },
+                  { name: '直播服務', href: '/services#live-streaming' },
+                  { name: '後製發行', href: '/services#post-production' },
+                  { name: '場地錄音', href: '/services#studio-recording' }
+                ].map(item => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                      {item.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -439,11 +444,16 @@ export default function OwldioSite() {
             <div>
               <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">COMPANY</h4>
               <ul className="space-y-3">
-                {['關於我們', '作品集', '定價方案', '聯絡我們'].map(item => (
-                  <li key={item}>
-                    <a href="#" className="text-sm font-light text-gray-500">
-                      {item}
-                    </a>
+                {[
+                  { name: '關於我們', href: '/about' },
+                  { name: '作品集', href: '/portfolio' },
+                  { name: '定價方案', href: '/pricing' },
+                  { name: '聯絡我們', href: '/contact' }
+                ].map(item => (
+                  <li key={item.name}>
+                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                      {item.name}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -490,12 +500,12 @@ export default function OwldioSite() {
               © 2024 Owldio. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <a href="#" className="text-xs font-light text-gray-600">
+              <Link href="/about#privacy" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 隱私政策
-              </a>
-              <a href="#" className="text-xs font-light text-gray-600">
+              </Link>
+              <Link href="/about#terms" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 服務條款
-              </a>
+              </Link>
             </div>
           </div>
         </div>
