@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useMemo } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -11,14 +11,14 @@ import BackgroundGradient from "@/components/BackgroundGradient";
 export default function PricingPage() {
   const [selectedPlan, setSelectedPlan] = useState("duo");
 
-  const pricingPlans = useMemo(() => [
+  const pricingPlans = [
     {
       id: "single",
       name: "單機方案",
       subtitle: "SINGLE CAM",
-      price: "NT$ 8,500",
+      price: "NT$ 7,800",
       originalPrice: "NT$ 10,500",
-      discount: "省 NT$ 2,000",
+      discount: "省 NT$ 2,700",
       bestFor: "個人演出",
       features: [
         "單機4K錄影",
@@ -66,16 +66,16 @@ export default function PricingPage() {
       gradient: "from-amber-600 to-orange-600",
       popular: false
     }
-  ], []);
+  ];
 
-  const addOns = useMemo(() => [
+  const addOns = [
     { name: "延長錄製", price: "+NT$ 1,200", unit: "/30分鐘", icon: "⏰" },
     { name: "快速交付", price: "+NT$ 2,000", unit: "起", icon: "⚡" },
     { name: "精華剪輯", price: "+NT$ 1,800", unit: "", icon: "✂️" },
     { name: "多軌錄音", price: "+NT$ 2,500", unit: "", icon: "🎵" },
     { name: "特殊需求", price: "可詳談", unit: "", icon: "🎚️" },
     { name: "實體隨身碟", price: "+NT$ 300", unit: "/個", icon: "💾" }
-  ], []);
+  ];
 
   return (
     <div className="min-h-screen bg-black text-amber-50">
@@ -188,7 +188,7 @@ export default function PricingPage() {
 
                     <div className="mb-6 p-4 bg-amber-500/5 backdrop-blur-xl border border-amber-500/20 rounded-lg">
                       <p className="text-xs font-light text-amber-100/70 text-center tracking-[0.05em] leading-relaxed">
-                        💬 歡迎來電洽談，我們將為您量身打造最適合的方案
+                        💬 歡迎來電洽談，為您量身打造最適合的方案
                         <br />
                         <span className="text-amber-400">首次合作享專屬優惠折扣</span>
                       </p>

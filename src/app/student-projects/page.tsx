@@ -285,7 +285,7 @@ export default function StudentProjectsPage() {
               {[
                 {
                   title: "單機錄影",
-                  price: "NT$ 8,500",
+                  price: "NT$ 7,800",
                   originalPrice: "NT$ 10,500",
                   features: ["單機4K錄影", "2小時拍攝", "基礎剪輯"],
                   color: "from-cyan-600 to-blue-600"

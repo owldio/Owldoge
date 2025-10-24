@@ -23,7 +23,7 @@ export default function ServicesPage() {
         "專業調色",
         "快速交付"
       ],
-      pricing: "NT$ 8,500",
+      pricing: "NT$ 7,800",
       pricingUnit: "起",
       gradient: "from-cyan-600 to-blue-600"
     },
@@ -212,7 +212,7 @@ export default function ServicesPage() {
                     專屬服務諮詢
                   </h3>
                   <p className="text-lg font-light text-gray-400 mb-6">
-                    歡迎來電洽談，我們將為您量身打造最適合的方案
+                    歡迎來電洽談，為您量身打造最適合的方案
                   </p>
                   <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-xl rounded-full border border-amber-500/20">
                     <span className="text-sm font-light text-amber-400 tracking-[0.1em]">首次合作享專屬優惠折扣</span>

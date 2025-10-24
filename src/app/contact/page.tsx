@@ -146,7 +146,7 @@ const ContactPage = () => {
     {
       value: "single",
       label: "單機方案",
-      price: "NT$ 8,500 起",
+      price: "NT$ 7,800 起",
       description: "內容：單機 4K 錄影、2 小時拍攝、基礎剪輯、雲端交付、一次小改"
     },
     {
