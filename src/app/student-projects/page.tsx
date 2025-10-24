@@ -349,143 +349,7 @@ export default function StudentProjectsPage() {
           </div>
         </section>
 
-        {/* Portfolio Section */}
-        <section className="py-32 bg-black relative">
-          <div className="max-w-[90vw] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-20"
-            >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
-                STUDENT WORKS
-              </span>
-              <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
-                學生作品
-              </h2>
-              <p className="text-xl font-light text-gray-500 max-w-2xl mx-auto">
-                超過 100+ 場學生音樂會錄製經驗
-              </p>
-            </motion.div>
-
-            {/* Portfolio Grid */}
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-              {[
-                { title: "畢業音樂會錄影", category: "獨奏會" },
-                { title: "管弦樂團演出", category: "交響樂" },
-                { title: "合唱團演出", category: "合唱" },
-                { title: "室內樂展演", category: "室內樂" },
-                { title: "爵士演出錄影", category: "爵士樂" },
-                { title: "國樂團演出", category: "國樂" }
-              ].map((work, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  className="relative group cursor-pointer aspect-video overflow-hidden rounded-lg"
-                >
-                  <img 
-                    src={`/${
-                      ['IMG_9106.JPG', 'IMG_9089.JPG', 'IMG_9124.JPG',
-                       'IMG_9076.JPG', 'IMG_9102.JPG', 'IMG_9117.JPG'][i]
-                    }`}
-                    alt={work.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-6 translate-y-full group-hover:translate-y-0 transition-transform duration-500">
-                    <span className="text-amber-500 text-xs font-light tracking-[0.2em]">
-                      {work.category}
-                    </span>
-                    <h3 className="text-xl font-light mt-1">{work.title}</h3>
-                  </div>
-                  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      className="w-14 h-14 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center"
-                    >
-                      <Play className="h-5 w-5 text-black ml-0.5" />
-                    </motion.div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Testimonials */}
-        <section className="py-32 bg-zinc-950 relative">
-          <div className="max-w-[90vw] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-20"
-            >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
-                TESTIMONIALS
-              </span>
-              <h2 className="text-5xl lg:text-6xl font-thin leading-[1.2]">
-                學生評價
-              </h2>
-            </motion.div>
-
-            <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {[
-                {
-                  quote: "團隊超用心！畢業音樂會的錄製品質超乎預期，價格也很學生友善。",
-                  author: "陳同學",
-                  school: "台灣大學音樂系",
-                  rating: 5
-                },
-                {
-                  quote: "72小時就收到成品，趕畢製的救星！品質完全不輸專業錄音室。",
-                  author: "林同學",
-                  school: "師範大學音樂系",
-                  rating: 5
-                },
-                {
-                  quote: "溝通很順暢，會給很多專業建議。學生預算也能有專業品質！",
-                  author: "王同學",
-                  school: "音樂系學生",
-                  rating: 5
-                }
-              ].map((testimonial, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.1 }}
-                  className="relative"
-                >
-                  <div className="bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 rounded-lg p-8">
-                    <div className="flex gap-1 mb-4">
-                      {[...Array(testimonial.rating)].map((_, j) => (
-                        <Star key={j} className="h-4 w-4 fill-amber-500 text-amber-500" />
-                      ))}
-                    </div>
-                    <p className="text-base font-light leading-[1.2] text-gray-300 mb-6">
-                      &ldquo;{testimonial.quote}&rdquo;
-                    </p>
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 rounded-full bg-gradient-to-br from-amber-600 to-orange-600"></div>
-                      <div>
-                        <div className="font-light text-white">{testimonial.author}</div>
-                        <div className="text-xs font-light text-gray-500">{testimonial.school}</div>
-                      </div>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
+        {/* Portfolio and Testimonials sections temporarily hidden */}
 
         {/* CTA Section */}
         <section className="relative py-32 overflow-hidden">
@@ -556,9 +420,9 @@ export default function StudentProjectsPage() {
               <Link href="/services" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 服務
               </Link>
-              <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              {/* <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 作品
-              </Link>
+              </Link> */}
               <Link href="/contact" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 聯絡
               </Link>

@@ -709,7 +709,7 @@ const ContactPage = () => {
             <Link href="/" className="text-amber-100/80 hover:text-amber-500 transition-colors">首頁</Link>
             <Link href="/services" className="text-amber-100/80 hover:text-amber-500 transition-colors">服務</Link>
             <Link href="/pricing" className="text-amber-100/80 hover:text-amber-500 transition-colors">價目</Link>
-            <Link href="/portfolio" className="text-amber-100/80 hover:text-amber-500 transition-colors">作品</Link>
+            {/* <Link href="/portfolio" className="text-amber-100/80 hover:text-amber-500 transition-colors">作品</Link> */}
           </div>
         </div>
       </footer>

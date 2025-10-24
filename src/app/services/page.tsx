@@ -446,9 +446,9 @@ export default function ServicesPage() {
               <Link href="/student-projects" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 學生專案
               </Link>
-              <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              {/* <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 作品
-              </Link>
+              </Link> */}
               <Link href="/contact" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
                 聯絡
               </Link>
