@@ -40,7 +40,7 @@ export default function StudentProjectsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="inline-block px-6 py-3 bg-gradient-to-r from-amber-600/20 to-orange-600/20 backdrop-blur-sm border border-amber-600/30 rounded-full text-amber-500 text-sm font-light tracking-[0.3em] mb-8">
+              <span className="inline-block px-6 py-3 bg-gradient-to-r from-amber-600/20 to-orange-600/20 backdrop-blur-sm border border-amber-600/30 rounded-full text-amber-500 text-sm font-normal tracking-[0.3em] mb-8">
                 STUDENT EXCLUSIVE
               </span>
               
@@ -52,14 +52,14 @@ export default function StudentProjectsPage() {
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl font-light text-gray-400 mb-12 max-w-3xl mx-auto leading-[1.2]">
+              <p className="text-xl md:text-2xl font-normal text-gray-400 mb-12 max-w-3xl mx-auto leading-[1.2]">
                 專屬優惠・快速交付・用心服務
               </p>
 
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
                 <Button 
                   size="lg"
-                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
+                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-normal tracking-[0.2em] transition-all duration-300"
                   asChild
                 >
                   <a href="#pricing">
@@ -69,7 +69,7 @@ export default function StudentProjectsPage() {
                 </Button>
                 <div className="flex items-center gap-2 text-amber-500/70">
                   <Sparkles className="h-5 w-5" />
-                  <span className="text-sm font-light tracking-wider">最高省 20%</span>
+                  <span className="text-sm font-normal tracking-wider">最高省 20%</span>
                 </div>
               </div>
             </motion.div>
@@ -102,7 +102,7 @@ export default function StudentProjectsPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 WHY CHOOSE US
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
@@ -152,8 +152,8 @@ export default function StudentProjectsPage() {
                       : 'bg-zinc-900/30 border-zinc-800'
                   } backdrop-blur-sm transition-all duration-500 hover:border-amber-600/50`}>
                     <div className="text-4xl mb-6">{benefit.icon}</div>
-                    <h3 className="text-xl font-light mb-3 text-white">{benefit.title}</h3>
-                    <p className="text-sm font-light text-gray-400 leading-[1.2]">{benefit.desc}</p>
+                    <h3 className="text-xl font-normal mb-3 text-white">{benefit.title}</h3>
+                    <p className="text-sm font-normal text-gray-400 leading-[1.2]">{benefit.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -173,13 +173,13 @@ export default function StudentProjectsPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 STUDENT PRICING
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
                 透明定價
               </h2>
-              <p className="text-xl font-light text-gray-500 max-w-2xl mx-auto">
+              <p className="text-xl font-normal text-gray-500 max-w-2xl mx-auto">
                 所有價格皆含稅，無隱藏費用
               </p>
             </motion.div>
@@ -203,12 +203,12 @@ export default function StudentProjectsPage() {
                   </div>
 
                   <div className="text-center mb-12">
-                    <h3 className="text-3xl font-light mb-4">學生錄音錄影套餐</h3>
+                    <h3 className="text-3xl font-normal mb-4">學生錄音錄影套餐</h3>
                     <div className="flex items-center justify-center gap-6">
                       <div>
                         <div className="text-6xl font-thin text-amber-500">
                           NT$ 3,300
-                          <span className="text-xl font-light text-amber-400/60 ml-2">起</span>
+                          <span className="text-xl font-normal text-amber-400/60 ml-2">起</span>
                         </div>
                       </div>
                       <div className="text-gray-600">
@@ -221,7 +221,7 @@ export default function StudentProjectsPage() {
 
                   <div className="grid md:grid-cols-2 gap-12">
                     <div>
-                      <h4 className="text-lg font-light mb-6 text-amber-500">包含服務</h4>
+                      <h4 className="text-lg font-normal mb-6 text-amber-500">包含服務</h4>
                       <ul className="space-y-4">
                         {[
                           "2小時專業錄音",
@@ -233,13 +233,13 @@ export default function StudentProjectsPage() {
                         ].map((item, i) => (
                           <li key={i} className="flex items-center gap-3">
                             <Check className="h-4 w-4 text-amber-500" />
-                            <span className="text-sm font-light text-gray-300">{item}</span>
+                            <span className="text-sm font-normal text-gray-300">{item}</span>
                           </li>
                         ))}
                       </ul>
                     </div>
                     <div>
-                      <h4 className="text-lg font-light mb-6 text-amber-500">加購選項</h4>
+                      <h4 className="text-lg font-normal mb-6 text-amber-500">加購選項</h4>
                       <ul className="space-y-4">
                         {[
                           { item: "延長錄製", price: "+NT$ 1,200/30分鐘" },
@@ -249,8 +249,8 @@ export default function StudentProjectsPage() {
                           { item: "實體隨身碟", price: "+NT$ 300" }
                         ].map((addon, i) => (
                           <li key={i} className="flex items-center justify-between">
-                            <span className="text-sm font-light text-gray-400">{addon.item}</span>
-                            <span className="text-sm font-light text-amber-300">{addon.price}</span>
+                            <span className="text-sm font-normal text-gray-400">{addon.item}</span>
+                            <span className="text-sm font-normal text-amber-300">{addon.price}</span>
                           </li>
                         ))}
                       </ul>
@@ -259,7 +259,7 @@ export default function StudentProjectsPage() {
 
                   <div className="mt-8 mb-8">
                     <div className="bg-amber-900/10 border border-amber-600/20 rounded-lg p-6">
-                      <p className="text-sm font-light text-amber-100/70 leading-relaxed tracking-[0.05em] text-center">
+                      <p className="text-sm font-normal text-amber-100/70 leading-relaxed tracking-[0.05em] text-center">
                         ※ 選擇學生方案即表示同意授權 Owldio 使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。
                       </p>
                     </div>
@@ -268,7 +268,7 @@ export default function StudentProjectsPage() {
                   <div className="text-center">
                     <Button
                       size="lg"
-                      className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-4 text-sm font-light tracking-[0.2em] transition-all duration-300"
+                      className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-4 text-sm font-normal tracking-[0.2em] transition-all duration-300"
                       asChild
                     >
                       <Link href="/contact">
@@ -324,11 +324,11 @@ export default function StudentProjectsPage() {
                   )}
                   <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 hover:border-zinc-700 rounded-lg p-8 transition-all duration-500">
                     <div className={`w-16 h-px bg-gradient-to-r ${pkg.color} mb-6`}></div>
-                    <h3 className="text-2xl font-light mb-2">{pkg.title}</h3>
+                    <h3 className="text-2xl font-normal mb-2">{pkg.title}</h3>
                     <div className="mb-6">
                       <div className="text-3xl font-thin text-white">
                         {pkg.price}
-                        <span className="text-sm font-light text-gray-400 ml-2">起</span>
+                        <span className="text-sm font-normal text-gray-400 ml-2">起</span>
                       </div>
                       <div className="text-sm text-gray-500 line-through">{pkg.originalPrice}</div>
                     </div>
@@ -336,11 +336,11 @@ export default function StudentProjectsPage() {
                       {pkg.features.map((feature, j) => (
                         <li key={j} className="flex items-center gap-2">
                           <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                          <span className="text-sm font-light text-gray-400">{feature}</span>
+                          <span className="text-sm font-normal text-gray-400">{feature}</span>
                         </li>
                       ))}
                     </ul>
-                    <button className="w-full py-3 border border-zinc-700 hover:border-amber-500 hover:text-amber-500 text-sm font-light tracking-[0.2em] transition-all duration-500">
+                    <button className="w-full py-3 border border-zinc-700 hover:border-amber-500 hover:text-amber-500 text-sm font-normal tracking-[0.2em] transition-all duration-500">
                       了解詳情
                     </button>
                   </div>
@@ -368,14 +368,14 @@ export default function StudentProjectsPage() {
               <br />
               <span className="italic font-extralight text-amber-500">音樂旅程</span>
             </h2>
-            <p className="text-xl font-light text-gray-400 mb-12 max-w-2xl mx-auto">
+            <p className="text-xl font-normal text-gray-400 mb-12 max-w-2xl mx-auto">
               立即預約，享受學生專屬優惠
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-normal tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">
@@ -390,7 +390,7 @@ export default function StudentProjectsPage() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-12 flex justify-center gap-8 text-sm font-light text-gray-500"
+              className="mt-12 flex justify-center gap-8 text-sm font-normal text-gray-500"
             >
               <span className="flex items-center gap-2">
                 <Clock className="h-4 w-4" />
@@ -411,20 +411,20 @@ export default function StudentProjectsPage() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 invert" />
-              <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
-              <span className="text-xs font-light text-gray-600">© 2024</span>
+              <span className="text-lg font-normal tracking-[0.1em]">OWLDIO</span>
+              <span className="text-xs font-normal text-gray-600">© 2024</span>
             </div>
             <div className="flex gap-6">
-              <Link href="/" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 首頁
               </Link>
-              <Link href="/services" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/services" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 服務
               </Link>
-              {/* <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              {/* <Link href="/portfolio" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 作品
               </Link> */}
-              <Link href="/contact" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/contact" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 聯絡
               </Link>
             </div>

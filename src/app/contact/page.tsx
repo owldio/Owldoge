@@ -183,12 +183,12 @@ const ContactPage = () => {
               <CheckCircle2 className="h-10 w-10 text-amber-500" />
             </div>
             <h1 className="text-2xl font-thin text-amber-50 mb-2 tracking-[0.2em]">預約申請已送出</h1>
-            <p className="text-amber-100/60 font-light">
+            <p className="text-amber-100/60 font-normal">
               感謝您的預約申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
             </p>
           </div>
           <Button 
-            className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-light tracking-[0.1em] border-none transition-all duration-300"
+            className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-normal tracking-[0.1em] border-none transition-all duration-300"
             asChild
           >
             <Link href="/">返回首頁</Link>
@@ -216,7 +216,7 @@ const ContactPage = () => {
                 聯絡預約
               </span>
             </h1>
-            <p className="text-xl text-amber-100/60 max-w-2xl mx-auto font-light tracking-[0.1em]">
+            <p className="text-xl text-amber-100/60 max-w-2xl mx-auto font-normal tracking-[0.1em]">
               填寫表單告訴我們您的需求
               <br />
               我們將在 24 小時內回覆詳細報價與檔期安排
@@ -236,7 +236,7 @@ const ContactPage = () => {
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         姓名（聯絡人）*
                       </label>
                       <input
@@ -250,7 +250,7 @@ const ContactPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         Email（會用此信箱發送估價與繳費連結）*
                       </label>
                       <input
@@ -267,7 +267,7 @@ const ContactPage = () => {
 
                   <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         連絡電話 *
                       </label>
                       <input
@@ -281,7 +281,7 @@ const ContactPage = () => {
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         學校 / 機構
                       </label>
                       <input
@@ -296,10 +296,10 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">演出資訊</h3>
+                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">演出資訊</h3>
                     
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         演出類型 *
                       </label>
                       <select
@@ -318,7 +318,7 @@ const ContactPage = () => {
 
                     <div className="grid md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                           演出日期與時間 *
                         </label>
                         <input
@@ -331,7 +331,7 @@ const ContactPage = () => {
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                           演出場地 *
                         </label>
                         <input
@@ -347,7 +347,7 @@ const ContactPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         演出時長 *
                       </label>
                       <select
@@ -365,7 +365,7 @@ const ContactPage = () => {
                     </div>
 
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                         參與人數 *
                       </label>
                       <input
@@ -381,7 +381,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">服務內容</h3>
+                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">服務內容</h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       {serviceOptions.map(service => (
                         <label key={service.id} className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
@@ -393,7 +393,7 @@ const ContactPage = () => {
                           />
                           <div className="flex items-center gap-2">
                             {service.icon}
-                            <span className="font-light text-amber-50 tracking-[0.05em]">{service.label}</span>
+                            <span className="font-normal text-amber-50 tracking-[0.05em]">{service.label}</span>
                           </div>
                         </label>
                       ))}
@@ -401,9 +401,9 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">學生方案</h3>
+                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">學生方案</h3>
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-3 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-3 tracking-[0.1em]">
                         是否使用學生方案 *
                       </label>
                       <div className="space-y-3">
@@ -416,7 +416,7 @@ const ContactPage = () => {
                             onChange={handleInputChange}
                             className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
                           />
-                          <span className="font-light text-amber-50 tracking-[0.05em]">是</span>
+                          <span className="font-normal text-amber-50 tracking-[0.05em]">是</span>
                         </label>
                         <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
                           <input
@@ -427,14 +427,14 @@ const ContactPage = () => {
                             onChange={handleInputChange}
                             className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
                           />
-                          <span className="font-light text-amber-50 tracking-[0.05em]">否</span>
+                          <span className="font-normal text-amber-50 tracking-[0.05em]">否</span>
                         </label>
                       </div>
                     </div>
 
                     {formData.useStudentPlan === "yes" && (
                       <div className="mt-4 p-4 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-xl">
-                        <p className="text-sm text-amber-100/80 font-light tracking-[0.05em] leading-relaxed">
+                        <p className="text-sm text-amber-100/80 font-normal tracking-[0.05em] leading-relaxed">
                           <span className="text-amber-500 font-medium">學生方案授權說明</span><br />
                           選擇學生方案即表示同意授權 Owldio 使用您的演出錄音錄影作為作品集展示。經過您同意後或許社群發佈，若您希望成為推薦案藝術家，共同推廣音樂藝術之美。
                         </p>
@@ -445,7 +445,7 @@ const ContactPage = () => {
                             required={formData.useStudentPlan === "yes"}
                             className="mt-1 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 rounded focus:ring-amber-500/50"
                           />
-                          <label htmlFor="studentPlanAgreement" className="text-sm text-amber-100/80 font-light">
+                          <label htmlFor="studentPlanAgreement" className="text-sm text-amber-100/80 font-normal">
                             我已閱讀並同意上述授權內容
                           </label>
                         </div>
@@ -454,7 +454,7 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">方案選擇</h3>
+                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">方案選擇</h3>
                     <div className="space-y-4">
                       {pricingPlans.map(plan => (
                         <label key={plan.value} className="block">
@@ -475,10 +475,10 @@ const ContactPage = () => {
                               <div className="flex-1">
                                 <div className="flex items-center justify-between mb-1">
                                   <span className="font-medium text-amber-50 tracking-[0.05em]">{plan.label}</span>
-                                  {plan.price && <span className="text-amber-500 font-light">{plan.price}</span>}
+                                  {plan.price && <span className="text-amber-500 font-normal">{plan.price}</span>}
                                 </div>
                                 {plan.description && (
-                                  <p className="text-sm text-amber-100/60 font-light tracking-[0.05em] leading-relaxed">
+                                  <p className="text-sm text-amber-100/60 font-normal tracking-[0.05em] leading-relaxed">
                                     {plan.description}
                                   </p>
                                 )}
@@ -491,9 +491,9 @@ const ContactPage = () => {
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-light text-amber-50 mb-4 tracking-[0.15em]">交件時程</h3>
+                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">交件時程</h3>
                     <div>
-                      <label className="block text-sm font-light text-amber-100/80 mb-3 tracking-[0.1em]">
+                      <label className="block text-sm font-normal text-amber-100/80 mb-3 tracking-[0.1em]">
                         交件時程 *
                       </label>
                       <div className="space-y-3">
@@ -506,7 +506,7 @@ const ContactPage = () => {
                             onChange={handleInputChange}
                             className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
                           />
-                          <span className="font-light text-amber-50 tracking-[0.05em]">一般交件（7~10 個工作天）</span>
+                          <span className="font-normal text-amber-50 tracking-[0.05em]">一般交件（7~10 個工作天）</span>
                         </label>
                         <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
                           <input
@@ -517,14 +517,14 @@ const ContactPage = () => {
                             onChange={handleInputChange}
                             className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
                           />
-                          <span className="font-light text-amber-50 tracking-[0.05em]">72 小時交件（加購）</span>
+                          <span className="font-normal text-amber-50 tracking-[0.05em]">72 小時交件（加購）</span>
                         </label>
                       </div>
                     </div>
                   </div>
 
                   <div className="border-t border-amber-500/20 pt-6">
-                    <label className="block text-sm font-light text-amber-100/80 mb-2 tracking-[0.1em]">
+                    <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
                       其他需求說明
                     </label>
                     <textarea
@@ -542,15 +542,15 @@ const ContactPage = () => {
                       <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
                       <div className="relative p-6 backdrop-blur-sm border border-amber-900/30 rounded-2xl">
                         <h3 className="text-xl font-thin text-amber-50 mb-3 tracking-[0.1em]">我們已收到回覆!!</h3>
-                        <p className="text-gray-400 font-light tracking-[0.05em] leading-relaxed mb-4">
+                        <p className="text-gray-400 font-normal tracking-[0.05em] leading-relaxed mb-4">
                           感謝您的預約！Owldio 已收到表單，我們將在 1~2 個工作天內以 Email 與您聯繫。若有急件或疑問時間，歡迎直接與我們聯絡或追蹤 IG 私訊我們～！
                         </p>
                         <div className="space-y-2 text-sm">
-                          <p className="text-gray-400 font-light">
+                          <p className="text-gray-400 font-normal">
                             <span className="text-amber-500">Line ID：</span>
                             <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">@4470guce</a>
                           </p>
-                          <p className="text-gray-400 font-light">
+                          <p className="text-gray-400 font-normal">
                             <span className="text-amber-500">IG：</span>
                             <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">Owldio Studio 鴞聲音畫 @owldio.art</a>
                           </p>
@@ -562,7 +562,7 @@ const ContactPage = () => {
                   <Button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 text-lg font-light tracking-[0.15em] bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black border-none transition-all duration-300"
+                    className="w-full py-4 text-lg font-medium tracking-[0.15em] bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black border-none transition-all duration-300"
                   >
                     {isSubmitting ? (
                       <div className="flex items-center gap-2">
@@ -598,8 +598,8 @@ const ContactPage = () => {
                       <Mail className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
-                      <p className="font-light text-amber-50 tracking-[0.1em]">Email</p>
-                      <p className="text-amber-100/60 font-light group-hover:text-amber-500 transition-colors">owldio.art@gmail.com</p>
+                      <p className="font-normal text-amber-50 tracking-[0.1em]">Email</p>
+                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">owldio.art@gmail.com</p>
                     </div>
                   </button>
                   
@@ -608,8 +608,8 @@ const ContactPage = () => {
                       <MessageCircle className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
-                      <p className="font-light text-amber-50 tracking-[0.1em]">LINE</p>
-                      <p className="text-amber-100/60 font-light group-hover:text-amber-500 transition-colors">@owldio</p>
+                      <p className="font-normal text-amber-50 tracking-[0.1em]">LINE</p>
+                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio</p>
                     </div>
                   </a>
                   
@@ -618,8 +618,8 @@ const ContactPage = () => {
                       <Facebook className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
-                      <p className="font-light text-amber-50 tracking-[0.1em]">Facebook</p>
-                      <p className="text-amber-100/60 font-light group-hover:text-amber-500 transition-colors">@owldio.art</p>
+                      <p className="font-normal text-amber-50 tracking-[0.1em]">Facebook</p>
+                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio.art</p>
                     </div>
                   </a>
                   
@@ -628,8 +628,8 @@ const ContactPage = () => {
                       <Instagram className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
-                      <p className="font-light text-amber-50 tracking-[0.1em]">Instagram</p>
-                      <p className="text-amber-100/60 font-light group-hover:text-amber-500 transition-colors">@owldio.art</p>
+                      <p className="font-normal text-amber-50 tracking-[0.1em]">Instagram</p>
+                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio.art</p>
                     </div>
                   </a>
                   
@@ -638,8 +638,8 @@ const ContactPage = () => {
                       <Clock className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
-                      <p className="font-light text-amber-50 tracking-[0.1em]">回覆時間</p>
-                      <p className="text-amber-100/60 font-light">24 小時內回覆</p>
+                      <p className="font-normal text-amber-50 tracking-[0.1em]">回覆時間</p>
+                      <p className="text-amber-100/60 font-normal">24 小時內回覆</p>
                     </div>
                   </div>
                 </div>
@@ -650,30 +650,30 @@ const ContactPage = () => {
                 <div className="space-y-3">
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-light tracking-[0.05em]">24 小時內回覆報價</span>
+                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">24 小時內回覆報價</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-light tracking-[0.05em]">免費檔期查詢</span>
+                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">免費檔期查詢</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-light tracking-[0.05em]">學生優惠價格</span>
+                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">學生優惠價格</span>
                   </div>
                   <div className="flex items-center gap-3">
                     <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-light tracking-[0.05em]">專業品質保證</span>
+                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">專業品質保證</span>
                   </div>
                 </div>
               </div>
 
               <div className="bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-8 border border-amber-500/30 shadow-2xl">
                 <h3 className="text-xl font-thin text-amber-50 mb-4 tracking-[0.2em]">急件諮詢</h3>
-                <p className="text-amber-100/60 mb-6 font-light tracking-[0.05em]">
+                <p className="text-amber-100/60 mb-6 font-normal tracking-[0.05em]">
                   如有急件需求或特殊情況，歡迎直接與我們聯絡
                 </p>
                 <Button 
-                  className="w-full bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-light tracking-[0.1em] border-none transition-all duration-300"
+                  className="w-full bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-medium tracking-[0.1em] border-none transition-all duration-300"
                   onClick={() => setIsEmailModalOpen(true)}
                 >
                   <Mail className="h-4 w-4 mr-2" />
@@ -697,10 +697,10 @@ const ContactPage = () => {
             <div className="flex h-10 w-10 items-center justify-center">
               <Image src="/Owldio.svg" alt="Owldio" width={32} height={32} className="h-8 w-8 brightness-0 invert" />
             </div>
-            <span className="font-light tracking-[0.1em] text-amber-50">Owldio</span>
-            <span className="text-amber-100/60 font-light">© 2024</span>
+            <span className="font-normal tracking-[0.1em] text-amber-50">Owldio</span>
+            <span className="text-amber-100/60 font-normal">© 2024</span>
           </div>
-          <div className="flex gap-4 font-light tracking-[0.05em]">
+          <div className="flex gap-4 font-normal tracking-[0.05em]">
             <Link href="/" className="text-amber-100/80 hover:text-amber-500 transition-colors">首頁</Link>
             <Link href="/services" className="text-amber-100/80 hover:text-amber-500 transition-colors">服務</Link>
             <Link href="/pricing" className="text-amber-100/80 hover:text-amber-500 transition-colors">價目</Link>

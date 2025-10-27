@@ -26,7 +26,7 @@ export default function PortfolioPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-light tracking-[0.3em] mb-8">
+              <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-normal tracking-[0.3em] mb-8">
                 COMING SOON
               </div>
               
@@ -38,11 +38,11 @@ export default function PortfolioPage() {
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl font-light text-amber-100/60 mb-12 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
+              <p className="text-xl md:text-2xl font-normal text-amber-100/60 mb-12 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
                 我們正在精心準備精彩的作品集，敬請期待
               </p>
 
-              <div className="flex items-center justify-center gap-8 text-sm font-light text-amber-100/40 mb-12">
+              <div className="flex items-center justify-center gap-8 text-sm font-normal text-amber-100/40 mb-12">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   即將上線
@@ -56,7 +56,7 @@ export default function PortfolioPage() {
               <div className="flex flex-col sm:flex-row gap-6 justify-center">
                 <Button
                   size="lg"
-                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.15em] transition-all duration-300 border-none"
+                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-normal tracking-[0.15em] transition-all duration-300 border-none"
                   asChild
                 >
                   <Link href="/contact">
@@ -68,7 +68,7 @@ export default function PortfolioPage() {
                 <Button
                   variant="outline"
                   size="lg"
-                  className="border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 text-amber-50 px-12 py-6 text-sm font-light tracking-[0.15em] transition-all duration-300"
+                  className="border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 text-amber-50 px-12 py-6 text-sm font-normal tracking-[0.15em] transition-all duration-300"
                   asChild
                 >
                   <Link href="/services">
@@ -116,10 +116,10 @@ export default function PortfolioPage() {
                     transition={{ duration: 0.5, delay: i * 0.1 }}
                     className="p-6 bg-black/40 backdrop-blur-xl border border-amber-500/20 rounded-lg"
                   >
-                    <h3 className="text-lg font-light text-amber-50 mb-3 tracking-[0.1em]">
+                    <h3 className="text-lg font-normal text-amber-50 mb-3 tracking-[0.1em]">
                       {feature.title}
                     </h3>
-                    <p className="text-sm font-light text-amber-100/60 leading-relaxed tracking-[0.05em]">
+                    <p className="text-sm font-normal text-amber-100/60 leading-relaxed tracking-[0.05em]">
                       {feature.description}
                     </p>
                   </motion.div>
@@ -136,20 +136,20 @@ export default function PortfolioPage() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 brightness-0 invert" />
-              <span className="text-lg font-light tracking-[0.1em] text-amber-50">OWLDIO</span>
-              <span className="text-xs font-light text-amber-100/40">© 2024</span>
+              <span className="text-lg font-normal tracking-[0.1em] text-amber-50">OWLDIO</span>
+              <span className="text-xs font-normal text-amber-100/40">© 2024</span>
             </div>
             <div className="flex gap-6">
-              <Link href="/" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 首頁
               </Link>
-              <Link href="/student-projects" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/student-projects" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 學生專案
               </Link>
-              <Link href="/services" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/services" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 服務
               </Link>
-              <Link href="/contact" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/contact" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 聯絡
               </Link>
             </div>

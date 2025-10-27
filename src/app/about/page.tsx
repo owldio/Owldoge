@@ -27,7 +27,7 @@ export default function AboutPage() {
           transition={{ duration: 1, delay: 0.2 }}
           className="relative z-10 max-w-4xl mx-auto text-center px-4"
         >
-          <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+          <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
             ABOUT US
           </span>
           <h1 className="text-5xl lg:text-7xl font-thin mb-8 leading-[1.2]">
@@ -37,7 +37,7 @@ export default function AboutPage() {
               Owldio
             </span>
           </h1>
-          <p className="text-xl font-light text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl font-normal text-gray-400 max-w-2xl mx-auto">
             專注校園音樂會錄製的新創團隊，用心為每一場演出留下最珍貴的瞬間
           </p>
         </motion.div>
@@ -53,7 +53,7 @@ export default function AboutPage() {
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 OUR STORY
               </span>
               <h2 className="text-4xl lg:text-5xl font-thin mb-8 leading-[1.2]">
@@ -104,7 +104,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+            <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
               OUR VALUES
             </span>
             <h2 className="text-4xl lg:text-5xl font-thin mb-8">
@@ -139,7 +139,7 @@ export default function AboutPage() {
                 className="bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-lg p-8"
               >
                 <div className="text-4xl mb-6">{value.icon}</div>
-                <h3 className="text-xl font-light mb-4">{value.title}</h3>
+                <h3 className="text-xl font-normal mb-4">{value.title}</h3>
                 <p className="text-gray-400 leading-relaxed">{value.description}</p>
               </motion.div>
             ))}
@@ -157,7 +157,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="mb-16"
           >
-            <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+            <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
               PRIVACY POLICY
             </span>
             <h2 className="text-4xl lg:text-5xl font-thin mb-8">
@@ -167,7 +167,7 @@ export default function AboutPage() {
 
           <div className="space-y-8 text-gray-400 leading-relaxed">
             <div>
-              <h3 className="text-xl font-light text-white mb-4">資料收集與使用</h3>
+              <h3 className="text-xl font-normal text-white mb-4">資料收集與使用</h3>
               <p className="mb-4">
                 我們僅收集為提供服務所必要的個人資料，包括但不限於：
               </p>
@@ -179,28 +179,28 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">資料保護</h3>
+              <h3 className="text-xl font-normal text-white mb-4">資料保護</h3>
               <p>
                 我們採用適當的技術和管理措施來保護您的個人資料安全，防止未經授權的存取、使用或洩露。您的個人資料僅用於提供服務，不會與第三方分享，除非經過您的明確同意或法律要求。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">影像權利</h3>
+              <h3 className="text-xl font-normal text-white mb-4">影像權利</h3>
               <p>
                 我們錄製的影音內容版權歸客戶所有。除非另有約定，我們不會將錄製內容用於商業宣傳或其他用途。如需使用部分內容作為作品集展示，將事先徵得客戶同意。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">Cookie 使用</h3>
+              <h3 className="text-xl font-normal text-white mb-4">Cookie 使用</h3>
               <p>
                 本網站可能使用 Cookie 來改善用戶體驗。您可以通過瀏覽器設定選擇接受或拒絕 Cookie，但這可能影響某些網站功能的正常運作。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">政策更新</h3>
+              <h3 className="text-xl font-normal text-white mb-4">政策更新</h3>
               <p>
                 我們保留隨時修改此隱私政策的權利。任何重大變更將會在網站上公告，並通過電子郵件通知已註冊的用戶。
               </p>
@@ -219,7 +219,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="mb-16"
           >
-            <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+            <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
               TERMS OF SERVICE
             </span>
             <h2 className="text-4xl lg:text-5xl font-thin mb-8">
@@ -229,7 +229,7 @@ export default function AboutPage() {
 
           <div className="space-y-8 text-gray-400 leading-relaxed">
             <div>
-              <h3 className="text-xl font-light text-white mb-4">服務內容</h3>
+              <h3 className="text-xl font-normal text-white mb-4">服務內容</h3>
               <p className="mb-4">
                 Owldio 提供專業的音樂會錄製服務，包括：
               </p>
@@ -242,7 +242,7 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">預約與付款</h3>
+              <h3 className="text-xl font-normal text-white mb-4">預約與付款</h3>
               <p className="mb-4">
                 服務預約需提前至少 7 個工作天確認。付款方式包括：
               </p>
@@ -254,35 +254,35 @@ export default function AboutPage() {
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">取消政策</h3>
+              <h3 className="text-xl font-normal text-white mb-4">取消政策</h3>
               <p>
                 客戶可在錄製日期前 3 個工作天免費取消預約。3 個工作天內取消將酌收 50% 手續費。錄製當日取消恕不退費。如因不可抗力因素（如天災、疫情等）需要調整，雙方可協商重新安排。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">作品交付</h3>
+              <h3 className="text-xl font-normal text-white mb-4">作品交付</h3>
               <p>
                 影音作品將在錄製完成後 5-10 個工作天內交付。交付格式為數位檔案，透過雲端連結下載。如需實體光碟或其他格式，將另外收費。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">責任限制</h3>
+              <h3 className="text-xl font-normal text-white mb-4">責任限制</h3>
               <p>
                 我們將盡力提供最佳服務品質，但不對因設備故障、場地限制或其他不可控因素造成的錄製品質問題承擔責任。如有爭議，將以誠信原則協商解決。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">智慧財產權</h3>
+              <h3 className="text-xl font-normal text-white mb-4">智慧財產權</h3>
               <p>
                 錄製內容的版權歸客戶所有。Owldio 保留將部分內容（經客戶同意）用於作品集展示的權利。客戶需確保錄製內容不侵犯第三方版權。
               </p>
             </div>
 
             <div>
-              <h3 className="text-xl font-light text-white mb-4">聯絡資訊</h3>
+              <h3 className="text-xl font-normal text-white mb-4">聯絡資訊</h3>
               <p>
                 如對本服務條款有任何疑問，請聯絡我們：
                 <br />
@@ -307,12 +307,12 @@ export default function AboutPage() {
           <h2 className="text-4xl lg:text-5xl font-thin mb-8">
             準備開始合作？
           </h2>
-          <p className="text-xl font-light text-gray-400 mb-8">
+          <p className="text-xl font-normal text-gray-400 mb-8">
             讓我們為您的下一場音樂會創造完美的錄製體驗
           </p>
           <Button
             size="lg"
-            className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-6 text-base font-light tracking-[0.2em] transition-all duration-300"
+            className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-6 text-base font-medium tracking-[0.2em] transition-all duration-300"
             asChild
           >
             <Link href="/contact">
@@ -330,9 +330,9 @@ export default function AboutPage() {
             <div>
               <div className="flex items-center gap-3 mb-6">
                 <Image src="/Owldio.svg" alt="Owldio" width={32} height={32} className="h-8 w-8 invert" />
-                <span className="text-xl font-light tracking-[0.1em]">OWLDIO</span>
+                <span className="text-xl font-normal tracking-[0.1em]">OWLDIO</span>
               </div>
-              <p className="text-sm font-light text-gray-500 leading-[1.2]">
+              <p className="text-sm font-normal text-gray-500 leading-[1.2]">
                 校園音樂會錄製專家
                 <br />
                 新創團隊，用心服務
@@ -340,7 +340,7 @@ export default function AboutPage() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">SERVICES</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">SERVICES</h4>
               <ul className="space-y-3">
                 {[
                   { name: '音樂會錄製', href: '/services#concert-recording' },
@@ -349,7 +349,7 @@ export default function AboutPage() {
                   { name: '場地錄音', href: '/services#studio-recording' }
                 ].map(item => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                    <Link href={item.href} className="text-sm font-normal text-gray-500 hover:text-amber-500 transition-colors duration-200">
                       {item.name}
                     </Link>
                   </li>
@@ -358,7 +358,7 @@ export default function AboutPage() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">COMPANY</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">COMPANY</h4>
               <ul className="space-y-3">
                 {[
                   { name: '關於我們', href: '/about' },
@@ -367,7 +367,7 @@ export default function AboutPage() {
                   { name: '聯絡我們', href: '/contact' }
                 ].map(item => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                    <Link href={item.href} className="text-sm font-normal text-gray-500 hover:text-amber-500 transition-colors duration-200">
                       {item.name}
                     </Link>
                   </li>
@@ -376,9 +376,9 @@ export default function AboutPage() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">CONNECT</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">CONNECT</h4>
               <div className="space-y-3">
-                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-light text-gray-500">
+                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-normal text-gray-500">
                   owldio.art@gmail.com
                 </a>
                 <div className="flex gap-4 mt-6">
@@ -386,7 +386,7 @@ export default function AboutPage() {
                     href="https://www.instagram.com/owldio.art/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     Instagram
                   </a>
@@ -394,7 +394,7 @@ export default function AboutPage() {
                     href="https://www.facebook.com/share/19xTqkqM9Y/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     Facebook
                   </a>
@@ -402,7 +402,7 @@ export default function AboutPage() {
                     href="https://youtube.com/@owldioart?si=ypYR6wo0a1LLiGeS"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     YouTube
                   </a>
@@ -412,14 +412,14 @@ export default function AboutPage() {
           </div>
           
           <div className="border-t border-zinc-900 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4">
-            <p className="text-xs font-light text-gray-600">
+            <p className="text-xs font-normal text-gray-600">
               © 2024 Owldio. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link href="/about#privacy" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/about#privacy" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 隱私政策
               </Link>
-              <Link href="/about#terms" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/about#terms" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 服務條款
               </Link>
             </div>

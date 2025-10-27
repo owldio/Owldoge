@@ -61,7 +61,7 @@ export default function OwldioSite() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1, delay: 1.2 }}
-              className="text-xl md:text-2xl font-light tracking-wider text-white/80 mb-12 max-w-2xl mx-auto"
+              className="text-xl md:text-2xl font-normal tracking-wider text-white/80 mb-12 max-w-2xl mx-auto"
             >
               專業音樂會錄製 · 為藝術而生
             </motion.p>
@@ -74,7 +74,7 @@ export default function OwldioSite() {
             >
               <Button
                 size="lg"
-                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-6 text-base font-light tracking-[0.2em] transition-all duration-300"
+                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-6 text-base font-medium tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/services">
@@ -106,7 +106,7 @@ export default function OwldioSite() {
             transition={{ repeat: Infinity, duration: 1.5 }}
             className="flex flex-col items-center gap-2"
           >
-            <span className="text-xs font-light tracking-[0.3em] text-white/60">SCROLL</span>
+            <span className="text-xs font-normal tracking-[0.3em] text-white/60">SCROLL</span>
             <ChevronDown className="h-5 w-5 text-white/60" />
           </motion.div>
         </motion.div>
@@ -124,7 +124,7 @@ export default function OwldioSite() {
             className="flex items-center p-12 lg:p-24"
           >
             <div className="max-w-xl">
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 ABOUT STUDIO
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-10 leading-[1.2]">
@@ -132,7 +132,7 @@ export default function OwldioSite() {
                 <br />
                 <span className="italic font-extralight text-amber-500">靈魂捕手</span>
               </h2>
-              <p className="text-lg font-light leading-[1.2] text-gray-400 mb-8">
+              <p className="text-lg font-normal leading-[1.2] text-gray-400 mb-8">
                 Owldio 是專注於音樂會錄製的新創團隊。
                 我們運用新世代技術與創新思維，
                 為學生音樂家提供高品質且平價的錄製服務。
@@ -153,7 +153,7 @@ export default function OwldioSite() {
                     className="flex items-center gap-4"
                   >
                     <span className="w-12 h-px bg-amber-500"></span>
-                    <span className="text-sm font-light tracking-wider text-gray-300">
+                    <span className="text-sm font-normal tracking-wider text-gray-300">
                       {item}
                     </span>
                   </motion.div>
@@ -230,13 +230,13 @@ export default function OwldioSite() {
             transition={{ duration: 0.8 }}
             className="text-center mb-20"
           >
-            <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+            <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
               OUR SERVICES
             </span>
             <h2 className="text-5xl lg:text-7xl font-thin mb-8 leading-[1.2]">
               專業服務
             </h2>
-            <p className="text-xl font-light text-gray-500 max-w-2xl mx-auto">
+            <p className="text-xl font-normal text-gray-500 max-w-2xl mx-auto">
               專注校園音樂會錄製，提供學生友善的專業服務
             </p>
           </motion.div>
@@ -275,23 +275,23 @@ export default function OwldioSite() {
               >
                 <div className="relative bg-zinc-900/50 backdrop-blur-sm border border-zinc-800 rounded-lg p-8">
                   <div className={`w-16 h-px bg-gradient-to-r ${service.color} mb-8`}></div>
-                  <h3 className="text-2xl font-light mb-2">{service.title}</h3>
-                  <p className="text-xs font-light tracking-[0.2em] text-gray-500 mb-6">
+                  <h3 className="text-2xl font-normal mb-2">{service.title}</h3>
+                  <p className="text-xs font-normal tracking-[0.2em] text-gray-500 mb-6">
                     {service.subtitle}
                   </p>
                   <div className="text-3xl font-thin text-amber-500 mb-8">
                     {service.price}
-                    <span className="text-sm text-gray-600 font-light"> 起</span>
+                    <span className="text-sm text-gray-600 font-normal"> 起</span>
                   </div>
                   <ul className="space-y-3 mb-8">
                     {service.features.map((feature, j) => (
                       <li key={j} className="flex items-center gap-3">
                         <span className="w-1.5 h-1.5 bg-amber-500 rounded-full"></span>
-                        <span className="text-sm font-light text-gray-400">{feature}</span>
+                        <span className="text-sm font-normal text-gray-400">{feature}</span>
                       </li>
                     ))}
                   </ul>
-                  <Link href="/pricing" className="block w-full py-3 border border-zinc-700 text-sm font-light tracking-[0.2em] text-center">
+                  <Link href="/pricing" className="block w-full py-3 border border-zinc-700 text-sm font-medium tracking-[0.2em] text-center">
                     了解詳情
                   </Link>
                 </div>
@@ -314,7 +314,7 @@ export default function OwldioSite() {
                   backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
                 }}
                 transition={{ duration: 10, repeat: Infinity }}
-                className="inline-block text-xs font-light tracking-[0.3em] text-amber-500 mb-4"
+                className="inline-block text-xs font-normal tracking-[0.3em] text-amber-500 mb-4"
                 style={{
                   backgroundImage: "linear-gradient(90deg, #f59e0b, #ea580c, #f59e0b)",
                   backgroundSize: "200% 100%",
@@ -327,12 +327,12 @@ export default function OwldioSite() {
               <h3 className="text-3xl lg:text-4xl font-thin mb-4">
                 學生專屬優惠
               </h3>
-              <p className="text-lg font-light text-gray-400 mb-8">
+              <p className="text-lg font-normal text-gray-400 mb-8">
                 憑學生證享全方案 8 折優惠
               </p>
               <Button
                 size="lg"
-                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-4 text-sm font-light tracking-[0.2em] transition-all duration-300"
+                className="bg-amber-500 text-black hover:bg-amber-600 hover:scale-105 px-12 py-4 text-sm font-medium tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/student-projects">
@@ -365,7 +365,7 @@ export default function OwldioSite() {
             <br />
             <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400">專業錄製</span>
           </h2>
-          <p className="text-xl font-light text-gray-400 mb-12 max-w-2xl mx-auto">
+          <p className="text-xl font-normal text-gray-400 mb-12 max-w-2xl mx-auto">
             讓我們為你的音樂注入專業品質
           </p>
 
@@ -424,7 +424,7 @@ export default function OwldioSite() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">SERVICES</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">SERVICES</h4>
               <ul className="space-y-3">
                 {[
                   { name: '音樂會錄製', href: '/services#concert-recording' },
@@ -433,7 +433,7 @@ export default function OwldioSite() {
                   { name: '場地錄音', href: '/services#studio-recording' }
                 ].map(item => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                    <Link href={item.href} className="text-sm font-normal text-gray-500 hover:text-amber-500 transition-colors duration-200">
                       {item.name}
                     </Link>
                   </li>
@@ -442,7 +442,7 @@ export default function OwldioSite() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">COMPANY</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">COMPANY</h4>
               <ul className="space-y-3">
                 {[
                   { name: '關於我們', href: '/about' },
@@ -451,7 +451,7 @@ export default function OwldioSite() {
                   { name: '聯絡我們', href: '/contact' }
                 ].map(item => (
                   <li key={item.name}>
-                    <Link href={item.href} className="text-sm font-light text-gray-500 hover:text-amber-500 transition-colors duration-200">
+                    <Link href={item.href} className="text-sm font-normal text-gray-500 hover:text-amber-500 transition-colors duration-200">
                       {item.name}
                     </Link>
                   </li>
@@ -460,9 +460,9 @@ export default function OwldioSite() {
             </div>
             
             <div>
-              <h4 className="text-xs font-light tracking-[0.3em] text-gray-400 mb-6">CONNECT</h4>
+              <h4 className="text-xs font-normal tracking-[0.3em] text-gray-400 mb-6">CONNECT</h4>
               <div className="space-y-3">
-                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-light text-gray-500">
+                <a href="mailto:owldio.art@gmail.com" className="block text-sm font-normal text-gray-500">
                   owldio.art@gmail.com
                 </a>
                 <div className="flex gap-4 mt-6">
@@ -470,7 +470,7 @@ export default function OwldioSite() {
                     href="https://www.instagram.com/owldio.art/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     Instagram
                   </a>
@@ -478,7 +478,7 @@ export default function OwldioSite() {
                     href="https://www.facebook.com/share/19xTqkqM9Y/?mibextid=wwXIfr"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     Facebook
                   </a>
@@ -486,7 +486,7 @@ export default function OwldioSite() {
                     href="https://youtube.com/@owldioart?si=ypYR6wo0a1LLiGeS"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs font-light text-gray-500"
+                    className="text-xs font-normal text-gray-500"
                   >
                     YouTube
                   </a>
@@ -496,11 +496,11 @@ export default function OwldioSite() {
           </div>
           
           <div className="border-t border-zinc-900 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4">
-            <p className="text-xs font-light text-gray-600">
+            <p className="text-xs font-normal text-gray-600">
               © 2024 Owldio. All rights reserved.
             </p>
             <div className="flex gap-6">
-              <Link href="/about#privacy" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/about#privacy" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 隱私政策
               </Link>
               <Link href="/about#terms" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">

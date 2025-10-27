@@ -37,7 +37,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
             <span className="text-2xl font-thin tracking-[0.2em] text-amber-50">
               OWLDIO
             </span>
-            <span className="text-xs text-amber-100/60 font-light tracking-[0.1em]">專業音樂會錄製服務</span>
+            <span className="text-xs text-amber-100/60 font-normal tracking-[0.1em]">專業音樂會錄製服務</span>
           </div>
         </Link>
         
@@ -47,7 +47,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
             <Link 
               key={item.href} 
               href={item.href} 
-              className={`text-sm font-light tracking-[0.1em] transition-all duration-300 relative group ${
+              className={`text-sm font-normal tracking-[0.1em] transition-all duration-300 relative group ${
                 currentPage === item.id
                   ? "text-amber-500" 
                   : item.highlight 
@@ -90,7 +90,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         {/* Desktop CTA */}
         <div className="hidden lg:flex items-center gap-3">
           <Button 
-            className="bg-amber-500 hover:bg-amber-600 text-black font-light tracking-[0.1em] px-6 border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:scale-[1.02]"
+            className="bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] px-6 border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:scale-[1.02]"
             asChild
           >
             <Link href="/contact">立即預約</Link>
@@ -113,7 +113,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
                   key={item.href} 
                   href={item.href}
                   onClick={() => setShowMobileMenu(false)}
-                  className={`block text-sm font-light tracking-[0.1em] py-3 px-4 rounded-lg transition-all duration-300 ${
+                  className={`block text-sm font-normal tracking-[0.1em] py-3 px-4 rounded-lg transition-all duration-300 ${
                     currentPage === item.id
                       ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
                       : item.highlight 
@@ -128,7 +128,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
             </nav>
             <div className="mt-4 pt-4 border-t border-amber-500/20">
               <Button 
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-light tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300"
+                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">立即預約</Link>

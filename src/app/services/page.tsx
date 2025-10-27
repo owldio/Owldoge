@@ -101,7 +101,7 @@ export default function ServicesPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <span className="inline-block px-6 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 backdrop-blur-sm border border-zinc-700/50 rounded-full text-gray-400 text-sm font-light tracking-[0.3em] mb-8">
+              <span className="inline-block px-6 py-3 bg-gradient-to-r from-zinc-800/50 to-zinc-700/50 backdrop-blur-sm border border-zinc-700/50 rounded-full text-gray-400 text-sm font-normal tracking-[0.3em] mb-8">
                 OUR SERVICES
               </span>
               
@@ -113,7 +113,7 @@ export default function ServicesPage() {
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl font-light text-gray-400 mb-12 max-w-3xl mx-auto leading-[1.2]">
+              <p className="text-xl md:text-2xl font-normal text-gray-400 mb-12 max-w-3xl mx-auto leading-[1.2]">
                 從錄音到錄影，從直播到後製
                 <br />
                 一站式專業音樂製作服務
@@ -157,11 +157,11 @@ export default function ServicesPage() {
 
                     {/* Content */}
                     <div className="mb-8">
-                      <h3 className="text-3xl font-light mb-2">{service.title}</h3>
-                      <p className="text-xs font-light tracking-[0.3em] text-gray-500 mb-4">
+                      <h3 className="text-3xl font-normal mb-2">{service.title}</h3>
+                      <p className="text-xs font-normal tracking-[0.3em] text-gray-500 mb-4">
                         {service.subtitle}
                       </p>
-                      <p className="text-base font-light text-gray-400 leading-[1.2]">
+                      <p className="text-base font-normal text-gray-400 leading-[1.2]">
                         {service.description}
                       </p>
                     </div>
@@ -171,7 +171,7 @@ export default function ServicesPage() {
                       {service.features.map((feature, j) => (
                         <div key={j} className="flex items-center gap-2">
                           <Check className="h-3 w-3 text-amber-500" />
-                          <span className="text-sm font-light text-gray-500">{feature}</span>
+                          <span className="text-sm font-normal text-gray-500">{feature}</span>
                         </div>
                       ))}
                     </div>
@@ -179,7 +179,7 @@ export default function ServicesPage() {
                     {/* Pricing */}
                     <div className="flex items-end justify-between">
                       <div>
-                        <p className="text-sm font-light text-gray-500 mb-1">起始價格</p>
+                        <p className="text-sm font-normal text-gray-500 mb-1">起始價格</p>
                         <p className="text-3xl font-thin text-white">
                           {service.pricing}
                           <span className="text-sm text-gray-500 ml-2">{service.pricingUnit}</span>
@@ -212,11 +212,11 @@ export default function ServicesPage() {
                   <h3 className="text-3xl lg:text-4xl font-thin mb-4">
                     專屬服務諮詢
                   </h3>
-                  <p className="text-lg font-light text-gray-400 mb-6">
+                  <p className="text-lg font-normal text-gray-400 mb-6">
                     歡迎來電洽談，為您量身打造最適合的方案
                   </p>
                   <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-xl rounded-full border border-amber-500/20">
-                    <span className="text-sm font-light text-amber-400 tracking-[0.1em]">首次合作享專屬優惠折扣</span>
+                    <span className="text-sm font-normal text-amber-400 tracking-[0.1em]">首次合作享專屬優惠折扣</span>
                   </div>
                 </div>
               </div>
@@ -236,13 +236,13 @@ export default function ServicesPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 OUR PROCESS
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
                 服務流程
               </h2>
-              <p className="text-xl font-light text-gray-500 max-w-2xl mx-auto">
+              <p className="text-xl font-normal text-gray-500 max-w-2xl mx-auto">
                 簡單四步驟，輕鬆完成專業錄製
               </p>
             </motion.div>
@@ -290,12 +290,12 @@ export default function ServicesPage() {
                   <div className="relative z-10 text-center">
                     <div className="inline-block mb-6">
                       <div className="text-5xl mb-4">{process.icon}</div>
-                      <span className="text-amber-500 text-xs font-light tracking-[0.3em]">
+                      <span className="text-amber-500 text-xs font-normal tracking-[0.3em]">
                         STEP {process.step}
                       </span>
                     </div>
-                    <h3 className="text-xl font-light mb-3">{process.title}</h3>
-                    <p className="text-sm font-light text-gray-500">{process.desc}</p>
+                    <h3 className="text-xl font-normal mb-3">{process.title}</h3>
+                    <p className="text-sm font-normal text-gray-500">{process.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -313,7 +313,7 @@ export default function ServicesPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 ADD-ON SERVICES
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
@@ -371,9 +371,9 @@ export default function ServicesPage() {
                 >
                   <div className="p-6 bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 hover:border-amber-600/30 rounded-lg transition-all duration-300">
                     <div className="text-3xl mb-4">{addon.icon}</div>
-                    <h3 className="text-lg font-light mb-2">{addon.title}</h3>
+                    <h3 className="text-lg font-normal mb-2">{addon.title}</h3>
                     <p className="text-2xl font-thin text-amber-500 mb-3">{addon.price}</p>
-                    <p className="text-sm font-light text-gray-500">{addon.desc}</p>
+                    <p className="text-sm font-normal text-gray-500">{addon.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -401,14 +401,14 @@ export default function ServicesPage() {
                 專業錄製
               </span>
             </h2>
-            <p className="text-xl font-light text-gray-400 mb-12 max-w-2xl mx-auto">
+            <p className="text-xl font-normal text-gray-400 mb-12 max-w-2xl mx-auto">
               讓我們為你的音樂注入專業品質
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-300"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-normal tracking-[0.2em] transition-all duration-300"
                 asChild
               >
                 <Link href="/contact">
@@ -419,7 +419,7 @@ export default function ServicesPage() {
               <Button
                 variant="outline"
                 size="lg"
-                className="border-zinc-700 hover:border-amber-500 hover:text-amber-500 px-12 py-6 text-sm font-light tracking-[0.2em] transition-all duration-500"
+                className="border-zinc-700 hover:border-amber-500 hover:text-amber-500 px-12 py-6 text-sm font-normal tracking-[0.2em] transition-all duration-500"
                 asChild
               >
                 <Link href="/pricing">
@@ -437,20 +437,20 @@ export default function ServicesPage() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 invert" />
-              <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
-              <span className="text-xs font-light text-gray-600">© 2024</span>
+              <span className="text-lg font-normal tracking-[0.1em]">OWLDIO</span>
+              <span className="text-xs font-normal text-gray-600">© 2024</span>
             </div>
             <div className="flex gap-6">
-              <Link href="/" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 首頁
               </Link>
-              <Link href="/student-projects" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/student-projects" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 學生專案
               </Link>
-              {/* <Link href="/portfolio" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              {/* <Link href="/portfolio" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 作品
               </Link> */}
-              <Link href="/contact" className="text-xs font-light text-gray-600 hover:text-amber-500 transition-colors">
+              <Link href="/contact" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 聯絡
               </Link>
             </div>

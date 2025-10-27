@@ -93,7 +93,7 @@ export default function PricingPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
             >
-              <span className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-light tracking-[0.3em] mb-8">
+              <span className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-normal tracking-[0.3em] mb-8">
                 TRANSPARENT PRICING
               </span>
               
@@ -105,11 +105,11 @@ export default function PricingPage() {
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl font-light text-amber-100/60 mb-12 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
+              <p className="text-xl md:text-2xl font-normal text-amber-100/60 mb-12 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
                 所有價格皆含稅・學生享專屬折扣
               </p>
 
-              <div className="flex items-center justify-center gap-8 text-sm font-light text-amber-100/40">
+              <div className="flex items-center justify-center gap-8 text-sm font-normal text-amber-100/40">
                 <span className="flex items-center gap-2">
                   <Clock className="h-4 w-4" />
                   24小時內回覆
@@ -143,7 +143,7 @@ export default function PricingPage() {
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 -translate-x-1/2 z-10">
-                      <span className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black rounded-full text-sm font-light tracking-[0.1em] shadow-xl">
+                      <span className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-black rounded-full text-sm font-normal tracking-[0.1em] shadow-xl">
                         🔥 最受歡迎
                       </span>
                     </div>
@@ -158,23 +158,23 @@ export default function PricingPage() {
                     
                     <div className="text-center mb-8">
                       <h3 className="text-2xl font-thin mb-2 tracking-[0.15em] text-amber-50">{plan.name}</h3>
-                      <p className="text-xs font-light tracking-[0.3em] text-amber-100/40 mb-6">
+                      <p className="text-xs font-normal tracking-[0.3em] text-amber-100/40 mb-6">
                         {plan.subtitle}
                       </p>
                       
                       <div className="mb-4">
                         <div className="text-5xl font-thin text-amber-50 mb-2 tracking-[0.05em]">
                           {plan.price}
-                          <span className="text-base font-light text-amber-100/40 ml-2">起</span>
+                          <span className="text-base font-normal text-amber-100/40 ml-2">起</span>
                         </div>
                         <div className="flex items-center justify-center gap-3">
-                          <span className="text-lg text-amber-100/40 line-through font-light">{plan.originalPrice}</span>
-                          <span className="text-sm text-amber-500 font-light">{plan.discount}</span>
+                          <span className="text-lg text-amber-100/40 line-through font-normal">{plan.originalPrice}</span>
+                          <span className="text-sm text-amber-500 font-normal">{plan.discount}</span>
                         </div>
                       </div>
 
                       <div className="inline-block px-4 py-2 bg-amber-500/10 backdrop-blur-xl rounded-full border border-amber-500/20">
-                        <span className="text-xs font-light text-amber-100/60 tracking-[0.1em]">適合：{plan.bestFor}</span>
+                        <span className="text-xs font-normal text-amber-100/60 tracking-[0.1em]">適合：{plan.bestFor}</span>
                       </div>
                     </div>
 
@@ -182,13 +182,13 @@ export default function PricingPage() {
                       {plan.features.map((feature, j) => (
                         <li key={j} className="flex items-center gap-3">
                           <Check className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                          <span className="text-sm font-light text-amber-100/80 tracking-[0.05em]">{feature}</span>
+                          <span className="text-sm font-normal text-amber-100/80 tracking-[0.05em]">{feature}</span>
                         </li>
                       ))}
                     </ul>
 
                     <div className="mb-6 p-4 bg-amber-500/5 backdrop-blur-xl border border-amber-500/20 rounded-lg">
-                      <p className="text-xs font-light text-amber-100/70 text-center tracking-[0.05em] leading-relaxed">
+                      <p className="text-xs font-normal text-amber-100/70 text-center tracking-[0.05em] leading-relaxed">
                         💬 歡迎來電洽談，為您量身打造最適合的方案
                         <br />
                         <span className="text-amber-400">首次合作享專屬優惠折扣</span>
@@ -196,7 +196,7 @@ export default function PricingPage() {
                     </div>
 
                     <Button
-                      className={`w-full py-4 text-sm font-light tracking-[0.15em] transition-all duration-200 ${
+                      className={`w-full py-4 text-sm font-medium tracking-[0.15em] transition-all duration-200 ${
                         plan.popular 
                           ? 'bg-amber-500 hover:bg-amber-600 text-black border-none shadow-xl hover:shadow-amber-500/30'
                           : 'border border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 bg-transparent text-amber-50'
@@ -223,18 +223,18 @@ export default function PricingPage() {
               <div className="relative overflow-hidden rounded-2xl">
                 <div className="absolute inset-0 bg-gradient-to-r from-green-600/10 to-emerald-600/10"></div>
                 <div className="relative p-8 lg:p-12 text-center backdrop-blur-xl border border-green-500/20">
-                  <div className="inline-block px-4 py-2 bg-green-500 text-black rounded-full text-sm font-light tracking-[0.1em] mb-6">
+                  <div className="inline-block px-4 py-2 bg-green-500 text-black rounded-full text-sm font-normal tracking-[0.1em] mb-6">
                     🎓 學生專屬優惠
                   </div>
                   <h3 className="text-3xl lg:text-4xl font-thin mb-4 tracking-[0.15em] text-amber-50">
                     學生專屬優惠方案
                   </h3>
-                  <p className="text-lg font-light text-amber-100/60 mb-6 tracking-[0.05em]">
+                  <p className="text-lg font-normal text-amber-100/60 mb-6 tracking-[0.05em]">
                     憑學生證享超值價格・支持你的音樂夢想
                   </p>
                   
                   <div className="max-w-2xl mx-auto mb-6 p-4 bg-green-500/10 backdrop-blur-xl border border-green-500/30 rounded-lg">
-                    <p className="text-sm font-light text-amber-100/80 text-center tracking-[0.05em] leading-relaxed">
+                    <p className="text-sm font-normal text-amber-100/80 text-center tracking-[0.05em] leading-relaxed">
                       🎯 <span className="text-green-400 font-medium">學生團體預約享額外優惠</span>
                       <br />
                       歡迎音樂系所、社團洽談學期合作專案
@@ -242,13 +242,13 @@ export default function PricingPage() {
                   </div>
                   
                   <div className="max-w-2xl mx-auto mb-8">
-                    <p className="text-sm font-light text-amber-100/40 leading-relaxed tracking-[0.05em]">
+                    <p className="text-sm font-normal text-amber-100/40 leading-relaxed tracking-[0.05em]">
                       ※ 選擇學生方案即表示同意授權 Owldio 使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。
                     </p>
                   </div>
                   <Button
                     size="lg"
-                    className="bg-green-500 hover:bg-green-600 hover:scale-105 text-black px-12 py-4 text-sm font-light tracking-[0.15em] border-none transition-all duration-300"
+                    className="bg-green-500 hover:bg-green-600 hover:scale-105 text-black px-12 py-4 text-sm font-medium tracking-[0.15em] border-none transition-all duration-300"
                     asChild
                   >
                     <Link href="/student-projects">
@@ -271,13 +271,13 @@ export default function PricingPage() {
               transition={{ duration: 0.5 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 ADD-ON SERVICES
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2] tracking-[0.2em] text-amber-50">
                 加值服務
               </h2>
-              <p className="text-xl font-light text-amber-100/60 max-w-2xl mx-auto tracking-[0.1em] mb-6">
+              <p className="text-xl font-normal text-amber-100/60 max-w-2xl mx-auto tracking-[0.1em] mb-6">
                 根據需求客製化你的錄製服務
               </p>
               
@@ -288,7 +288,7 @@ export default function PricingPage() {
                 transition={{ duration: 0.6, delay: 0.2 }}
                 className="inline-block px-6 py-3 bg-gradient-to-r from-amber-500/10 to-orange-500/10 backdrop-blur-xl border border-amber-500/30 rounded-full"
               >
-                <p className="text-sm font-light text-amber-100/80 tracking-[0.05em]">
+                <p className="text-sm font-normal text-amber-100/80 tracking-[0.05em]">
                   💰 <span className="text-amber-400">批量服務享額外折扣</span> • 歡迎來電討論組合優惠
                 </p>
               </motion.div>
@@ -313,7 +313,7 @@ export default function PricingPage() {
                         <span className="text-xs text-amber-100/40">{addon.unit}</span>
                       </span>
                     </div>
-                    <h3 className="text-lg font-light text-amber-50 tracking-[0.1em]">{addon.name}</h3>
+                    <h3 className="text-lg font-normal text-amber-50 tracking-[0.1em]">{addon.name}</h3>
                   </div>
                 </motion.div>
               ))}
@@ -330,7 +330,7 @@ export default function PricingPage() {
               transition={{ duration: 0.5 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 COMPARISON
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2] tracking-[0.2em] text-amber-50">
@@ -348,10 +348,10 @@ export default function PricingPage() {
               >
                 <thead>
                   <tr className="border-b border-amber-500/20">
-                    <th className="text-left py-6 pr-8 text-lg font-light text-amber-100/60 tracking-[0.1em]">功能項目</th>
-                    <th className="text-center py-6 px-4 text-lg font-light text-amber-50 tracking-[0.1em]">單機方案</th>
-                    <th className="text-center py-6 px-4 text-lg font-light text-amber-500 tracking-[0.1em]">雙機套餐</th>
-                    <th className="text-center py-6 px-4 text-lg font-light text-amber-50 tracking-[0.1em]">三機旗艦</th>
+                    <th className="text-left py-6 pr-8 text-lg font-normal text-amber-100/60 tracking-[0.1em]">功能項目</th>
+                    <th className="text-center py-6 px-4 text-lg font-normal text-amber-50 tracking-[0.1em]">單機方案</th>
+                    <th className="text-center py-6 px-4 text-lg font-normal text-amber-500 tracking-[0.1em]">雙機套餐</th>
+                    <th className="text-center py-6 px-4 text-lg font-normal text-amber-50 tracking-[0.1em]">三機旗艦</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -372,10 +372,10 @@ export default function PricingPage() {
                       transition={{ duration: 0.5, delay: i * 0.05 }}
                       className="border-b border-amber-500/10 hover:bg-amber-500/5"
                     >
-                      <td className="py-4 pr-8 text-sm font-light text-amber-100/80 tracking-[0.05em]">{row[0]}</td>
-                      <td className="text-center py-4 px-4 text-sm font-light text-amber-100/60 whitespace-pre-line">{row[1]}</td>
-                      <td className="text-center py-4 px-4 text-sm font-light text-amber-500 whitespace-pre-line">{row[2]}</td>
-                      <td className="text-center py-4 px-4 text-sm font-light text-amber-100/60 whitespace-pre-line">{row[3]}</td>
+                      <td className="py-4 pr-8 text-sm font-normal text-amber-100/80 tracking-[0.05em]">{row[0]}</td>
+                      <td className="text-center py-4 px-4 text-sm font-normal text-amber-100/60 whitespace-pre-line">{row[1]}</td>
+                      <td className="text-center py-4 px-4 text-sm font-normal text-amber-500 whitespace-pre-line">{row[2]}</td>
+                      <td className="text-center py-4 px-4 text-sm font-normal text-amber-100/60 whitespace-pre-line">{row[3]}</td>
                     </motion.tr>
                   ))}
                 </tbody>
@@ -393,7 +393,7 @@ export default function PricingPage() {
               transition={{ duration: 0.8 }}
               className="text-center mb-20"
             >
-              <span className="text-amber-500 text-xs font-light tracking-[0.3em] mb-6 block">
+              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
                 FAQ
               </span>
               <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2] tracking-[0.2em] text-amber-50">
@@ -428,8 +428,8 @@ export default function PricingPage() {
                   transition={{ duration: 0.5, delay: i * 0.1 }}
                   className="border border-amber-500/20 rounded-lg p-6 hover:border-amber-500/40 transition-colors bg-black/40 backdrop-blur-xl"
                 >
-                  <h3 className="text-lg font-light text-amber-50 mb-3 tracking-[0.1em]">{faq.q}</h3>
-                  <p className="text-sm font-light text-amber-100/60 leading-[1.2] tracking-[0.05em]">{faq.a}</p>
+                  <h3 className="text-lg font-normal text-amber-50 mb-3 tracking-[0.1em]">{faq.q}</h3>
+                  <p className="text-sm font-normal text-amber-100/60 leading-[1.2] tracking-[0.05em]">{faq.a}</p>
                 </motion.div>
               ))}
             </div>
@@ -453,14 +453,14 @@ export default function PricingPage() {
               <br />
               <span className="font-thin text-transparent bg-clip-text bg-gradient-to-r from-amber-200 via-amber-500 to-yellow-400">開始錄製了嗎？</span>
             </h2>
-            <p className="text-xl font-light text-amber-100/60 mb-12 max-w-2xl mx-auto tracking-[0.1em]">
+            <p className="text-xl font-normal text-amber-100/60 mb-12 max-w-2xl mx-auto tracking-[0.1em]">
               立即預約，享受透明定價的專業服務
             </p>
             
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <Button
                 size="lg"
-                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-light tracking-[0.15em] transition-all duration-300 border-none"
+                className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-medium tracking-[0.15em] transition-all duration-300 border-none"
                 asChild
               >
                 <Link href="/contact">
@@ -475,7 +475,7 @@ export default function PricingPage() {
               whileInView={{ opacity: 1 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.3 }}
-              className="mt-12 flex justify-center gap-8 text-sm font-light text-amber-100/40"
+              className="mt-12 flex justify-center gap-8 text-sm font-normal text-amber-100/40"
             >
               <span>24小時內回覆</span>
               <span>·</span>
@@ -492,20 +492,20 @@ export default function PricingPage() {
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
               <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 brightness-0 invert" />
-              <span className="text-lg font-light tracking-[0.1em] text-amber-50">OWLDIO</span>
-              <span className="text-xs font-light text-amber-100/40">© 2024</span>
+              <span className="text-lg font-normal tracking-[0.1em] text-amber-50">OWLDIO</span>
+              <span className="text-xs font-normal text-amber-100/40">© 2024</span>
             </div>
             <div className="flex gap-6">
-              <Link href="/" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 首頁
               </Link>
-              <Link href="/student-projects" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/student-projects" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 學生專案
               </Link>
-              <Link href="/services" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/services" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 服務
               </Link>
-              <Link href="/contact" className="text-xs font-light text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
+              <Link href="/contact" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 聯絡
               </Link>
             </div>
