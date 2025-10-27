@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Play, ChevronDown } from "lucide-react";
+import { ArrowRight, ChevronDown } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navigation from "@/components/Navigation";
 import MistAnimation from "@/components/MistAnimation";

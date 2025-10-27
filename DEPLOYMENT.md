@@ -60,6 +60,43 @@ https://script.google.com/macros/s/AKfycbzRlWuldXufWVlJxydZDyLQBBowVE50XtASvPx2O
 - 本地的 `.env.local` 文件
 - Vercel/Netlify 的環境變量設置
 
+## Google Apps Script 設置
+
+### 問題解決：郵件通知功能
+
+之前的設定只將表單資料儲存到 Google Sheets，但**沒有發送郵件通知**到 owldio.art@gmail.com。
+
+### 🚨 重要：需要更新 Google Apps Script
+
+1. **前往 Google Apps Script**:
+   - 網址: https://script.google.com/
+   - 找到現有的專案或建立新專案
+
+2. **複製新的程式碼**:
+   - 從 `google-apps-script/Code.gs` 複製完整程式碼
+   - 貼上到 Google Apps Script 編輯器中
+   - 儲存專案
+
+3. **測試功能**:
+   - 在編輯器中執行 `testFormSubmission` 函數
+   - 檢查是否收到測試郵件
+
+4. **重新部署**:
+   - 點擊「部署」→「新增部署作業」
+   - 選擇「網頁應用程式」
+   - 複製新的 URL
+
+5. **更新環境變數**:
+   - 將新的 URL 更新到 `.env.local` 和 Vercel/Netlify
+
+### 新功能特色
+
+✅ **自動郵件通知**: 每當有新表單提交時，自動發送格式化郵件到 owldio.art@gmail.com
+✅ **美觀的 HTML 郵件**: 包含品牌色彩和完整的客戶資訊
+✅ **可點擊聯絡資訊**: 郵件中的電話和 Email 可直接點擊
+✅ **學生方案標示**: 特別標記使用學生方案的客戶
+✅ **錯誤處理**: 完整的錯誤日誌和處理機制
+
 ## Google Sheets 設置
 
 表單數據會自動寫入以下試算表：
@@ -73,3 +110,13 @@ https://script.google.com/macros/s/AKfycbzRlWuldXufWVlJxydZDyLQBBowVE50XtASvPx2O
 1. 訪問 `/contact` 頁面
 2. 填寫並提交表單
 3. 檢查 Google Sheets 是否收到數據
+4. **檢查 owldio.art@gmail.com 是否收到郵件通知**
+5. 確認郵件格式正確且包含所有必要資訊
+
+### 故障排除
+
+如果沒有收到郵件：
+1. 檢查 Gmail 垃圾郵件資料夾
+2. 確認 Google Apps Script 權限設定正確
+3. 查看 Apps Script 執行日誌是否有錯誤
+4. 測試 `testFormSubmission` 函數

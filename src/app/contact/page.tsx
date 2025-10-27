@@ -3,22 +3,17 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { 
   Mail, 
-  Phone, 
-  MapPin, 
   Clock, 
   Send, 
-  Calendar,
   Music,
   Video,
   Users,
   MessageCircle,
   CheckCircle2,
-  ArrowLeft,
-  ChevronDown,
-  Menu,
   Facebook,
   Instagram
 } from "lucide-react";
@@ -700,7 +695,7 @@ const ContactPage = () => {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm md:flex-row">
           <div className="flex items-center gap-2">
             <div className="flex h-10 w-10 items-center justify-center">
-              <img src="/Owldio.svg" alt="Owldio" className="h-8 w-8 brightness-0 invert" />
+              <Image src="/Owldio.svg" alt="Owldio" width={32} height={32} className="h-8 w-8 brightness-0 invert" />
             </div>
             <span className="font-light tracking-[0.1em] text-amber-50">Owldio</span>
             <span className="text-amber-100/60 font-light">© 2024</span>
