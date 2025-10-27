@@ -537,28 +537,6 @@ const ContactPage = () => {
                     />
                   </div>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <div className="relative overflow-hidden rounded-2xl">
-                      <div className="absolute inset-0 bg-gradient-to-r from-amber-600/20 to-orange-600/20"></div>
-                      <div className="relative p-6 backdrop-blur-sm border border-amber-900/30 rounded-2xl">
-                        <h3 className="text-xl font-thin text-amber-50 mb-3 tracking-[0.1em]">我們已收到回覆!!</h3>
-                        <p className="text-gray-400 font-normal tracking-[0.05em] leading-relaxed mb-4">
-                          感謝您的預約！Owldio 已收到表單，我們將在 1~2 個工作天內以 Email 與您聯繫。若有急件或疑問時間，歡迎直接與我們聯絡或追蹤 IG 私訊我們～！
-                        </p>
-                        <div className="space-y-2 text-sm">
-                          <p className="text-gray-400 font-normal">
-                            <span className="text-amber-500">Line ID：</span>
-                            <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">@4470guce</a>
-                          </p>
-                          <p className="text-gray-400 font-normal">
-                            <span className="text-amber-500">IG：</span>
-                            <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="hover:text-amber-400 transition-colors">Owldio Studio 鴞聲音畫 @owldio.art</a>
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
                   <Button
                     type="submit"
                     disabled={isSubmitting}
