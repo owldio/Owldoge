@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Clock, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
 
 interface NavigationProps {
   currentPage?: string;
@@ -30,7 +31,7 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
             transition={{ duration: 0.5 }}
             className="flex h-12 w-12 items-center justify-center"
           >
-            <img src="/Owldio.svg" alt="Owldio" className="h-10 w-10 brightness-0 invert" />
+            <Image src="/Owldio.svg" alt="Owldio" width={40} height={40} className="h-10 w-10 brightness-0 invert" />
           </motion.div>
           <div className="flex flex-col">
             <span className="text-2xl font-thin tracking-[0.2em] text-amber-50">

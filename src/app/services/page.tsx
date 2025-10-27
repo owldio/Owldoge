@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Video, Headphones, Camera, Wifi, Package, Disc, ChevronRight, Check } from "lucide-react";
+import { ArrowRight, Video, Headphones, Wifi, Package, ChevronRight, Check } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import BackgroundGradient from "@/components/BackgroundGradient";
 
@@ -435,7 +436,7 @@ export default function ServicesPage() {
         <div className="max-w-[90vw] mx-auto py-12">
           <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
             <div className="flex items-center gap-3">
-              <img src="/Owldio.svg" alt="Owldio" className="h-6 w-6 invert" />
+              <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 invert" />
               <span className="text-lg font-light tracking-[0.1em]">OWLDIO</span>
               <span className="text-xs font-light text-gray-600">© 2024</span>
             </div>
