@@ -30,6 +30,7 @@ const ContactPage = () => {
     school: "",
     eventType: "",
     eventDate: "",
+    eventTime: "",
     venue: "",
     duration: "",
     participants: "",
@@ -79,6 +80,8 @@ const ContactPage = () => {
         school: formData.school,
         eventType: formData.eventType,
         eventDate: formData.eventDate,
+        eventTime: formData.eventTime,
+        eventDateTime: formData.eventDate && formData.eventTime ? `${formData.eventDate} ${formData.eventTime}` : "",
         venue: formData.venue,
         duration: formData.duration,
         participants: formData.participants,
@@ -137,6 +140,14 @@ const ContactPage = () => {
     "其他"
   ];
 
+  const timeOptions = [
+    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+    "21:00", "21:30", "22:00"
+  ];
+
   const pricingPlans = [
     {
       value: "single",
@@ -157,8 +168,13 @@ const ContactPage = () => {
       description: "內容：三機位拍攝、多視角剪輯、色彩校正、專業混音、完整後製、實體光碟"
     },
     {
+      value: "recommend",
+      label: "請為我推薦最適合的方案",
+      description: "根據您的演出類型、場地與需求，我們將為您推薦最合適的拍攝方案與報價"
+    },
+    {
       value: "other",
-      label: "其他"
+      label: "其他需求"
     }
   ];
 
@@ -316,19 +332,36 @@ const ContactPage = () => {
                       </select>
                     </div>
 
-                    <div className="grid md:grid-cols-2 gap-6">
+                    <div className="grid md:grid-cols-3 gap-6">
                       <div>
                         <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出日期與時間 *
+                          演出日期 *
                         </label>
                         <input
-                          type="datetime-local"
+                          type="date"
                           name="eventDate"
                           value={formData.eventDate}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer"
                         />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
+                          演出時間 *
+                        </label>
+                        <select
+                          name="eventTime"
+                          value={formData.eventTime}
+                          onChange={handleInputChange}
+                          required
+                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                        >
+                          <option value="">請選擇時間</option>
+                          {timeOptions.map(time => (
+                            <option key={time} value={time} className="bg-black text-amber-50">{time}</option>
+                          ))}
+                        </select>
                       </div>
                       <div>
                         <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">

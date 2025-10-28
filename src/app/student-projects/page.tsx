@@ -242,15 +242,15 @@ export default function StudentProjectsPage() {
                       <h4 className="text-lg font-normal mb-6 text-amber-500">加購選項</h4>
                       <ul className="space-y-4">
                         {[
-                          { item: "延長錄製", price: "+NT$ 1,200/30分鐘" },
-                          { item: "多機位拍攝", price: "+NT$ 2,000" },
-                          { item: "72小時快交", price: "+NT$ 2,000" },
-                          { item: "特殊需求", price: "可詳談" },
-                          { item: "實體隨身碟", price: "+NT$ 300" }
+                          "延長錄製",
+                          "多機位拍攝",
+                          "72小時快交",
+                          "實體隨身碟",
+                          "特殊需求（可詳談）"
                         ].map((addon, i) => (
-                          <li key={i} className="flex items-center justify-between">
-                            <span className="text-sm font-normal text-gray-400">{addon.item}</span>
-                            <span className="text-sm font-normal text-amber-300">{addon.price}</span>
+                          <li key={i} className="flex items-center gap-3">
+                            <Check className="h-4 w-4 text-amber-500" />
+                            <span className="text-sm font-normal text-gray-300">{addon}</span>
                           </li>
                         ))}
                       </ul>
@@ -288,14 +288,14 @@ export default function StudentProjectsPage() {
                   title: "單機錄影",
                   price: "NT$ 7,800",
                   originalPrice: "NT$ 10,500",
-                  features: ["單機4K錄影", "2小時拍攝", "基礎剪輯"],
+                  features: ["單機錄影", "2小時拍攝", "基礎剪輯"],
                   color: "from-cyan-600 to-blue-600"
                 },
                 {
                   title: "雙機套餐",
                   price: "NT$ 14,800",
                   originalPrice: "NT$ 18,800",
-                  features: ["雙機位拍攝", "60秒精華", "專業剪輯"],
+                  features: ["雙機位拍攝","4K Ultra HD", "專業剪輯"],
                   color: "from-purple-600 to-pink-600",
                   popular: true
                 },
@@ -303,7 +303,7 @@ export default function StudentProjectsPage() {
                   title: "三機旗艦",
                   price: "NT$ 21,200",
                   originalPrice: "NT$ 27,200",
-                  features: ["三機位拍攝", "完整後製", "色彩校正"],
+                  features: ["三機位拍攝", "多軌錄音", "色彩校正"],
                   color: "from-amber-600 to-orange-600"
                 }
               ].map((pkg, i) => (

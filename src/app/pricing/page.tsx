@@ -22,10 +22,10 @@ export default function PricingPage() {
       discount: "省 NT$ 2,700",
       bestFor: "個人演出",
       features: [
-        "單機4K錄影",
+        "單機錄影",
+        "立體聲錄音",
         "基礎剪輯",
-        "雲端交付",
-        "一次小改"
+        "雲端 / Youtube 交付"
       ],
       gradient: "from-cyan-600 to-blue-600",
       popular: false
@@ -42,8 +42,7 @@ export default function PricingPage() {
         "雙機位拍攝",
         "4K Ultra HD",
         "專業剪輯",
-        "多角度切換",
-        "雲端+USB交付"
+        "雲端 / Youtube 交付"
       ],
       gradient: "from-purple-600 to-pink-600",
       popular: true
@@ -58,11 +57,11 @@ export default function PricingPage() {
       bestFor: "大型演出",
       features: [
         "三機位拍攝",
+        "4K Ultra HD",
         "多視角剪輯",
+        "多軌錄音",
         "色彩校正",
-        "特殊需求處理",
-        "完整後製",
-        "實體隨身碟"
+        "雲端及Youtube連結交付"
       ],
       gradient: "from-amber-600 to-orange-600",
       popular: false
@@ -74,8 +73,8 @@ export default function PricingPage() {
     { name: "快速交付", price: "+NT$ 2,000", unit: "起", icon: "⚡" },
     { name: "精華剪輯", price: "+NT$ 1,800", unit: "", icon: "✂️" },
     { name: "多軌錄音", price: "+NT$ 2,500", unit: "", icon: "🎵" },
-    { name: "特殊需求", price: "可詳談", unit: "", icon: "🎚️" },
-    { name: "實體隨身碟", price: "+NT$ 300", unit: "/個", icon: "💾" }
+    { name: "實體隨身碟", price: "+NT$ 300", unit: "/個", icon: "💾" },
+    { name: "特殊需求", price: "可詳談", unit: "", icon: "🎚️" }
   ];
 
   return (
@@ -415,10 +414,10 @@ export default function PricingPage() {
                   q: "後製交付需要多長時間？",
                   a: "一般作業時間為 7-10 個工作天，急件可選擇 72 小時快交服務。"
                 },
-                {
+                /*{
                   q: "可以指定特定的剪輯風格嗎？",
                   a: "當然可以！我們會在前期溝通中了解您的需求和喜好。"
-                }
+                }*/
               ].map((faq, i) => (
                 <motion.div
                   key={i}
