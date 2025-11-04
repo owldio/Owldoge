@@ -31,7 +31,7 @@ export default function OwldioSite() {
       <Navigation currentPage="home" />
 
       {/* Hero Section - Fullscreen */}
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative h-screen flex items-center justify-center">
         {/* Mist Background */}
         <div className="absolute inset-0 z-0">
           <MistAnimation />
@@ -52,7 +52,7 @@ export default function OwldioSite() {
             >
               CAPTURE
               <br />
-              <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60">
+              <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-white via-white/80 to-white/60 inline-block pr-4">
                 EVERY NOTE
               </span>
             </motion.h1>
@@ -348,7 +348,7 @@ export default function OwldioSite() {
       {/* Portfolio and Testimonials sections temporarily hidden */}
 
       {/* CTA Section - Dramatic & Minimal */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative py-32">
         <div className="absolute inset-0">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-black to-black"></div>
         </div>
@@ -363,7 +363,7 @@ export default function OwldioSite() {
           <h2 className="text-5xl lg:text-7xl font-thin mb-10 leading-[1.2]">
             開始你的
             <br />
-            <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400">專業錄製</span>
+            <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-400 to-amber-400 inline-block pr-4">專業錄製</span>
           </h2>
           <p className="text-xl font-normal text-gray-400 mb-12 max-w-2xl mx-auto">
             讓我們為你的音樂注入專業品質

@@ -26,7 +26,7 @@ export default function StudentProjectsPage() {
 
       <main className="pt-32">
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[60vh] flex items-center justify-center">
           {/* Background Pattern */}
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-black to-black"></div>
@@ -47,7 +47,7 @@ export default function StudentProjectsPage() {
               <h1 className="text-[clamp(3rem,8vw,6rem)] font-thin leading-[1.2] mb-8">
                 為學生
                 <br />
-                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 inline-block pr-4">
                   量身打造
                 </span>
               </h1>
@@ -353,7 +353,7 @@ export default function StudentProjectsPage() {
         {/* Portfolio and Testimonials sections temporarily hidden */}
 
         {/* CTA Section */}
-        <section className="relative py-32 overflow-hidden">
+        <section className="relative py-32">
           <div className="absolute inset-0 bg-gradient-to-br from-amber-900/20 via-black to-black"></div>
           
           <motion.div

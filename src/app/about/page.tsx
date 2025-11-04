@@ -19,7 +19,7 @@ export default function AboutPage() {
       <Navigation currentPage="about" />
 
       {/* Hero Section */}
-      <section className="relative pt-32 pb-20 overflow-hidden">
+      <section className="relative pt-32 pb-20">
         <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-black to-black"></div>
         <motion.div
           initial={{ opacity: 0, y: 50 }}
@@ -33,7 +33,7 @@ export default function AboutPage() {
           <h1 className="text-5xl lg:text-7xl font-thin mb-8 leading-[1.2]">
             關於
             <br />
-            <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400">
+            <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-400 inline-block pr-4">
               Owldio
             </span>
           </h1>

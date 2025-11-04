@@ -83,7 +83,7 @@ export default function PricingPage() {
       <Navigation currentPage="pricing" />
 
       <main className="pt-32">
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[60vh] flex items-center justify-center">
           <div className="absolute inset-0 bg-black"></div>
 
           <div className="relative z-10 text-center px-4 max-w-5xl mx-auto">
@@ -99,7 +99,7 @@ export default function PricingPage() {
               <h1 className="text-[clamp(3rem,8vw,6rem)] font-thin leading-[1.2] mb-8">
                 透明定價
                 <br />
-                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 inline-block pr-4">
                   無隱藏費用
                 </span>
               </h1>
@@ -435,7 +435,7 @@ export default function PricingPage() {
           </div>
         </section>
 
-        <section className="relative py-20 overflow-hidden">
+        <section className="relative py-20">
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-amber-900/10 via-black to-black"></div>
           </div>

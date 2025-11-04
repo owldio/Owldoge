@@ -17,7 +17,7 @@ export default function PortfolioPage() {
 
       <main className="pt-32">
         {/* Coming Soon Section */}
-        <section className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[80vh] flex items-center justify-center">
           <div className="absolute inset-0 bg-black"></div>
           
           <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
@@ -33,13 +33,17 @@ export default function PortfolioPage() {
               <h1 className="text-[clamp(3rem,8vw,6rem)] font-thin leading-[1.2] mb-8">
                 精選作品
                 <br />
-                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500">
+                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 inline-block pr-4">
                   即將推出
                 </span>
               </h1>
               
-              <p className="text-xl md:text-2xl font-normal text-amber-100/60 mb-12 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
+              <p className="text-xl md:text-2xl font-normal text-amber-100/60 mb-4 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
                 我們正在精心準備精彩的作品集，敬請期待
+              </p>
+              
+              <p className="text-base font-normal text-amber-100/40 mb-12 max-w-2xl mx-auto leading-relaxed tracking-[0.05em]">
+                欲瀏覽相關作品樣本，歡迎私訊洽詢或與我們聯絡！
               </p>
 
               <div className="flex items-center justify-center gap-8 text-sm font-normal text-amber-100/40 mb-12">
@@ -60,7 +64,7 @@ export default function PortfolioPage() {
                   asChild
                 >
                   <Link href="/contact">
-                    立即預約
+                    聯絡我們
                     <ArrowRight className="ml-3 h-4 w-4 group-hover:translate-x-2 transition-transform" />
                   </Link>
                 </Button>

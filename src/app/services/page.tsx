@@ -88,7 +88,7 @@ export default function ServicesPage() {
 
       <main className="pt-32">
         {/* Hero Section */}
-        <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
+        <section className="relative min-h-[60vh] flex items-center justify-center">
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-zinc-900 via-black to-black"></div>
             <div className="absolute top-0 right-1/4 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl"></div>
@@ -108,7 +108,7 @@ export default function ServicesPage() {
               <h1 className="text-[clamp(3rem,8vw,6rem)] font-thin leading-[1.2] mb-8">
                 專業服務
                 <br />
-                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500">
+                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-purple-500 via-pink-500 to-amber-500 inline-block pr-4">
                   全方位製作
                 </span>
               </h1>
@@ -287,7 +287,7 @@ export default function ServicesPage() {
                     <div className="hidden lg:block absolute top-1/4 left-full w-full h-px bg-gradient-to-r from-zinc-700 to-transparent z-0"></div>
                   )}
                   
-                  <div className="relative z-10 text-center">
+                  <div className="relative z-10 text-center px-4">
                     <div className="inline-block mb-6">
                       <div className="text-5xl mb-4">{process.icon}</div>
                       <span className="text-amber-500 text-xs font-normal tracking-[0.3em]">
@@ -295,7 +295,7 @@ export default function ServicesPage() {
                       </span>
                     </div>
                     <h3 className="text-xl font-normal mb-3">{process.title}</h3>
-                    <p className="text-sm font-normal text-gray-500">{process.desc}</p>
+                    <p className="text-sm font-normal text-gray-500 leading-relaxed">{process.desc}</p>
                   </div>
                 </motion.div>
               ))}
@@ -303,86 +303,9 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        {/* Add-on Services */}
-        <section className="py-32 bg-black relative">
-          <div className="max-w-[90vw] mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-center mb-20"
-            >
-              <span className="text-amber-500 text-xs font-normal tracking-[0.3em] mb-6 block">
-                ADD-ON SERVICES
-              </span>
-              <h2 className="text-5xl lg:text-6xl font-thin mb-8 leading-[1.2]">
-                加值服務
-              </h2>
-            </motion.div>
-
-            <div className="grid lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              {[
-                {
-                  title: "快速交付",
-                  price: "+NT$ 2,000 起",
-                  desc: "72小時內完成後製交付",
-                  icon: "⚡"
-                },
-                {
-                  title: "精華剪輯",
-                  price: "+NT$ 1,800",
-                  desc: "60秒社群媒體精華版本",
-                  icon: "🎬"
-                },
-                {
-                  title: "實體隨身碟",
-                  price: "+NT$ 300/個",
-                  desc: "客製化隨身碟與包裝設計",
-                  icon: "💿"
-                },
-                {
-                  title: "字幕製作",
-                  price: "+NT$ 2,200",
-                  desc: "中英文字幕製作",
-                  icon: "📝"
-                },
-                {
-                  title: "色彩校正",
-                  price: "+NT$ 1,500",
-                  desc: "專業級調色處理",
-                  icon: "🎨"
-                },
-                {
-                  title: "雲端儲存",
-                  price: "+NT$ 500/年",
-                  desc: "一年期雲端備份服務",
-                  icon: "☁️"
-                }
-              ].map((addon, i) => (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.5, delay: i * 0.05 }}
-                  whileHover={{ y: -5 }}
-                  className="relative group"
-                >
-                  <div className="p-6 bg-zinc-900/30 backdrop-blur-sm border border-zinc-800 hover:border-amber-600/30 rounded-lg transition-all duration-300">
-                    <div className="text-3xl mb-4">{addon.icon}</div>
-                    <h3 className="text-lg font-normal mb-2">{addon.title}</h3>
-                    <p className="text-2xl font-thin text-amber-500 mb-3">{addon.price}</p>
-                    <p className="text-sm font-normal text-gray-500">{addon.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </div>
-        </section>
 
         {/* CTA Section */}
-        <section className="relative py-32 overflow-hidden">
+        <section className="relative py-32">
           <div className="absolute inset-0">
             <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-black to-black"></div>
           </div>
@@ -397,7 +320,7 @@ export default function ServicesPage() {
             <h2 className="text-5xl lg:text-6xl font-thin mb-10 leading-[1.2]">
               開始你的
               <br />
-              <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">
+              <span className="italic font-extralight text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 inline-block pr-4">
                 專業錄製
               </span>
             </h2>
