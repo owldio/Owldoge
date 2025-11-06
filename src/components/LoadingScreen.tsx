@@ -58,26 +58,12 @@ export default function LoadingScreen({ onAnimationComplete }: LoadingScreenProp
             <motion.img
               src="/Owldio.svg"
               alt="Owldio"
-              className="h-32 w-32 md:h-40 md:w-40 lg:h-48 lg:w-48 mb-6"
+              className="h-32 w-32 md:h-40 md:w-40 lg:h-48 lg:w-48"
               animate={stage === 'logo' ? {
                 filter: "brightness(0) invert(1)",
                 transition: { duration: 0.3, delay: 0.5 }
               } : {}}
             />
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={stage === 'logo' ? {
-                opacity: 1,
-                y: 0,
-                transition: { duration: 0.6, delay: 0.8 }
-              } : stage === 'fade' ? {
-                opacity: 0,
-                transition: { duration: 0.8 }
-              } : {}}
-              className="text-white text-2xl md:text-3xl lg:text-4xl font-bold tracking-wide"
-            >
-              Owldio
-            </motion.div>
           </motion.div>
         </motion.div>
       )}
