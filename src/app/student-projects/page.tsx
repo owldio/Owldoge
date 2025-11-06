@@ -69,7 +69,7 @@ export default function StudentProjectsPage() {
                 </Button>
                 <div className="flex items-center gap-2 text-amber-500/70">
                   <Sparkles className="h-5 w-5" />
-                  <span className="text-sm font-normal tracking-wider">最高省 20%</span>
+                  <span className="text-sm font-normal tracking-wider">最高省 45%</span>
                 </div>
               </div>
             </motion.div>

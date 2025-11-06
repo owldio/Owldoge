@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ interface NavigationProps {
 
 const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   const navItems = [
     { label: "學生專案", href: "/student-projects", highlight: true, id: "student-projects" },
@@ -21,6 +22,22 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
     { label: "作品展示", href: "/portfolio", id: "portfolio" },
     { label: "聯絡預約", href: "/contact", id: "contact" }
   ];
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setShowMobileMenu(false);
+      }
+    };
+
+    if (showMobileMenu) {
+      document.addEventListener('mousedown', handleClickOutside, true);
+      return () => {
+        document.removeEventListener('mousedown', handleClickOutside, true);
+      };
+    }
+  }, [showMobileMenu]);
 
   return (
     <header className="fixed top-0 z-50 w-full backdrop-blur-xl bg-black/80 border-b border-amber-500/20">
@@ -98,45 +115,82 @@ const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
-      {showMobileMenu && (
-        <motion.div
-          initial={{ opacity: 0, y: -10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -10 }}
-          className="lg:hidden border-t border-amber-500/20 bg-black/95 backdrop-blur-xl"
-        >
-          <div className="mx-auto max-w-7xl px-4 py-4">
-            <nav className="space-y-3">
-              {navItems.map((item) => (
-                <Link 
-                  key={item.href} 
-                  href={item.href}
-                  onClick={() => setShowMobileMenu(false)}
-                  className={`block text-sm font-normal tracking-[0.1em] py-3 px-4 rounded-lg transition-all duration-300 ${
-                    currentPage === item.id
-                      ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
-                      : item.highlight 
-                      ? "text-amber-50 hover:bg-amber-500/10 hover:border hover:border-amber-500/30" 
-                      : "text-amber-100/70 hover:bg-amber-500/10 hover:border hover:border-amber-500/30"
-                  }`}
-                >
-                  {item.highlight && <span className="mr-2">✨</span>}
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
-            <div className="mt-4 pt-4 border-t border-amber-500/20">
-              <Button 
-                className="w-full bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300"
-                asChild
+      <AnimatePresence>
+        {/* Mobile Menu Backdrop - Click to close */}
+        {showMobileMenu && (
+          <motion.div
+            key="mobile-backdrop"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="lg:hidden fixed inset-0 z-40 bg-black/50"
+            onClick={() => setShowMobileMenu(false)}
+          />
+        )}
+
+        {/* Mobile Menu */}
+        {showMobileMenu && (
+          <motion.div
+            key="mobile-menu"
+            ref={mobileMenuRef}
+            initial={{ opacity: 0, y: -10, height: 0 }}
+            animate={{ opacity: 1, y: 0, height: "auto" }}
+            exit={{ opacity: 0, y: -10, height: 0 }}
+            transition={{ duration: 0.3, ease: "easeInOut" }}
+            className="lg:hidden absolute left-0 right-0 top-full z-50 border-t border-amber-500/20 bg-black/95 backdrop-blur-xl overflow-hidden"
+          >
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, delay: 0.1 }}
+              className="mx-auto max-w-7xl px-4 py-4"
+            >
+              <nav className="space-y-3">
+                {navItems.map((item, index) => (
+                  <motion.div
+                    key={item.href}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                  >
+                    <Link 
+                      href={item.href}
+                      onClick={() => setShowMobileMenu(false)}
+                      className={`block text-sm font-normal tracking-[0.1em] py-3 px-4 rounded-lg transition-all duration-300 ${
+                        currentPage === item.id
+                          ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
+                          : item.highlight 
+                          ? "text-amber-50 hover:bg-amber-500/10 hover:border hover:border-amber-500/30" 
+                          : "text-amber-100/70 hover:bg-amber-500/10 hover:border hover:border-amber-500/30"
+                      }`}
+                    >
+                      {item.highlight && <span className="mr-2">✨</span>}
+                      {item.label}
+                    </Link>
+                  </motion.div>
+                ))}
+              </nav>
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, delay: 0.2 }}
+                className="mt-4 pt-4 border-t border-amber-500/20"
               >
-                <Link href="/contact">立即預約</Link>
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-      )}
+                <Button 
+                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300"
+                  asChild
+                >
+                  <Link href="/contact">立即預約</Link>
+                </Button>
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
