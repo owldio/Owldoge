@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://owldio.com',
+  siteUrl: 'https://owldio.art',
   generateRobotsTxt: true,
   changefreq: 'weekly',
   priority: 0.7,
