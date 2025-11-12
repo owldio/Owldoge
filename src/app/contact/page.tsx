@@ -1,6 +1,12 @@
-"use client"
-
 import React, { useState } from "react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Owldio Studio | 聯絡我們 — 免費詢詢奉音樂會錄製',
+  description: '聯絡 Owldio 團隊獲取免費詢詢服務。提供全方位音樂會錄製解決方案，24小時內快速回覆。',
+};
+
+"use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";

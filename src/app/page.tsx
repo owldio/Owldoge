@@ -1,6 +1,12 @@
-"use client"
-
 import React, { useState } from "react";
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Owldio Studio | 鴞聲音畫 — 音樂會錄音錄影工作室',
+  description: '專業校園音樂會錄製服務。提供 4K 高清錄影、多軌錄音、後製服務。學生友善價格，72 小時快交。為你的音樂注入專業品質。',
+};
+
+"use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
