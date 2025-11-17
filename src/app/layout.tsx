@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.owldio.art'),
   title: {
     default: 'Owldio Studio | 鴞聲音畫 — 音樂會錄音錄影工作室',
     template: '%s | Owldio Studio'
@@ -11,6 +12,26 @@ export const metadata: Metadata = {
     icon: '/Owldio.svg',
     shortcut: '/favicon.ico',
     apple: '/owldio-logo.png',
+  },
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    type: 'website',
+    locale: 'zh_TW',
+    url: 'https://www.owldio.art',
+    siteName: 'Owldio Studio',
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
+    },
   },
 };
 
