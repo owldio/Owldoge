@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 interface LoadingScreenProps {
@@ -9,13 +9,18 @@ interface LoadingScreenProps {
 
 export default function LoadingScreen({ onAnimationComplete }: LoadingScreenProps) {
   const [stage, setStage] = useState<'black' | 'logo' | 'fade' | 'complete'>('black');
+  const onCompleteRef = useRef(onAnimationComplete);
+
+  useEffect(() => {
+    onCompleteRef.current = onAnimationComplete;
+  }, [onAnimationComplete]);
 
   useEffect(() => {
     const timer1 = setTimeout(() => setStage('logo'), 500);
     const timer2 = setTimeout(() => setStage('fade'), 2500);
     const timer3 = setTimeout(() => {
       setStage('complete');
-      onAnimationComplete();
+      onCompleteRef.current();
     }, 3500);
 
     return () => {
