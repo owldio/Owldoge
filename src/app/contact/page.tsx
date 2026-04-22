@@ -107,9 +107,6 @@ const ContactPage = () => {
         throw new Error(`提交失敗 (${response.status})，請稍後再試或透過 email 聯絡我們`);
       }
 
-      // 注意：由於使用 no-cors 模式，我們無法讀取響應內容
-      // 但數據應該已經成功發送到 Google Sheets
-
       setIsSubmitting(false);
       setIsSubmitted(true);
 

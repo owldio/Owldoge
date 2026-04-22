@@ -4,8 +4,11 @@ export async function POST(req: NextRequest) {
   const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
 
   if (!GOOGLE_SCRIPT_URL) {
+    console.error(
+      '[submit-contact] GOOGLE_SCRIPT_URL env var is not set. This must be a server-only variable; do NOT prefix with NEXT_PUBLIC_.',
+    );
     return NextResponse.json(
-      { status: 'error', message: 'GOOGLE_SCRIPT_URL env var is not set (server-only, do NOT prefix with NEXT_PUBLIC_)' },
+      { status: 'error', message: 'Server configuration error' },
       { status: 500 },
     );
   }

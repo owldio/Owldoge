@@ -47,9 +47,6 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
         throw new Error(`發送失敗 (${response.status})，請稍後再試`);
       }
 
-      // 注意：由於使用 no-cors 模式，我們無法讀取響應內容
-      // 但數據應該已經成功發送
-
       setIsSending(false);
       setIsSent(true);
 
