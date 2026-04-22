@@ -2,9 +2,11 @@
 
 ## 環境變量設置
 
+> **Important:** `GOOGLE_SCRIPT_URL` is a server-only variable. Do NOT prefix it with `NEXT_PUBLIC_` — that would inline the URL into the client JS bundle and expose it to any visitor. The Next.js API route at `/api/submit-contact` reads this variable server-side and forwards the request.
+
 本項目需要以下環境變量才能正常運行：
 
-### `NEXT_PUBLIC_GOOGLE_SCRIPT_URL`
+### `GOOGLE_SCRIPT_URL`
 
 **用途**: Google Apps Script 網頁應用程式 URL，用於接收表單提交數據並寫入 Google Sheets
 
@@ -25,7 +27,7 @@ https://script.google.com/macros/s/AKfycbzRlWuldXufWVlJxydZDyLQBBowVE50XtASvPx2O
 2. 在 Vercel Dashboard 設置環境變量
    - 進入項目設置: https://vercel.com/[your-username]/[your-project]/settings/environment-variables
    - 添加環境變量:
-     - Name: `NEXT_PUBLIC_GOOGLE_SCRIPT_URL`
+     - Name: `GOOGLE_SCRIPT_URL`
      - Value: (上面的 URL)
      - Environment: 全選 (Production, Preview, Development)
 
@@ -40,7 +42,7 @@ https://script.google.com/macros/s/AKfycbzRlWuldXufWVlJxydZDyLQBBowVE50XtASvPx2O
    - 進入 Site settings > Build & deploy > Environment
    - 點擊 "Edit variables"
    - 添加:
-     - Key: `NEXT_PUBLIC_GOOGLE_SCRIPT_URL`
+     - Key: `GOOGLE_SCRIPT_URL`
      - Value: (上面的 URL)
 
 3. 觸發重新部署

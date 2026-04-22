@@ -43,6 +43,7 @@ const ContactPage = () => {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
@@ -63,6 +64,7 @@ const ContactPage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError(null);
     setIsSubmitting(true);
 
     try {
@@ -92,22 +94,18 @@ const ContactPage = () => {
         additionalInfo: formData.additionalInfo
       };
 
-      // 發送到 Google Apps Script
-      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-
-      if (!GOOGLE_SCRIPT_URL) {
-        console.error('Google Script URL 未設置');
-        throw new Error('系統配置錯誤，請聯繫管理員');
-      }
-
-      await fetch(GOOGLE_SCRIPT_URL, {
+      // 透過同源 API route 提交到 Google Apps Script（伺服器端持有 URL，避免 NEXT_PUBLIC_ 洩漏）
+      const response = await fetch('/api/submit-contact', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(submitData)
       });
+
+      if (!response.ok) {
+        throw new Error(`提交失敗 (${response.status})，請稍後再試或透過 email 聯絡我們`);
+      }
 
       // 注意：由於使用 no-cors 模式，我們無法讀取響應內容
       // 但數據應該已經成功發送到 Google Sheets
@@ -116,10 +114,9 @@ const ContactPage = () => {
       setIsSubmitted(true);
 
     } catch (error) {
-      console.error('提交表單時發生錯誤:', error);
       setIsSubmitting(false);
-      // 即使出錯也顯示成功頁面，因為使用 no-cors 模式無法檢測實際錯誤
-      setIsSubmitted(true);
+      const message = error instanceof Error ? error.message : '發生未知錯誤，請稍後再試';
+      setSubmitError(message);
     }
   };
 
@@ -569,6 +566,12 @@ const ContactPage = () => {
                       placeholder="詳答文字"
                     />
                   </div>
+
+                  {submitError && (
+                    <div role="alert" className="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
+                      {submitError}
+                    </div>
+                  )}
 
                   <Button
                     type="submit"

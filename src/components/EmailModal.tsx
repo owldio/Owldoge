@@ -20,23 +20,17 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
   });
   const [isSending, setIsSending] = useState(false);
   const [isSent, setIsSent] = useState(false);
+  const [sendError, setSendError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSendError(null);
     setIsSending(true);
 
     try {
-      // 發送郵件到 Google Apps Script
-      const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
-
-      if (!GOOGLE_SCRIPT_URL) {
-        console.error('Google Script URL 未設置');
-        throw new Error('系統配置錯誤');
-      }
-
-      await fetch(GOOGLE_SCRIPT_URL, {
+      // 透過同源 API route（伺服器端持有 GAS URL，避免 NEXT_PUBLIC_ 洩漏）
+      const response = await fetch('/api/submit-contact', {
         method: 'POST',
-        mode: 'no-cors',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -48,6 +42,10 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
           message: formData.message
         })
       });
+
+      if (!response.ok) {
+        throw new Error(`發送失敗 (${response.status})，請稍後再試`);
+      }
 
       // 注意：由於使用 no-cors 模式，我們無法讀取響應內容
       // 但數據應該已經成功發送
@@ -63,15 +61,9 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
       }, 2000);
 
     } catch (error) {
-      console.error('發送郵件時發生錯誤:', error);
       setIsSending(false);
-      // 即使出錯也顯示成功訊息，因為使用 no-cors 模式無法檢測實際錯誤
-      setIsSent(true);
-      setTimeout(() => {
-        onClose();
-        setIsSent(false);
-        setFormData({ name: "", email: "", subject: "", message: "" });
-      }, 2000);
+      const message = error instanceof Error ? error.message : '發送郵件時發生未知錯誤';
+      setSendError(message);
     }
   };
 
@@ -185,6 +177,12 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
                     />
                   </div>
                   
+                  {sendError && (
+                    <div role="alert" className="rounded-lg border border-red-500/40 bg-red-500/10 p-3 text-sm text-red-200">
+                      {sendError}
+                    </div>
+                  )}
+
                   <div className="flex gap-4 pt-4">
                     <Button
                       type="button"

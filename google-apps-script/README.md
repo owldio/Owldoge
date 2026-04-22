@@ -65,16 +65,16 @@
 
 1. **本地開發** - `.env.local`:
    ```
-   NEXT_PUBLIC_GOOGLE_SCRIPT_URL=你的新網頁應用程式URL
+   GOOGLE_SCRIPT_URL=你的新網頁應用程式URL
    ```
 
 2. **Vercel 部署** - 環境變數設定:
    - 進入 Vercel Dashboard > Settings > Environment Variables
-   - 更新 `NEXT_PUBLIC_GOOGLE_SCRIPT_URL` 的值
+   - 更新 `GOOGLE_SCRIPT_URL` 的值
 
 3. **Netlify 部署** - 環境變數設定:
    - 進入 Site settings > Build & deploy > Environment
-   - 更新 `NEXT_PUBLIC_GOOGLE_SCRIPT_URL` 的值
+   - 更新 `GOOGLE_SCRIPT_URL` 的值
 
 ## Google Sheets 設定
 

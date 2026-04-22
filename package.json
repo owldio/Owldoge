@@ -10,7 +10,6 @@
     "postbuild": "next-sitemap"
   },
   "dependencies": {
-    "@anthropic-ai/claude-code": "^1.0.98",
     "@radix-ui/react-accordion": "^1.2.12",
     "@radix-ui/react-slot": "^1.2.3",
     "class-variance-authority": "^0.7.1",
