@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useRef, useCallback } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 
 interface TrailPoint {
   x: number;
@@ -24,58 +24,6 @@ const MouseGlow: React.FC = () => {
   const lastPositionRef = useRef({ x: 0, y: 0, timestamp: 0 });
   const lastRippleRef = useRef({ x: 0, y: 0, timestamp: 0 });
   const rippleIdRef = useRef(0);
-
-  // 生成微光顏色 - 非常淡的白色微光
-  const getSubtleGlowColor = useCallback((x: number, y: number): string => {
-    const element = document.elementFromPoint(x, y);
-    if (!element) return 'rgba(255, 255, 255, 0.15)';
-
-    const computedStyle = window.getComputedStyle(element);
-    let backgroundColor = computedStyle.backgroundColor;
-
-    // 解析顏色
-    const parseColor = (colorStr: string): [number, number, number] => {
-      if (colorStr === 'transparent' || colorStr === 'rgba(0, 0, 0, 0)') {
-        return [0, 0, 0];
-      }
-      
-      const rgbMatch = colorStr.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      if (rgbMatch) {
-        return [parseInt(rgbMatch[1]), parseInt(rgbMatch[2]), parseInt(rgbMatch[3])];
-      }
-      
-      return [0, 0, 0];
-    };
-
-    // 尋找背景顏色
-    if (backgroundColor === 'transparent' || backgroundColor === 'rgba(0, 0, 0, 0)') {
-      let parent = element.parentElement;
-      while (parent && parent !== document.body) {
-        const parentStyle = window.getComputedStyle(parent);
-        const parentBg = parentStyle.backgroundColor;
-        if (parentBg !== 'transparent' && parentBg !== 'rgba(0, 0, 0, 0)') {
-          backgroundColor = parentBg;
-          break;
-        }
-        parent = parent.parentElement;
-      }
-    }
-
-    const [r, g, b] = parseColor(backgroundColor);
-    const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
-    
-    // 生成非常微弱的對比色
-    if (brightness < 0.3) {
-      // 深色背景：微弱白光
-      return 'rgba(255, 255, 255, 0.12)';
-    } else if (brightness < 0.7) {
-      // 中等亮度：微弱淺色
-      return 'rgba(255, 255, 255, 0.08)';
-    } else {
-      // 亮色背景：微弱深色
-      return 'rgba(0, 0, 0, 0.06)';
-    }
-  }, []);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -289,10 +237,8 @@ const MouseGlow: React.FC = () => {
           const opacity = Math.max(0, (1 - progress) * 0.012); // 微弱透明度
           
           if (opacity <= 0.001) return null;
-          
+
           // 根據移動方向創建橢圓形波紋
-          const perpDirection = ripple.direction + Math.PI / 2; // 垂直於移動方向
-          
           // 創建多個橢圓波紋，模擬水被推開的效果
           const waves = [];
           for (let i = 0; i < 3; i++) {
