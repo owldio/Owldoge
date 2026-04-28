@@ -83,7 +83,15 @@ const ContactPage = () => {
         eventType: formData.eventType,
         eventDate: formData.eventDate,
         eventTime: formData.eventTime,
-        eventDateTime: formData.eventDate && formData.eventTime ? `${formData.eventDate} ${formData.eventTime}` : "",
+        eventDateTime: formData.eventDate && formData.eventTime ? (() => {
+          const d = new Date(formData.eventDate + 'T00:00:00');
+          const yyyy = d.getFullYear();
+          const mm = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+          const weekday = weekdays[d.getDay()];
+          return `${yyyy}年${mm}月${dd}日（週${weekday}）${formData.eventTime}`;
+        })() : "",
         venue: formData.venue,
         duration: formData.duration,
         participants: formData.participants,

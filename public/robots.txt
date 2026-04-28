@@ -1,10 +1,14 @@
 # *
 User-agent: *
 Allow: /
+Disallow: /contact/success
+Disallow: /_next/
+Disallow: /api/
 
 # Googlebot
 User-agent: Googlebot
 Allow: /
+Disallow: /contact/success
 
 # Host
 Host: https://www.owldio.art
