@@ -175,7 +175,7 @@ function recordToSheet(data) {
       // 設定標題行
       const headers = [
         '提交時間', '姓名', 'Email', '電話', '學校/機構',
-        '演出類型', '演出日期', '演出場地', '演出時長', '參與人數',
+        '演出類型', '演出日期時間', '演出場地', '演出時長', '參與人數',
         '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求'
       ];
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -195,7 +195,7 @@ function recordToSheet(data) {
       data.phone || '',
       data.school || '',
       data.eventType || '',
-      data.eventDate || '',
+      getEventDateTimeLabel(data),
       data.venue || '',
       data.duration || '',
       data.participants || '',
@@ -311,8 +311,8 @@ function createEmailBody(data) {
               <span class="value highlight">${data.eventType || '未提供'}</span>
             </div>
             <div class="info-row">
-              <span class="label">演出日期:</span>
-              <span class="value">${formatDate(data.eventDate) || '未提供'}</span>
+              <span class="label">演出日期時間:</span>
+              <span class="value">${getEventDateTimeLabel(data) || '未提供'}</span>
             </div>
             <div class="info-row">
               <span class="label">演出場地:</span>
@@ -390,23 +390,26 @@ function createEmailBody(data) {
 /**
  * 格式化日期顯示
  */
+function getEventDateTimeLabel(data) {
+  if (data.eventDateTime) return data.eventDateTime;
+
+  const dateLabel = formatDate(data.eventDate);
+  if (dateLabel && data.eventTime) return `${dateLabel} ${data.eventTime}`;
+  return dateLabel || data.eventTime || '';
+}
+
 function formatDate(dateString) {
   if (!dateString) return '';
-  
-  try {
-    const date = new Date(dateString);
-    return date.toLocaleString('zh-TW', {
-      timeZone: 'Asia/Taipei',
-      year: 'numeric',
-      month: '2-digit',
-      day: '2-digit',
-      hour: '2-digit',
-      minute: '2-digit',
-      weekday: 'long'
-    });
-  } catch (error) {
-    return dateString;
-  }
+
+  const match = String(dateString).match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!match) return dateString;
+
+  const yyyy = match[1];
+  const mm = match[2];
+  const dd = match[3];
+  const date = new Date(`${yyyy}-${mm}-${dd}T00:00:00+08:00`);
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+  return `${yyyy}年${mm}月${dd}日（週${weekdays[date.getDay()]}）`;
 }
 
 /**
@@ -432,7 +435,9 @@ function testFormSubmission() {
     phone: "0912345678",
     school: "測試大學",
     eventType: "獨奏 / 個人演出",
-    eventDate: "2024-12-01T19:00",
+    eventDate: "2024-12-01",
+    eventTime: "19:00",
+    eventDateTime: "2024年12月01日（週日）19:00",
     venue: "測試音樂廳",
     duration: "60分鐘",
     participants: "1人",
