@@ -224,7 +224,6 @@ export default function StudentProjectsPage() {
                       <h4 className="text-lg font-normal mb-6 text-amber-500">包含服務</h4>
                       <ul className="space-y-4">
                         {[
-                          "2小時專業錄音",
                           "多軌同步收音",
                           "4K 錄影服務",
                           "基礎剪輯後製",
