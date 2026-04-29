@@ -175,7 +175,7 @@ function recordToSheet(data) {
       // 設定標題行
       const headers = [
         '提交時間', '姓名', 'Email', '電話', '學校/機構',
-        '演出類型', '演出日期時間', '演出場地', '演出時長', '參與人數',
+        '演出類型', '樂器/編制', '演出日期時間', '演出場地', '演出時長', '參與人數',
         '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求'
       ];
       sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
@@ -195,6 +195,7 @@ function recordToSheet(data) {
       data.phone || '',
       data.school || '',
       data.eventType || '',
+      data.instrument || '',
       getEventDateTimeLabel(data),
       data.venue || '',
       data.duration || '',
@@ -309,6 +310,10 @@ function createEmailBody(data) {
             <div class="info-row">
               <span class="label">演出類型:</span>
               <span class="value highlight">${data.eventType || '未提供'}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">樂器/編制:</span>
+              <span class="value">${data.instrument || '未提供'}</span>
             </div>
             <div class="info-row">
               <span class="label">演出日期時間:</span>
@@ -435,6 +440,7 @@ function testFormSubmission() {
     phone: "0912345678",
     school: "測試大學",
     eventType: "獨奏 / 個人演出",
+    instrument: "鋼琴",
     eventDate: "2024-12-01",
     eventTime: "19:00",
     eventDateTime: "2024年12月01日（週日）19:00",

@@ -31,6 +31,7 @@ const ContactPage = () => {
     eventType: "",
     eventDate: "",
     eventTime: "",
+    instrument: "",
     venue: "",
     duration: "",
     participants: "",
@@ -83,6 +84,7 @@ const ContactPage = () => {
         eventType: formData.eventType,
         eventDate: formData.eventDate,
         eventTime: formData.eventTime,
+        instrument: formData.instrument,
         eventDateTime: formData.eventDate && formData.eventTime ? (() => {
           const d = new Date(formData.eventDate + 'T00:00:00');
           const yyyy = d.getFullYear();
@@ -332,6 +334,20 @@ const ContactPage = () => {
                           <option key={type} value={type} className="bg-black text-amber-50">{type}</option>
                         ))}
                       </select>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
+                        樂器 / 編制
+                      </label>
+                      <input
+                        type="text"
+                        name="instrument"
+                        value={formData.instrument}
+                        onChange={handleInputChange}
+                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                        placeholder="例：鋼琴、小提琴、聲樂、弦樂四重奏"
+                      />
                     </div>
 
                     <div className="grid md:grid-cols-3 gap-6">
