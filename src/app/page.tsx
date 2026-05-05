@@ -16,10 +16,6 @@ export default function OwldioSite() {
     setLoadingComplete(true);
   };
 
-  if (!loadingComplete) {
-    return <LoadingScreen onAnimationComplete={handleLoadingComplete} />;
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -27,6 +23,10 @@ export default function OwldioSite() {
       transition={{ duration: 0.8 }}
       className="min-h-screen bg-black text-white overflow-x-hidden"
     >
+      {!loadingComplete && (
+        <LoadingScreen onAnimationComplete={handleLoadingComplete} />
+      )}
+
       {/* Navigation */}
       <Navigation currentPage="home" />
 

@@ -36,7 +36,7 @@ module.exports = {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/contact/success', '/_next/', '/api/'],
+        disallow: ['/contact/success', '/api/'],
       },
       {
         userAgent: 'Googlebot',
