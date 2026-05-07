@@ -81,8 +81,8 @@ export default function AboutPage() {
             >
               <div className="relative h-[500px] rounded-lg overflow-hidden">
                 <Image
-                  src="/IMG_9089.JPG"
-                  alt="Owldio Team"
+                  src="/seo/owldio-campus-recording.png"
+                  alt="Owldio Studio 校園音樂會錄音錄影服務"
                   fill
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"

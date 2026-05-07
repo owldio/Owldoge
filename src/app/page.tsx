@@ -174,8 +174,8 @@ export default function OwldioSite() {
               <div className="space-y-4">
                 <div className="h-[60%] bg-gradient-to-br from-amber-900/20 to-amber-600/20 rounded-lg overflow-hidden relative">
                   <Image
-                    src="/IMG_9089.JPG"
-                    alt="Studio"
+                    src="/seo/owldio-campus-service.png"
+                    alt="Owldio Studio 校園音樂會錄音錄影服務"
                     fill
                     className="object-cover opacity-80"
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -185,8 +185,8 @@ export default function OwldioSite() {
                 </div>
                 <div className="h-[35%] bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg overflow-hidden relative">
                   <Image
-                    src="/IMG_9054.JPG"
-                    alt="Equipment"
+                    src="/seo/owldio-recording-plan.png"
+                    alt="Owldio Studio 完整錄製方案"
                     fill
                     className="object-cover opacity-80"
                     sizes="(max-width: 768px) 50vw, 25vw"
@@ -198,8 +198,8 @@ export default function OwldioSite() {
               <div className="space-y-4 pt-12">
                 <div className="h-[45%] bg-gradient-to-br from-amber-600/20 to-orange-600/20 rounded-lg overflow-hidden relative">
                   <Image
-                    src="/IMG_9133.JPG"
-                    alt="Recording"
+                    src="/seo/owldio-music-production.png"
+                    alt="Owldio Studio 音樂會影像與聲音製作"
                     fill
                     className="object-cover opacity-80"
                     sizes="(max-width: 768px) 50vw, 25vw"

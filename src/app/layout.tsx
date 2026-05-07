@@ -1,23 +1,27 @@
 import type { Metadata } from 'next';
 import './globals.css';
-import { siteDescription, siteName, siteUrl } from '@/lib/seo';
+import { defaultOgImage, siteDescription, siteName, siteUrl } from '@/lib/seo';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
   title: {
-    default: 'Owldio Studio | 鴞聲音畫 — 音樂會錄音錄影工作室',
+    default: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
     template: '%s | Owldio Studio'
   },
   description: siteDescription,
   keywords: [
     '音樂會錄影',
     '音樂會錄音',
+    '音樂會錄影錄音',
     '校園音樂會錄製',
     '學生演奏錄影',
+    '學生音樂會錄影',
     '4K 錄影',
     '多軌錄音',
     '現場直播',
+    '影片後製',
+    '畢業音樂會錄影',
     'Owldio',
   ],
   authors: [{ name: siteName }],
@@ -36,22 +40,22 @@ export const metadata: Metadata = {
     locale: 'zh_TW',
     url: siteUrl,
     siteName,
-    title: 'Owldio Studio | 鴞聲音畫 — 音樂會錄音錄影工作室',
+    title: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
     description: siteDescription,
     images: [
       {
-        url: '/owldio-logo.png',
+        url: defaultOgImage,
         width: 1200,
         height: 630,
-        alt: 'Owldio Studio 音樂會錄製服務',
+        alt: 'Owldio Studio 音樂會錄影錄音服務',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Owldio Studio | 鴞聲音畫 — 音樂會錄音錄影工作室',
+    title: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
     description: siteDescription,
-    images: ['/owldio-logo.png'],
+    images: [defaultOgImage],
   },
   robots: {
     index: true,
@@ -74,7 +78,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       name: siteName,
       url: siteUrl,
       logo: `${siteUrl}/owldio-logo.png`,
-      image: `${siteUrl}/owldio-logo.png`,
+      image: `${siteUrl}/seo/owldio-music-production.png`,
       email: 'owldio.art@gmail.com',
       areaServed: 'Taiwan',
       serviceType: [
@@ -83,6 +87,36 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         '現場直播',
         '影片後製',
       ],
+      "hasOfferCatalog": {
+        '@type': 'OfferCatalog',
+        name: '音樂會錄製服務',
+        itemListElement: [
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: '4K 音樂會錄影',
+              description: '校園音樂會、畢業演奏與室內樂演出的 4K 多機位錄影服務。',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: '多軌錄音',
+              description: '現場多軌收音、混音與音檔整理交付。',
+            },
+          },
+          {
+            '@type': 'Offer',
+            itemOffered: {
+              '@type': 'Service',
+              name: '現場直播與後製',
+              description: '音樂會現場直播、影片剪輯、調色與成品交付。',
+            },
+          },
+        ],
+      },
       sameAs: [
         'https://www.instagram.com/owldio.art/',
         'https://www.facebook.com/share/19xTqkqM9Y/?mibextid=wwXIfr',

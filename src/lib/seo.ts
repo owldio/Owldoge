@@ -3,20 +3,24 @@ import type { Metadata } from "next";
 export const siteUrl = "https://www.owldio.art";
 export const siteName = "Owldio Studio";
 export const siteDescription =
-  "專業校園音樂會錄製服務。提供 4K 高清錄影、多軌錄音、現場直播與後製服務。學生友善價格，讓每一場演出都留下專業作品。";
+  "專業音樂會錄影、錄音、直播與後製服務。Owldio Studio 提供 4K 錄影、多軌錄音、現場直播、影片剪輯與學生音樂會優惠方案，讓每一場演出都留下完整作品。";
 
-const ogImage = "/owldio-logo.png";
+const ogImage = "/seo/owldio-music-production.png";
+export const defaultOgImage = ogImage;
+export const studentOgImage = "/seo/owldio-student-discount.png";
 
 type PageMetadataInput = {
   title: string;
   description: string;
   path: string;
+  image?: string;
 };
 
 export function createPageMetadata({
   title,
   description,
   path,
+  image = defaultOgImage,
 }: PageMetadataInput): Metadata {
   return {
     title,
@@ -33,10 +37,10 @@ export function createPageMetadata({
       type: "website",
       images: [
         {
-          url: ogImage,
+          url: image,
           width: 1200,
           height: 630,
-          alt: `${siteName} 音樂會錄製服務`,
+          alt: `${siteName} 音樂會錄影錄音服務`,
         },
       ],
     },
@@ -44,8 +48,7 @@ export function createPageMetadata({
       card: "summary_large_image",
       title: `${title} | ${siteName}`,
       description,
-      images: [ogImage],
+      images: [image],
     },
   };
 }
-

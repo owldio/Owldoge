@@ -2,8 +2,8 @@ import type { Metadata } from 'next';
 import { createPageMetadata } from '@/lib/seo';
 
 export const metadata: Metadata = createPageMetadata({
-  title: '價格方案 — 音樂會錄製學生優惠方案',
-  description: '查看 Owldio 音樂會錄製服務完整價格。學生優惠方案、8折優惠，從 NT$7,800 起。包含 4K 錄影、多軌錄音、後製服務。',
+  title: '價格方案 — 音樂會錄影錄音與學生優惠',
+  description: '查看 Owldio Studio 音樂會錄影錄音價格方案，包含學生優惠、4K 錄影、多軌錄音、現場直播與後製交付。',
   path: '/pricing',
 });
 
