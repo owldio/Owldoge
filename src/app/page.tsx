@@ -10,6 +10,27 @@ import LoadingScreen from "@/components/LoadingScreen";
 import Navigation from "@/components/Navigation";
 import MistAnimation from "@/components/MistAnimation";
 
+const studioMoments = {
+  main: {
+    src: "/pic/edited/owldio-performance-main.jpg",
+    alt: "鋼琴演奏者與攝影機同步錄製的音樂會現場",
+  },
+  performer: {
+    src: "/pic/edited/owldio-performance-performer.jpg",
+    alt: "鋼琴演奏者在舞台燈光下演出",
+  },
+  detail: {
+    src: "/pic/edited/owldio-piano-strings-detail.jpg",
+    alt: "平台鋼琴琴弦與收音細節",
+  },
+};
+
+const studioStats = [
+  { value: "100+", label: "錄製場次" },
+  { value: "4K", label: "多機影像" },
+  { value: "48hr", label: "快速初剪" },
+];
+
 export default function OwldioSite() {
   const [loadingComplete, setLoadingComplete] = useState(false);
   const handleLoadingComplete = () => {
@@ -113,7 +134,7 @@ export default function OwldioSite() {
       </section>
 
       {/* About Section - Split Screen */}
-      <section className="relative min-h-screen flex items-center bg-zinc-950">
+      <section id="about-studio" className="relative min-h-screen flex items-center bg-zinc-950">
         <div className="w-full grid lg:grid-cols-2">
           {/* Left - Text Content */}
           <motion.div
@@ -162,59 +183,91 @@ export default function OwldioSite() {
             </div>
           </motion.div>
 
-          {/* Right - Image Grid */}
+          {/* Right - Performance Collage */}
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="relative h-full min-h-[600px] lg:min-h-screen"
+            className="relative min-h-[620px] overflow-hidden bg-black lg:min-h-screen"
           >
-            <div className="absolute inset-4 grid grid-cols-2 gap-4">
-              <div className="space-y-4">
-                <div className="h-[60%] bg-gradient-to-br from-amber-900/20 to-amber-600/20 rounded-lg overflow-hidden relative">
-                  <Image
-                    src="/seo/owldio-campus-service.png"
-                    alt="Owldio Studio 校園音樂會錄音錄影服務"
-                    fill
-                    className="object-cover opacity-80"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    loading="lazy"
-                    quality={75}
-                  />
-                </div>
-                <div className="h-[35%] bg-gradient-to-br from-zinc-900 to-zinc-800 rounded-lg overflow-hidden relative">
-                  <Image
-                    src="/seo/owldio-recording-plan.png"
-                    alt="Owldio Studio 完整錄製方案"
-                    fill
-                    className="object-cover opacity-80"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    loading="lazy"
-                    quality={75}
-                  />
-                </div>
-              </div>
-              <div className="space-y-4 pt-12">
-                <div className="h-[45%] bg-gradient-to-br from-amber-600/20 to-orange-600/20 rounded-lg overflow-hidden relative">
-                  <Image
-                    src="/seo/owldio-music-production.png"
-                    alt="Owldio Studio 音樂會影像與聲音製作"
-                    fill
-                    className="object-cover opacity-80"
-                    sizes="(max-width: 768px) 50vw, 25vw"
-                    loading="lazy"
-                    quality={75}
-                  />
-                </div>
-                <div className="h-[50%] bg-gradient-to-br from-zinc-800 to-zinc-900 rounded-lg flex items-center justify-center">
-                  <div className="text-center p-8">
-                    <div className="text-6xl font-thin text-amber-500 mb-2">100+</div>
-                    <div className="text-sm font-light tracking-[0.2em] text-gray-400">錄製場次</div>
-                  </div>
-                </div>
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_18%,rgba(245,158,11,0.18),transparent_32%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(90deg,#09090b_0%,rgba(9,9,11,0.58)_26%,rgba(9,9,11,0)_58%)]" />
+
+            <div className="absolute inset-x-6 bottom-8 top-8 lg:bottom-12 lg:left-0 lg:right-16 lg:top-12">
+              <div className="group relative h-full overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-[0_30px_90px_rgba(0,0,0,0.5)]">
+                <Image
+                  src={studioMoments.main.src}
+                  alt={studioMoments.main.alt}
+                  fill
+                  className="object-cover object-[52%_45%] opacity-90 transition-transform duration-700 group-hover:scale-[1.03]"
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  loading="lazy"
+                  quality={75}
+                />
+                <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(0,0,0,0.08),rgba(0,0,0,0.72))]" />
+                <div className="absolute inset-0 ring-1 ring-inset ring-white/10" />
               </div>
             </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.15 }}
+              className="absolute right-6 top-14 hidden h-[30%] w-[46%] overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-[0_24px_70px_rgba(0,0,0,0.55)] sm:block lg:right-8 lg:top-16"
+            >
+              <Image
+                src={studioMoments.performer.src}
+                alt={studioMoments.performer.alt}
+                fill
+                className="object-cover object-[47%_48%]"
+                sizes="(max-width: 1024px) 45vw, 24vw"
+                loading="lazy"
+                quality={75}
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 28 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.25 }}
+              className="absolute bottom-32 left-8 hidden h-[24%] w-[36%] overflow-hidden rounded-lg border border-white/10 bg-zinc-900 shadow-[0_24px_70px_rgba(0,0,0,0.55)] md:block lg:bottom-36 lg:left-10"
+            >
+              <Image
+                src={studioMoments.detail.src}
+                alt={studioMoments.detail.alt}
+                fill
+                className="object-cover object-[50%_54%]"
+                sizes="(max-width: 1024px) 36vw, 18vw"
+                loading="lazy"
+                quality={75}
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-black/45 via-transparent to-amber-500/10" />
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.7, delay: 0.35 }}
+              className="absolute bottom-8 left-6 right-6 overflow-hidden rounded-lg border border-white/10 bg-black/60 backdrop-blur-md lg:bottom-12 lg:left-14 lg:right-24"
+            >
+              <div className="grid grid-cols-3 divide-x divide-white/10">
+                {studioStats.map((stat) => (
+                  <div key={stat.label} className="px-4 py-5 text-center">
+                    <div className="mb-1 text-2xl font-thin text-amber-400 md:text-4xl">
+                      {stat.value}
+                    </div>
+                    <div className="text-[0.65rem] font-normal tracking-[0.18em] text-gray-300 md:text-xs">
+                      {stat.label}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
           </motion.div>
         </div>
       </section>
