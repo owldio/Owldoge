@@ -211,7 +211,13 @@ const ContactPage = () => {
           </div>
 
           <div className="mb-8 border-y border-amber-500/20 py-8">
-            <div className="mx-auto mb-5 w-44 overflow-hidden rounded-lg border border-amber-500/20 bg-white p-3 shadow-2xl shadow-black/40">
+            <a
+              href={lineOfficialAccountUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="加入 Owldio LINE 官方帳號"
+              className="mx-auto mb-5 block w-44 overflow-hidden rounded-lg border border-amber-500/20 bg-white p-3 shadow-2xl shadow-black/40 transition-transform duration-300 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#06c755]"
+            >
               <Image
                 src="/pic/LINEQR.jpg"
                 alt="Owldio LINE 官方帳號 QR Code"
@@ -220,7 +226,7 @@ const ContactPage = () => {
                 className="h-auto w-full"
                 priority
               />
-            </div>
+            </a>
             <p className="mx-auto mb-5 max-w-sm text-sm font-normal leading-relaxed tracking-[0.05em] text-amber-100/70">
               預約送出後，也可以直接加入 Owldio LINE 官方帳號，方便我們確認檔期、需求細節與後續聯絡。
             </p>
