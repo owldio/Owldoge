@@ -189,16 +189,18 @@ const ContactPage = () => {
     { id: "editing", label: "後製剪輯", icon: <CheckCircle2 className="h-4 w-4" /> }
   ];
 
+  const lineOfficialAccountUrl = "https://line.me/R/ti/p/@447nguoe";
+
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4">
+      <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
         <motion.div
           initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6 }}
-          className="text-center max-w-md"
+          className="w-full max-w-lg text-center"
         >
-          <div className="mb-6">
+          <div className="mb-8">
             <div className="w-20 h-20 bg-amber-500/20 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
               <CheckCircle2 className="h-10 w-10 text-amber-500" />
             </div>
@@ -207,7 +209,33 @@ const ContactPage = () => {
               感謝您的預約申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
             </p>
           </div>
-          <Button 
+
+          <div className="mb-8 border-y border-amber-500/20 py-8">
+            <div className="mx-auto mb-5 w-44 overflow-hidden rounded-lg border border-amber-500/20 bg-white p-3 shadow-2xl shadow-black/40">
+              <Image
+                src="/pic/LINEQR.jpg"
+                alt="Owldio LINE 官方帳號 QR Code"
+                width={320}
+                height={320}
+                className="h-auto w-full"
+                priority
+              />
+            </div>
+            <p className="mx-auto mb-5 max-w-sm text-sm font-normal leading-relaxed tracking-[0.05em] text-amber-100/70">
+              預約送出後，也可以直接加入 Owldio LINE 官方帳號，方便我們確認檔期、需求細節與後續聯絡。
+            </p>
+            <Button
+              className="bg-[#06c755] text-white hover:bg-[#05b84f] hover:scale-105 font-normal tracking-[0.1em] border-none transition-all duration-300"
+              asChild
+            >
+              <a href={lineOfficialAccountUrl} target="_blank" rel="noopener noreferrer">
+                <MessageCircle className="mr-2 h-4 w-4" />
+                加入 LINE 官方帳號
+              </a>
+            </Button>
+          </div>
+
+          <Button
             className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-normal tracking-[0.1em] border-none transition-all duration-300"
             asChild
           >
@@ -638,13 +666,13 @@ const ContactPage = () => {
                     </div>
                   </button>
                   
-                  <a href="https://lin.ee/v3uTStG" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
+                  <a href={lineOfficialAccountUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
                     <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 group-hover:bg-amber-500/30 transition-all">
                       <MessageCircle className="h-6 w-6 text-amber-500" />
                     </div>
                     <div>
                       <p className="font-normal text-amber-50 tracking-[0.1em]">LINE</p>
-                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio</p>
+                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@447nguoe</p>
                     </div>
                   </a>
                   
