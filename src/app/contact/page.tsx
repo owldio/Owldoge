@@ -228,7 +228,7 @@ const ContactPage = () => {
               />
             </a>
             <p className="mx-auto mb-5 max-w-sm text-sm font-normal leading-relaxed tracking-[0.05em] text-amber-100/70">
-              預約送出後，也可以直接加入 Owldio LINE 官方帳號，方便我們確認檔期、需求細節與後續聯絡。
+              表單送出完成後，請加入 Owldio LINE 官方帳號，讓我們可以更即時地和您確認檔期、需求細節與後續安排。
             </p>
             <Button
               className="bg-[#06c755] text-white hover:bg-[#05b84f] hover:scale-105 font-normal tracking-[0.1em] border-none transition-all duration-300"
