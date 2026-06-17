@@ -1,6 +1,29 @@
 import type { Metadata } from 'next';
+import { Cormorant_Garamond, IBM_Plex_Mono, Noto_Serif_TC } from 'next/font/google';
 import './globals.css';
 import { defaultOgImage, siteDescription, siteName, siteUrl } from '@/lib/seo';
+
+const displayLatin = Cormorant_Garamond({
+  subsets: ['latin'],
+  weight: ['300', '400', '500', '600'],
+  style: ['normal', 'italic'],
+  variable: '--font-display-latin',
+  display: 'swap',
+});
+
+const serifTC = Noto_Serif_TC({
+  subsets: ['latin'],
+  weight: ['200', '300', '400', '500', '600'],
+  variable: '--font-serif-tc',
+  display: 'swap',
+});
+
+const monoLatin = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500'],
+  variable: '--font-mono-latin',
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -134,7 +157,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   ];
 
   return (
-    <html lang="zh-Hant" suppressHydrationWarning>
+    <html
+      lang="zh-Hant"
+      suppressHydrationWarning
+      className={`${displayLatin.variable} ${serifTC.variable} ${monoLatin.variable}`}
+    >
       <body>
         <script
           type="application/ld+json"

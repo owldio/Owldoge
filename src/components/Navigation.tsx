@@ -1,192 +1,174 @@
-"use client"
+"use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 
 interface NavigationProps {
   currentPage?: string;
 }
 
-const Navigation: React.FC<NavigationProps> = ({ currentPage }) => {
+const navItems = [
+  { label: "學生專案", href: "/student-projects", highlight: true, id: "student-projects" },
+  { label: "服務項目", href: "/services", id: "services" },
+  { label: "價目方案", href: "/pricing", id: "pricing" },
+  { label: "作品展示", href: "/portfolio", id: "portfolio" },
+  { label: "聯絡預約", href: "/contact", id: "contact" },
+];
+
+const Navigation = ({ currentPage }: NavigationProps) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
-  const mobileMenuRef = useRef<HTMLDivElement>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  const navItems = [
-    { label: "學生專案", href: "/student-projects", highlight: true, id: "student-projects" },
-    { label: "服務項目", href: "/services", id: "services" },
-    { label: "價目方案", href: "/pricing", id: "pricing" },
-    { label: "作品展示", href: "/portfolio", id: "portfolio" },
-    { label: "聯絡預約", href: "/contact", id: "contact" }
-  ];
-
-  // Close mobile menu when clicking outside
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
-        setShowMobileMenu(false);
-      }
-    };
+    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
-    if (showMobileMenu) {
-      document.addEventListener('mousedown', handleClickOutside, true);
-      return () => {
-        document.removeEventListener('mousedown', handleClickOutside, true);
-      };
-    }
+  useEffect(() => {
+    document.body.style.overflow = showMobileMenu ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
   }, [showMobileMenu]);
 
   return (
-    <header className="fixed top-0 z-50 w-full backdrop-blur-xl bg-black/80 border-b border-amber-500/20">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4">
-        <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-all duration-300 group">
-          <motion.div 
-            whileHover={{ scale: 1.1, rotate: 180 }}
-            transition={{ duration: 0.5 }}
-            className="flex h-12 w-12 items-center justify-center"
-          >
-            <Image src="/Owldio.svg" alt="Owldio" width={40} height={40} className="h-10 w-10 brightness-0 invert" />
-          </motion.div>
-          <div className="flex flex-col">
-            <span className="text-2xl font-thin tracking-[0.2em] text-amber-50">
+    <header
+      className={`fixed top-0 z-50 w-full transition-colors duration-500 ${
+        isScrolled || showMobileMenu
+          ? "border-b border-hairline bg-night/85 backdrop-blur-md"
+          : "border-b border-transparent bg-transparent"
+      }`}
+    >
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-5 py-4 md:px-8">
+        <Link
+          href="/"
+          className="group flex items-center gap-3"
+          onClick={() => setShowMobileMenu(false)}
+        >
+          <Image
+            src="/Owldio.svg"
+            alt="Owldio"
+            width={34}
+            height={34}
+            className="h-8 w-8 brightness-0 invert opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+          />
+          <span className="flex flex-col leading-none">
+            <span className="font-display text-xl font-medium tracking-[0.28em] text-parchment">
               OWLDIO
             </span>
-            <span className="text-xs text-amber-100/60 font-normal tracking-[0.1em]">專業音樂會錄製服務</span>
-          </div>
+            <span className="mt-1.5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+              CONCERT RECORDING
+            </span>
+          </span>
         </Link>
-        
-        {/* Desktop Navigation */}
-        <nav className="hidden gap-10 lg:flex">
-          {navItems.map((item) => (
-            <Link 
-              key={item.href} 
-              href={item.href} 
-              className={`text-sm font-normal tracking-[0.1em] transition-all duration-300 relative group ${
-                currentPage === item.id
-                  ? "text-amber-500" 
-                  : item.highlight 
-                  ? "text-amber-50 hover:text-amber-500" 
-                  : "text-amber-100/70 hover:text-amber-500"
-              }`}
-            >
-              {item.highlight && (
-                <motion.span 
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5 }}
-                  className="absolute -top-2 -right-3 text-xs"
-                >
-                  ✨
-                </motion.span>
-              )}
-              {item.label}
-              <span className={`absolute -bottom-1 left-0 h-px transition-all duration-300 ${
-                currentPage === item.id
-                  ? "w-full bg-amber-500" 
-                  : "w-0 group-hover:w-full bg-amber-500"
-              }`}></span>
-            </Link>
-          ))}
+
+        {/* Desktop navigation */}
+        <nav aria-label="主選單" className="hidden items-center gap-9 lg:flex">
+          {navItems.map((item) => {
+            const isActive = currentPage === item.id;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`group relative pb-1 text-[0.9rem] tracking-[0.08em] transition-colors duration-300 ${
+                  isActive
+                    ? "text-copper-bright"
+                    : item.highlight
+                      ? "text-parchment hover:text-copper-bright"
+                      : "text-parchment-dim hover:text-parchment"
+                }`}
+              >
+                {item.label}
+                <span
+                  className={`absolute bottom-0 left-0 h-px bg-copper transition-all duration-300 ${
+                    isActive ? "w-full" : "w-0 group-hover:w-full"
+                  }`}
+                />
+              </Link>
+            );
+          })}
         </nav>
 
-        {/* Mobile Menu Button */}
-        <button
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
-          className="lg:hidden flex items-center justify-center w-10 h-10 rounded-lg bg-amber-500/10 hover:bg-amber-500/20 transition-all duration-300 border border-amber-500/30"
-        >
-          {showMobileMenu ? (
-            <X className="h-5 w-5 text-amber-500" />
-          ) : (
-            <Menu className="h-5 w-5 text-amber-500" />
-          )}
-        </button>
-
-        {/* Desktop CTA */}
-        <div className="hidden lg:flex items-center gap-3">
-          <Button 
-            className="bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] px-6 border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300 transform hover:scale-[1.02]"
-            asChild
+        <div className="hidden lg:block">
+          <Link
+            href="/contact"
+            className="border border-hairline-strong px-6 py-2.5 text-sm tracking-[0.14em] text-parchment transition-all duration-300 hover:border-copper hover:bg-copper hover:text-night"
           >
-            <Link href="/contact">立即預約</Link>
-          </Button>
+            詢問檔期
+          </Link>
         </div>
+
+        {/* Mobile menu toggle */}
+        <button
+          type="button"
+          aria-label={showMobileMenu ? "關閉選單" : "開啟選單"}
+          aria-expanded={showMobileMenu}
+          onClick={() => setShowMobileMenu((prev) => !prev)}
+          className="flex h-10 w-10 items-center justify-center border border-hairline text-parchment transition-colors duration-300 hover:border-copper lg:hidden"
+        >
+          {showMobileMenu ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+        </button>
       </div>
 
+      {/* Mobile menu — full programme page */}
       <AnimatePresence>
-        {/* Mobile Menu Backdrop - Click to close */}
-        {showMobileMenu && (
-          <motion.div
-            key="mobile-backdrop"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.2 }}
-            className="lg:hidden fixed inset-0 z-40 bg-black/50"
-            onClick={() => setShowMobileMenu(false)}
-          />
-        )}
-
-        {/* Mobile Menu */}
         {showMobileMenu && (
           <motion.div
             key="mobile-menu"
-            ref={mobileMenuRef}
-            initial={{ opacity: 0, y: -10, height: 0 }}
-            animate={{ opacity: 1, y: 0, height: "auto" }}
-            exit={{ opacity: 0, y: -10, height: 0 }}
-            transition={{ duration: 0.3, ease: "easeInOut" }}
-            className="lg:hidden absolute left-0 right-0 top-full z-50 border-t border-amber-500/20 bg-black/95 backdrop-blur-xl overflow-hidden"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="fixed inset-0 top-[69px] z-40 flex flex-col bg-night/97 backdrop-blur-lg lg:hidden"
           >
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, delay: 0.1 }}
-              className="mx-auto max-w-7xl px-4 py-4"
-            >
-              <nav className="space-y-3">
-                {navItems.map((item, index) => (
+            <nav aria-label="行動選單" className="flex flex-1 flex-col justify-center px-8">
+              {navItems.map((item, index) => {
+                const isActive = currentPage === item.id;
+                return (
                   <motion.div
                     key={item.href}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -20 }}
-                    transition={{ duration: 0.3, delay: index * 0.05 }}
+                    initial={{ opacity: 0, y: 18 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.35, delay: 0.06 + index * 0.06 }}
+                    className="border-b border-hairline"
                   >
-                    <Link 
+                    <Link
                       href={item.href}
                       onClick={() => setShowMobileMenu(false)}
-                      className={`block text-sm font-normal tracking-[0.1em] py-3 px-4 rounded-lg transition-all duration-300 ${
-                        currentPage === item.id
-                          ? "bg-amber-500/20 text-amber-500 border border-amber-500/30" 
-                          : item.highlight 
-                          ? "text-amber-50 hover:bg-amber-500/10 hover:border hover:border-amber-500/30" 
-                          : "text-amber-100/70 hover:bg-amber-500/10 hover:border hover:border-amber-500/30"
+                      className={`flex items-baseline justify-between py-5 ${
+                        isActive ? "text-copper-bright" : "text-parchment"
                       }`}
                     >
-                      {item.highlight && <span className="mr-2">✨</span>}
-                      {item.label}
+                      <span className="text-2xl font-light tracking-[0.06em]">{item.label}</span>
+                      <span className="font-mono text-xs text-parchment-faint">
+                        0{index + 1}
+                      </span>
                     </Link>
                   </motion.div>
-                ))}
-              </nav>
-              <motion.div 
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3, delay: 0.2 }}
-                className="mt-4 pt-4 border-t border-amber-500/20"
+                );
+              })}
+            </nav>
+
+            <motion.div
+              initial={{ opacity: 0, y: 18 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.35, delay: 0.42 }}
+              className="px-8 pb-12"
+            >
+              <Link
+                href="/contact"
+                onClick={() => setShowMobileMenu(false)}
+                className="block border border-copper bg-copper px-6 py-4 text-center text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
               >
-                <Button 
-                  className="w-full bg-amber-500 hover:bg-amber-600 text-black font-normal tracking-[0.1em] border-none shadow-xl hover:shadow-amber-500/20 transition-all duration-300"
-                  asChild
-                >
-                  <Link href="/contact">立即預約</Link>
-                </Button>
-              </motion.div>
+                詢問檔期
+              </Link>
             </motion.div>
           </motion.div>
         )}
