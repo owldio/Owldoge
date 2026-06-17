@@ -9,6 +9,7 @@ import { ArrowRight, Check, Clock, Sparkles, ChevronDown } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import MouseGlow from "@/components/MouseGlow";
 import BackgroundGradient from "@/components/BackgroundGradient";
+import FooterLegal from "@/components/FooterLegal";
 
 export default function StudentProjectsPage() {
 
@@ -413,6 +414,7 @@ export default function StudentProjectsPage() {
               <span className="text-lg font-normal tracking-[0.1em]">OWLDIO</span>
               <span className="text-xs font-normal text-gray-600">© 2024</span>
             </div>
+            <FooterLegal className="items-center text-gray-600 lg:items-start" />
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 首頁

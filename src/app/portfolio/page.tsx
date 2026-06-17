@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import BackgroundGradient from "@/components/BackgroundGradient";
+import FooterLegal from "@/components/FooterLegal";
 
 export default function PortfolioPage() {
   return (
@@ -143,6 +144,7 @@ export default function PortfolioPage() {
               <span className="text-lg font-normal tracking-[0.1em] text-amber-50">OWLDIO</span>
               <span className="text-xs font-normal text-amber-100/40">© 2024</span>
             </div>
+            <FooterLegal className="items-center text-amber-100/50 lg:items-start" />
             <div className="flex gap-6">
               <Link href="/" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
                 首頁

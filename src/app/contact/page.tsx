@@ -20,6 +20,7 @@ import {
 import Navigation from "@/components/Navigation";
 import BackgroundGradient from "@/components/BackgroundGradient";
 import EmailModal from "@/components/EmailModal";
+import FooterLegal from "@/components/FooterLegal";
 
 const ContactPage = () => {
   const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
@@ -769,6 +770,7 @@ const ContactPage = () => {
             <span className="font-normal tracking-[0.1em] text-amber-50">Owldio</span>
             <span className="text-amber-100/60 font-normal">© 2024</span>
           </div>
+          <FooterLegal className="items-center text-amber-100/60 md:items-start" />
           <div className="flex gap-4 font-normal tracking-[0.05em]">
             <Link href="/" className="text-amber-100/80 hover:text-amber-500 transition-colors">首頁</Link>
             <Link href="/services" className="text-amber-100/80 hover:text-amber-500 transition-colors">服務</Link>

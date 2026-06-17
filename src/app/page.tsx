@@ -9,6 +9,7 @@ import { ArrowRight, ChevronDown } from "lucide-react";
 import LoadingScreen from "@/components/LoadingScreen";
 import Navigation from "@/components/Navigation";
 import MistAnimation from "@/components/MistAnimation";
+import FooterLegal from "@/components/FooterLegal";
 
 const studioMoments = {
   main: {
@@ -549,9 +550,12 @@ export default function OwldioSite() {
           </div>
           
           <div className="border-t border-zinc-900 pt-8 flex flex-col lg:flex-row justify-between items-center gap-4">
-            <p className="text-xs font-normal text-gray-600">
-              © 2024 Owldio. All rights reserved.
-            </p>
+            <div className="flex flex-col items-center gap-3 lg:items-start">
+              <p className="text-xs font-normal text-gray-600">
+                © 2024 Owldio. All rights reserved.
+              </p>
+              <FooterLegal className="items-center text-gray-600 lg:items-start" />
+            </div>
             <div className="flex gap-6">
               <Link href="/about#privacy" className="text-xs font-normal text-gray-600 hover:text-amber-500 transition-colors">
                 隱私政策
