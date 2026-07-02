@@ -60,16 +60,21 @@ let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 // 2. 頁面加載與初始化
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-    // 1. 優先從 config.json 或 LocalStorage 讀取資料
-    await loadDatabase();
-
-    // 2. 載入 GitHub 儲存庫同步設定
-    loadGitHubSettings();
-
-    // 3. 解析 URL 免密金鑰參數： ?key=xxx
     const urlParams = new URLSearchParams(window.location.search);
     const keyParam = urlParams.get('key');
 
+    // 1. 如果 URL 帶有免密金鑰，先清除任何殘留的舊 Session
+    if (keyParam) {
+        sessionStorage.clear();
+    }
+
+    // 2. 從伺服器最新 config.json 或 LocalStorage 讀取資料
+    await loadDatabase();
+
+    // 3. 載入 GitHub 儲存庫同步設定
+    loadGitHubSettings();
+
+    // 4. 解析 URL 免密金鑰參數： ?key=xxx
     if (keyParam) {
         verifyWithKey(keyParam);
     } else if (sessionStorage.getItem("owldio_auth") === "true") {
@@ -81,28 +86,55 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 /**
- * 載入播放清單資料庫
+ * 載入播放清單資料庫 (帶有快取防禦與格式防禦)
  */
 async function loadDatabase() {
+    let localDataLoaded = false;
     const localPlaylists = localStorage.getItem('owldio_playlists');
 
     if (localPlaylists) {
-        allPlaylists = JSON.parse(localPlaylists);
-        return;
+        try {
+            allPlaylists = JSON.parse(localPlaylists);
+            localDataLoaded = true;
+        } catch (e) {
+            console.warn("本機 LocalStorage 解析失敗，改用伺服器設定", e);
+        }
     }
 
-    try {
-        const response = await fetch('config.json');
-        if (response.ok) {
-            const data = await response.json();
-            allPlaylists = data.playlists || DEFAULT_PLAYLISTS;
-        } else {
+    // 若本地無資料，或解析失敗，則向伺服器拉取最新 config.json (加上時間戳防止瀏覽器快取)
+    if (!localDataLoaded) {
+        try {
+            const response = await fetch(`config.json?t=${Date.now()}`);
+            if (response.ok) {
+                const data = await response.json();
+                allPlaylists = data.playlists || DEFAULT_PLAYLISTS;
+            } else {
+                allPlaylists = DEFAULT_PLAYLISTS;
+            }
+        } catch (e) {
+            console.warn("無法載入 config.json，使用備用資料:", e);
             allPlaylists = DEFAULT_PLAYLISTS;
         }
-    } catch (e) {
-        console.warn("無法載入 config.json，使用備用資料:", e);
+    }
+
+    // 🛡️ 資料格式安全性防禦：避免瀏覽器中殘留不相容的舊版本 LocalStorage 資料造成 JS 卡死
+    let isDataValid = true;
+    if (allPlaylists && Array.isArray(allPlaylists) && allPlaylists.length > 0) {
+        const sample = allPlaylists[0];
+        // 舊架構可能不具備 playlists 結構。如果發現沒有 password 或 videos 欄位，判定為無效資料
+        if (sample.password === undefined || sample.videos === undefined) {
+            isDataValid = false;
+        }
+    } else {
+        isDataValid = false;
+    }
+
+    if (!isDataValid) {
+        console.warn("⚠️ 檢測到瀏覽器留有不相容的舊版資料結構，正自動重設為最新播放清單模式...");
+        localStorage.removeItem('owldio_playlists');
         allPlaylists = DEFAULT_PLAYLISTS;
     }
+
     saveToLocalStorage();
 }
 
