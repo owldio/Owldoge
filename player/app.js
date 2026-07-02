@@ -56,7 +56,8 @@ let currentVideoIndex = 0;
 let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播放
 let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
-let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube 或 mp4)
+let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube, mp4, hls)
+let hlsInstance = null; // hls.js 解碼器實例，用於 ABR 自適應多畫質串流播放
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -278,17 +279,20 @@ function revealContent(role) {
 }
 
 /**
- * 創建與綁定 Plyr 播放器實例 (解決 HTML5 Video 與 YouTube Iframe 互切時的 DOM 衝突)
+ * 創建與綁定 Plyr 播放器實例 (支援自訂選項以對接 HLS ABR 多畫質控制)
  */
-function setupPlyrInstance() {
-    player = new Plyr('#player', {
+function setupPlyrInstance(options = {}) {
+    const defaultOptions = {
         controls: [
             'play-large', 'play', 'progress', 'current-time', 
             'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
         ],
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true }
-    });
+    };
+
+    const mergedOptions = { ...defaultOptions, ...options };
+    player = new Plyr('#player', mergedOptions);
 
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
@@ -348,8 +352,13 @@ function setupPlaylistUI() {
         card.id = `card-${index}`;
         card.onclick = () => loadVideo(index, true);
 
-        const isYoutube = video.sources[0].provider === 'youtube';
-        const tagText = isYoutube ? 'YouTube 4K' : '4K H.265';
+        const srcUrl = video.sources && video.sources[0] && video.sources[0].src;
+        const isYoutube = video.sources && video.sources[0] && video.sources[0].provider === 'youtube';
+        const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
+        
+        let tagText = '4K MP4';
+        if (isYoutube) tagText = 'YouTube 4K';
+        else if (isHls) tagText = 'ABR 串流';
         
         // 若無時長欄位則不渲染黑色時長標籤
         const durationHtml = video.duration ? `<span class="card-duration">${video.duration}</span>` : '';
@@ -374,7 +383,7 @@ function setupPlaylistUI() {
 }
 
 /**
- * 載入影片 (支援跨訊源智能重建播放器)
+ * 載入影片 (支援跨訊源智能重建播放器，整合 hls.js 自適應串流解碼與畫質選單切換)
  */
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
@@ -385,16 +394,37 @@ function loadVideo(index, autoplay = true) {
     document.getElementById("current-video-title").textContent = video.title;
 
     // 確定目標類型
+    const srcUrl = video.sources && video.sources[0] && video.sources[0].src;
     const isYoutube = video.sources && video.sources[0] && video.sources[0].provider === 'youtube';
-    const targetType = isYoutube ? "youtube" : "mp4";
+    const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
+    const targetType = isHls ? "hls" : (isYoutube ? "youtube" : "mp4");
 
     const accessBadge = document.getElementById("video-access-badge");
-    accessBadge.textContent = isYoutube ? "YouTube Player" : "Cloudflare R2 (4K)";
-    accessBadge.className = isYoutube ? "meta-tag resolution" : "meta-tag access";
+    if (isYoutube) {
+        accessBadge.textContent = "YouTube Player";
+        accessBadge.className = "meta-tag resolution";
+    } else if (isHls) {
+        accessBadge.textContent = "自適應串流 (ABR)";
+        accessBadge.className = "meta-tag resolution";
+    } else {
+        accessBadge.textContent = "Cloudflare R2 (4K)";
+        accessBadge.className = "meta-tag access";
+    }
 
-    // 🛡️ 智能重建：如果上一部影片跟這部影片的類型不同，必須銷毀重做，否則 Plyr 會癱瘓 (YouTube Iframe 無法轉回 Video 標籤)
-    if (currentPlayerType && currentPlayerType !== targetType) {
-        console.log(`🔄 偵測到播放訊源類型轉換 (${currentPlayerType} -> ${targetType})，正在重建播放器以防控制列失效...`);
+    // 每次載入時，先安全銷毀可能存在的舊 hlsInstance
+    if (hlsInstance) {
+        try {
+            hlsInstance.destroy();
+            hlsInstance = null;
+        } catch (e) {
+            console.warn("銷毀舊 HLS 實例出錯:", e);
+        }
+    }
+
+    // 🛡️ 智能重建：如果訊源類型發生轉換，或者即將播 HLS 串流，均執行重建以獲取乾淨的 DOM 與事件綁定
+    const isTypeChanged = currentPlayerType !== targetType;
+    if (isTypeChanged || targetType === "hls") {
+        console.log(`🔄 訊源類型轉換或進入 HLS (${currentPlayerType} -> ${targetType})，正在重建播放器...`);
         if (player) {
             try {
                 player.destroy();
@@ -406,35 +436,84 @@ function loadVideo(index, autoplay = true) {
         const wrapper = document.querySelector(".player-wrapper");
         wrapper.innerHTML = `<video id="player" playsinline controls></video>`;
         
-        // 重新初始化 Plyr
-        setupPlyrInstance();
+        // 如果不是 HLS，在此處可以直接初始化 Plyr；若是 HLS，則延後到 MANIFEST_PARSED 後實例化
+        if (targetType !== "hls") {
+            setupPlyrInstance();
+        }
     }
 
     // 更新目前播放器類型
     currentPlayerType = targetType;
 
-    // 設定訊源後，若需要 autoplay，則將 flag 設為 true，交由 ready 事件觸發播放
+    // 設定訊源後，若需要 autoplay，則將 flag 設為 true，交由 ready 事件或 hls 就緒時觸發播放
     shouldPlayAfterReady = autoplay;
 
-    player.source = {
-        type: 'video',
-        title: video.title,
-        sources: video.sources.map(src => {
-            const sourceObj = { src: src.src };
-            if (src.type) sourceObj.type = src.type;
-            if (src.size) sourceObj.size = src.size;
-            if (src.provider) sourceObj.provider = src.provider;
-            return sourceObj;
-        })
-    };
+    if (targetType === "hls") {
+        const videoEl = document.getElementById("player");
+        hlsInstance = new Hls({
+            autoStartLoad: true,
+            capLevelToPlayerSize: true // 自動根據播放視窗大小限制最高畫質，優化頻寬
+        });
+        hlsInstance.loadSource(srcUrl);
+        hlsInstance.attachMedia(videoEl);
 
-    // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
-    if (targetType === "mp4" && autoplay && currentPlayerType === targetType) {
-        setTimeout(() => {
-            player.play().catch(error => {
-                console.log("HTML5 播放被阻擋：", error);
+        // 監聽 HLS 多畫質清單解析完畢
+        hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
+            // 讀取所有可用的解析度高度 (例如 [1080, 720, 480])
+            const availableQualities = hlsInstance.levels.map(l => l.height);
+            // options 加入 0 代表「自動 (Auto)」畫質
+            const qualityOptions = [0, ...availableQualities];
+
+            // 實例化 Plyr 並綁定自適應畫質選單切換
+            setupPlyrInstance({
+                settings: ['quality', 'speed'],
+                quality: {
+                    default: 0, // 預設為 Auto 自動
+                    options: qualityOptions,
+                    forced: true,
+                    onChange: (newQuality) => {
+                        if (newQuality === 0) {
+                            hlsInstance.currentLevel = -1; // ABR 自動調適
+                            console.log("ABR 自適應畫質切換為：自動 (Auto)");
+                        } else {
+                            const levelIdx = hlsInstance.levels.findIndex(l => l.height === newQuality);
+                            if (levelIdx !== -1) {
+                                hlsInstance.currentLevel = levelIdx; // 手動切換
+                                console.log(`畫質手動切換為：${newQuality}p`);
+                            }
+                        }
+                    }
+                },
+                i18n: {
+                    qualityLabel: {
+                        0: '自動'
+                    }
+                }
             });
-        }, 50);
+        });
+
+    } else {
+        // YouTube 或普通 MP4 播放流程
+        player.source = {
+            type: 'video',
+            title: video.title,
+            sources: video.sources.map(src => {
+                const sourceObj = { src: src.src };
+                if (src.type) sourceObj.type = src.type;
+                if (src.size) sourceObj.size = src.size;
+                if (src.provider) sourceObj.provider = src.provider;
+                return sourceObj;
+            })
+        };
+
+        // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
+        if (targetType === "mp4" && autoplay && !isTypeChanged) {
+            setTimeout(() => {
+                player.play().catch(error => {
+                    console.log("HTML5 播放被阻擋：", error);
+                });
+            }, 50);
+        }
     }
 
     const cards = document.querySelectorAll(".playlist-card");
