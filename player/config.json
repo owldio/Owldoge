@@ -1,9 +1,22 @@
 {
   "playlists": [
     {
-      "id": "clientA",
+      "id": "playlist-clientA",
       "name": "客戶 A 的專屬影音專區",
+      "password": "owl-client-a",
       "videos": [
+        {
+          "id": "vid-1783006529780",
+          "title": "《榮耀頌》I. 在至高之處榮耀歸與上帝｜《Gloria》Gloria in excelsis Deo",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/cCegZp_xNLk/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "cCegZp_xNLk",
+              "provider": "youtube"
+            }
+          ]
+        },
         {
           "id": "vid-01",
           "title": "Owldio Art - 測試影片一 (YouTube)",
@@ -15,12 +28,25 @@
               "provider": "youtube"
             }
           ]
+        },
+        {
+          "id": "vid-1783007878006",
+          "title": "《榮耀頌》I. 在至高之處榮耀歸與上帝｜《Gloria》Gloria in excelsis Deo",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/cCegZp_xNLk/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "cCegZp_xNLk",
+              "provider": "youtube"
+            }
+          ]
         }
       ]
     },
     {
-      "id": "clientB",
+      "id": "playlist-clientB",
       "name": "客戶 B 的特製影音清單",
+      "password": "owl-client-b",
       "videos": [
         {
           "id": "vid-02",
@@ -41,13 +67,98 @@
       "name": "《兩兔傍地走》鄭之棻小提琴獨奏會",
       "videos": [
         {
-          "id": "vid-1783015865496",
+          "id": "vid-1783016973550",
+          "title": "伊麗莎白·雅各布·德·拉格：D大調第二號小提琴奏鳴曲 | E. C. Jacquet de La Guerre / Violin Sonata No. 2 in D Major",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/rGoRpxy13lc/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "rGoRpxy13lc",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783017111856",
+          "title": "夏米娜德：給小提琴與鋼琴的三首小品，作品31 | C. Chaminade / 3 Morceaux for violin and piano, Op. 31",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/gRKp7DoXhbc/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "gRKp7DoXhbc",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783017801329",
+          "title": "夏米娜德：隨想曲，作品18 | C. Chaminade / Capriccio, Op. 18",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/_cpyHeN7CqI/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "_cpyHeN7CqI",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783018079558",
+          "title": "《兩兔傍地走》導聆",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/Mt61JN--nio/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "Mt61JN--nio",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783018105733",
+          "title": "愛賽兒·史密絲：a小調小提琴奏鳴曲，作品7 | Ethel Smyth / Violin Sonata in A minor, Op. 7",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/iCd31B6VP2s/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "iCd31B6VP2s",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783018141841",
+          "title": "戴耶費爾：給小提琴與鋼琴的搖籃曲 | G. Tailleferre / Berceuse for violin and piano",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/gIc6CtVtlHI/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "gIc6CtVtlHI",
+              "provider": "youtube"
+            }
+          ]
+        },
+        {
+          "id": "vid-1783015690011",
           "title": "胡宇君：擊破孤立 ｜Yu-Chun Hu: Breaking the Isolation, Fantasy for Violin and Piano",
           "duration": "",
           "thumbnail": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.png",
           "sources": [
             {
               "src": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.mp4",
+              "type": "video/mp4",
+              "size": 2160
+            }
+          ]
+        },
+        {
+          "id": "vid-1783018162887",
+          "title": "《兩兔傍地走》致謝",
+          "duration": "",
+          "thumbnail": "https://i.ytimg.com/vi/0nN92wF9ZXY/hqdefault.jpg",
+          "sources": [
+            {
+              "src": "0nN92wF9ZXY",
               "provider": "youtube"
             }
           ]
