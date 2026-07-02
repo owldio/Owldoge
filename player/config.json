@@ -145,8 +145,8 @@
           "thumbnail": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.png",
           "sources": [
             {
-              "src": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.mp4",
-              "type": "video/mp4",
+              "src": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6_hls/index.m3u8",
+              "type": "application/x-mpegURL",
               "size": 2160
             }
           ]
