@@ -580,25 +580,25 @@ function renderAdminPlaylistVideos() {
     playlist.videos.forEach((video, index) => {
         const hasSource = video.sources && video.sources[0];
         const isYoutube = hasSource && video.sources[0].provider === 'youtube';
-        const typeLabel = isYoutube ? "🔴 YT" : "🌐 MP4";
+        const typeLabel = isYoutube ? "YouTube" : "MP4";
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
             <td>
                 <div style="display: flex; align-items: center; gap: 8px;">
-                    <img src="${video.thumbnail}" style="width: 50px; aspect-ratio: 16/9; object-fit: cover; border-radius: 4px; flex-shrink: 0;">
+                    <img src="${video.thumbnail}" style="width: 50px; aspect-ratio: 16/9; object-fit: cover; flex-shrink: 0;">
                     <span style="font-weight: 500;">${video.title}</span>
                 </div>
             </td>
             <td><span class="meta-tag codec" style="font-size: 10px; padding: 2px 6px;">${typeLabel}</span></td>
             <td>
                 <div style="display: flex; gap: 4px;">
-                    <button class="btn-admin-portal" style="padding: 4px 8px; font-size: 11px;" onclick="moveVideoUp(${index})" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>⬆️</button>
-                    <button class="btn-admin-portal" style="padding: 4px 8px; font-size: 11px;" onclick="moveVideoDown(${index})" ${index === playlist.videos.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>⬇️</button>
+                    <button class="btn-admin-portal" style="padding: 4px 8px; font-size: 11px;" onclick="moveVideoUp(${index})" ${index === 0 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>↑</button>
+                    <button class="btn-admin-portal" style="padding: 4px 8px; font-size: 11px;" onclick="moveVideoDown(${index})" ${index === playlist.videos.length - 1 ? 'disabled style="opacity:0.3; cursor:not-allowed;"' : ''}>↓</button>
                 </div>
             </td>
             <td>
-                <button class="btn-danger" style="padding: 4px 8px; font-size: 11px;" onclick="removeVideoFromPlaylist(${index})">❌ 移除</button>
+                <button onclick="removeVideoFromPlaylist(${index})" style="background: none; border: none; color: #ef4444; font-size: 18px; cursor: pointer; padding: 4px 8px; font-weight: bold; transition: var(--transition-smooth);" onmouseover="this.style.color='#b91c1c'" onmouseout="this.style.color='#ef4444'">✕</button>
             </td>
         `;
         listBody.appendChild(tr);
