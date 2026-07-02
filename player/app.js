@@ -303,6 +303,7 @@ function setupPlyrInstance(options = {}) {
                 'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
             ],
             settings: ['quality', 'speed'],
+            fullscreen: { container: '.player-wrapper' }, // 指定最外層為全螢幕主體
             tooltips: { controls: true, seek: true },
             keyboard: { focused: true, global: true }
         };
@@ -339,23 +340,6 @@ function setupPlayerEvents(playerInstance, type) {
         }
     });
 
-    // 🛡️ 核心黑科技：代理全螢幕請求到最外層的 .player-wrapper 上，防止切換訊源時退出全螢幕！
-    playerInstance.on('enterfullscreen', (e) => {
-        e.preventDefault(); // 阻擋 Plyr 原生全螢幕行為
-        const wrapper = document.querySelector(".player-wrapper");
-        if (wrapper && document.fullscreenElement !== wrapper) {
-            wrapper.requestFullscreen().catch(err => {
-                console.log("原生全螢幕代理失敗:", err);
-            });
-        }
-    });
-
-    playerInstance.on('exitfullscreen', (e) => {
-        e.preventDefault();
-        if (document.fullscreenElement) {
-            document.exitFullscreen().catch(() => {});
-        }
-    });
 }
 
 /**
@@ -368,6 +352,7 @@ function initPlyr() {
             'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
         ],
         settings: ['speed'],
+        fullscreen: { container: '.player-wrapper' }, // 指定最外層為全螢幕主體
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true }
     };
