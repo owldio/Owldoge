@@ -690,7 +690,7 @@ body {
     padding: 20px;
     display: flex;
     flex-direction: column;
-    overflow: hidden;
+    overflow-y: auto;
 }
 
 .form-section h4, .list-section h4, .export-section h4 {
@@ -748,10 +748,9 @@ body {
 
 /* 表格樣式 */
 .table-wrapper {
-    flex: 1;
-    overflow-y: auto;
     border: 1px solid var(--border-color);
     border-radius: 8px;
+    overflow: visible;
 }
 
 .admin-table {
