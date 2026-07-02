@@ -515,6 +515,19 @@ function loadVideo(index, autoplay = true) {
         hlsInstance.loadSource(srcUrl);
         hlsInstance.attachMedia(videoEl);
 
+        // 監聽 HLS 致命載入錯誤，防禦網絡請求失敗或 CORS 導致的頁面卡死
+        hlsInstance.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+                console.error("HLS 致命錯誤：", data);
+                hidePlayerLoader(); // 發生致命錯誤時立刻關閉遮罩，防止卡死在 loading
+                
+                // 如果尚未初始化 Plyr，則還原出一個基礎的播放器以保全介面操作
+                if (!player) {
+                    setupPlyrInstance();
+                }
+            }
+        });
+
         // 監聽 HLS 多畫質清單解析完畢
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
             // 讀取所有可用的解析度高度 (例如 [1080, 720, 480])
@@ -1272,13 +1285,24 @@ function showSeekFeedback(direction) {
     el.classList.add("animate");
 }
 
-// 4. 顯示與隱藏影片載入遮罩
+// 4. 顯示與隱藏影片載入遮罩 (加入超時安全閥防禦)
+let loaderTimeout = null;
+
 function showPlayerLoader() {
     const loader = document.getElementById("player-loading-overlay");
     if (loader) {
         loader.classList.remove("hidden");
         void loader.offsetWidth;
         loader.classList.add("active");
+
+        // 3秒超時安全閥，防禦網絡崩潰或 API 未響應導致的畫面卡死
+        if (loaderTimeout) clearTimeout(loaderTimeout);
+        loaderTimeout = setTimeout(() => {
+            if (loader.classList.contains("active")) {
+                console.warn("⚠️ 影片加載超時安全閥觸發，強制關閉 Loading 遮罩。");
+                hidePlayerLoader();
+            }
+        }, 3000);
     }
 }
 
