@@ -55,6 +55,7 @@ let player = null;
 let currentVideoIndex = 0;
 let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播放
+let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -115,6 +116,7 @@ async function loadDatabase() {
             const response = await fetch(`config.json?t=${Date.now()}`);
             if (response.ok) {
                 const data = await response.json();
+                serverEncryptedToken = data.encryptedToken || "";
                 allPlaylists = data.playlists || DEFAULT_PLAYLISTS;
             } else {
                 allPlaylists = DEFAULT_PLAYLISTS;
@@ -123,6 +125,15 @@ async function loadDatabase() {
             console.warn("無法載入 config.json，使用備用資料:", e);
             allPlaylists = DEFAULT_PLAYLISTS;
         }
+    } else {
+        // 如果本地已載入播放清單，我們仍順便拉取 config.json 的加密 Token，確保換瀏覽器後可用
+        try {
+            const response = await fetch(`config.json?t=${Date.now()}`);
+            if (response.ok) {
+                const data = await response.json();
+                serverEncryptedToken = data.encryptedToken || "";
+            }
+        } catch (e) {}
     }
 
     // 🛡️ 資料格式防禦：若資料庫遺留舊版本格式，自動重置
@@ -204,6 +215,7 @@ function verifyPassword(event) {
     if (enteredPassword === "owl2026") {
         sessionStorage.setItem("owldio_auth", "true");
         sessionStorage.setItem("owldio_role", "admin");
+        sessionStorage.setItem("owldio_admin_pass", enteredPassword); // 儲存密碼作為解密金鑰
         
         setupSessionPlaylist("admin", null);
         errorMsg.textContent = "";
@@ -754,27 +766,45 @@ function removeVideoFromPlaylist(index) {
 // 5. GitHub API 一鍵同步設定檔功能
 // ==========================================
 
-// 載入 GitHub 設定
+// 載入 GitHub 設定 (整合對稱加密 Token 自動帶入機制)
 function loadGitHubSettings() {
     const pat = localStorage.getItem('owldio_github_pat') || '';
     const repo = localStorage.getItem('owldio_github_repo') || 'owldio/Owldoge';
     const branch = localStorage.getItem('owldio_github_branch') || 'main';
 
-    document.getElementById("github-pat").value = pat;
     document.getElementById("github-repo").value = repo;
     document.getElementById("github-branch").value = branch;
+
+    if (pat) {
+        document.getElementById("github-pat").value = pat;
+    } else if (serverEncryptedToken) {
+        // 本地無明文 Token，但有伺服器加密密文 ➔ 嘗試以管理密碼解密
+        try {
+            const adminPass = sessionStorage.getItem("owldio_admin_pass");
+            if (adminPass) {
+                const bytes = CryptoJS.AES.decrypt(serverEncryptedToken, adminPass);
+                const decryptedPat = bytes.toString(CryptoJS.enc.Utf8);
+                if (decryptedPat && decryptedPat.startsWith("ghp_")) {
+                    document.getElementById("github-pat").value = decryptedPat;
+                }
+            }
+        } catch (e) {
+            console.warn("自動解密 Token 失敗，可能密碼不同或密文損毀", e);
+        }
+    }
 }
 
-// 刷新 config.json 程式碼預覽
+// 刷新 config.json 程式碼預覽 (包含加密後的 Token 密文)
 function refreshExportCode() {
     const codeBlock = document.getElementById("code-export-output");
     const fullConfig = {
+        encryptedToken: serverEncryptedToken,
         playlists: allPlaylists
     };
     codeBlock.textContent = JSON.stringify(fullConfig, null, 2);
 }
 
-// 一鍵同步到 GitHub
+// 一鍵同步到 GitHub (同步前以 AES 將 Token 加密後包裝進 JSON，兼顧安全與便利)
 async function syncToGitHub() {
     const pat = document.getElementById("github-pat").value.trim();
     const repo = document.getElementById("github-repo").value.trim();
@@ -798,7 +828,20 @@ async function syncToGitHub() {
     syncStatus.textContent = "⏳ 正在與 GitHub 連線中...";
     syncStatus.style.color = "var(--accent)";
 
+    // 使用當前登入的密碼 (owl2026) 作為金鑰進行 AES 加密
+    let encryptedToken = serverEncryptedToken;
+    const adminPass = sessionStorage.getItem("owldio_admin_pass") || "owl2026";
+    if (pat && pat.startsWith("ghp_")) {
+        try {
+            encryptedToken = CryptoJS.AES.encrypt(pat, adminPass).toString();
+            serverEncryptedToken = encryptedToken; // 更新記憶體中的密文
+        } catch (e) {
+            console.error("Token 加密失敗:", e);
+        }
+    }
+
     const fullConfig = {
+        encryptedToken: encryptedToken,
         playlists: allPlaylists
     };
     const newContent = JSON.stringify(fullConfig, null, 2);
