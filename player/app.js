@@ -404,6 +404,16 @@ function loadVideo(index, autoplay = true) {
     const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
     const targetType = isHls ? "hls" : (isYoutube ? "youtube" : "mp4");
 
+    // 動態標記是否為 YouTube 播放，以利 CSS 進行比例自適應分流
+    const playerWrapper = document.querySelector(".player-wrapper");
+    if (playerWrapper) {
+        if (targetType === "youtube") {
+            playerWrapper.classList.add("youtube-active");
+        } else {
+            playerWrapper.classList.remove("youtube-active");
+        }
+    }
+
     const accessBadge = document.getElementById("video-access-badge");
     if (isYoutube) {
         accessBadge.textContent = "YouTube Player";
