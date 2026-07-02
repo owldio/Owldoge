@@ -62,14 +62,14 @@ let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtu
 // 2. 頁面加載與初始化
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
-    // 優先讀取 Hash 路由 (#playlistId)，例如：http://localhost:3000/#clientA
+    // 優先讀取 Hash 路由 (#playlistId)
     const hashParam = window.location.hash.slice(1);
     
     // 同時相容舊版 URL Query 參數 (?playlist=playlistId)
     const urlParams = new URLSearchParams(window.location.search);
     const playlistParam = urlParams.get('playlist');
 
-    // 1. 如果有 Hash 或 Query，先清除可能殘留的舊管理員 Session，確保客戶端載入乾淨
+    // 1. 清除過期的不一致 Session 資訊
     if (hashParam && hashParam !== "admin") {
         sessionStorage.clear();
     } else if (playlistParam) {
@@ -82,16 +82,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. 載入 GitHub 儲存庫同步設定
     loadGitHubSettings();
 
-    // 4. 路由登入解析
-    if (hashParam && hashParam !== "admin") {
+    // 4. 路由分流登入解析
+    if (hashParam === "admin") {
+        // 造訪管理後台
+        const auth = sessionStorage.getItem("owldio_auth");
+        const role = sessionStorage.getItem("owldio_role");
+        if (auth === "true" && role === "admin") {
+            setupSessionPlaylist("admin", null);
+            revealContent("admin");
+            // 已經驗證過管理員身分，直接彈出控制台
+            toggleAdminPortal(true);
+        } else {
+            // 尚未驗證，開啟管理員密碼登入遮罩，隱藏歡迎首頁
+            document.getElementById("password-overlay").classList.remove("hidden");
+            document.getElementById("welcome-overlay").classList.add("hidden");
+            document.getElementById("main-content").classList.add("hidden");
+        }
+    } else if (hashParam && hashParam !== "admin") {
+        // 客戶播放清單直連
         verifyWithPlaylist(hashParam);
     } else if (playlistParam) {
+        // 客戶舊有 Query 參數直連
         verifyWithPlaylist(playlistParam);
-    } else if (sessionStorage.getItem("owldio_auth") === "true") {
-        const role = sessionStorage.getItem("owldio_role");
-        const playlistId = sessionStorage.getItem("owldio_playlist_id");
-        setupSessionPlaylist(role, playlistId);
-        revealContent(role);
+    } else {
+        // 沒有任何 Hash (即 https://player.owldio.art/) ➔ 開啟「歡迎首頁」，展示歷史紀錄，不進播放器
+        document.getElementById("welcome-overlay").classList.remove("hidden");
+        document.getElementById("password-overlay").classList.add("hidden");
+        document.getElementById("main-content").classList.add("hidden");
+        renderVisitedHistory();
     }
 });
 
@@ -198,10 +216,15 @@ function verifyWithPlaylist(playlistId) {
         sessionStorage.setItem("owldio_role", "client");
         sessionStorage.setItem("owldio_playlist_id", matchedPlaylist.id);
 
+        // 記憶此造訪歷史到 LocalStorage 中
+        saveVisitedHistory(matchedPlaylist.id, matchedPlaylist.name);
+
         setupSessionPlaylist("client", matchedPlaylist.id);
         revealContent("client");
     } else {
-        document.getElementById("error-msg").textContent = `找不到 ID 為 "${playlistId}" 的播放清單，請確認連結！`;
+        // 如果是在客戶端點擊錯誤的連結，也引導到歡迎頁並提示錯誤
+        document.getElementById("welcome-overlay").classList.remove("hidden");
+        alert(`❌ 找不到 ID 為 "${playlistId}" 的播放清單，請確認連結！`);
     }
 }
 
@@ -230,11 +253,12 @@ function verifyPassword(event) {
 
 // 解鎖介面
 function revealContent(role) {
-    const overlay = document.getElementById("password-overlay");
     const mainContent = document.getElementById("main-content");
     const btnAdminPortal = document.getElementById("btn-admin-portal");
 
-    overlay.classList.add("fade-out");
+    // 徹底隱藏兩個 Overlay
+    document.getElementById("welcome-overlay").classList.add("hidden");
+    document.getElementById("password-overlay").classList.add("hidden");
     mainContent.classList.remove("hidden");
 
     if (role === "admin") {
@@ -937,7 +961,76 @@ async function syncToGitHub() {
 function resetToDefault() {
     if (!confirm("⚠️ 警告：這將會清除您本機上的設定，恢復成一開始的測試範例。確定要重設嗎？")) return;
     localStorage.removeItem('owldio_playlists');
+    localStorage.removeItem('owldio_visited_history');
     sessionStorage.clear();
     alert("已重設，即將重新整理網頁！");
+    window.location.reload();
+}
+
+// 儲存播放清單造訪歷史
+function saveVisitedHistory(id, name) {
+    let history = [];
+    try {
+        const localHistory = localStorage.getItem("owldio_visited_history");
+        if (localHistory) {
+            history = JSON.parse(localHistory);
+        }
+    } catch (e) {}
+
+    // 過濾重複、將最新的放最前
+    history = history.filter(item => item.id !== id);
+    history.unshift({ id, name, time: Date.now() });
+
+    // 最多留 5 筆
+    if (history.length > 5) {
+        history = history.slice(0, 5);
+    }
+
+    localStorage.setItem("owldio_visited_history", JSON.stringify(history));
+}
+
+// 渲染歡迎頁面的造訪歷史紀錄
+function renderVisitedHistory() {
+    const listDiv = document.getElementById("visited-playlists-list");
+    if (!listDiv) return;
+
+    let history = [];
+    try {
+        const localHistory = localStorage.getItem("owldio_visited_history");
+        if (localHistory) {
+            history = JSON.parse(localHistory);
+        }
+    } catch (e) {}
+
+    if (history.length === 0) {
+        listDiv.innerHTML = `<p style="font-size: 12px; color: var(--text-muted); text-align: left; line-height: 1.5; margin-bottom: 0;">目前本機尚無最近造訪紀錄。<br>請點擊您的專用分享網址造訪播放清單。</p>`;
+        return;
+    }
+
+    listDiv.innerHTML = "";
+    history.forEach(item => {
+        const btn = document.createElement("button");
+        btn.className = "btn-admin-portal";
+        btn.style.width = "100%";
+        btn.style.textAlign = "left";
+        btn.style.padding = "10px 14px";
+        btn.style.fontSize = "13px";
+        btn.style.marginBottom = "4px";
+        btn.style.display = "flex";
+        btn.style.justifyContent = "space-between";
+        btn.style.alignItems = "center";
+        btn.innerHTML = `<span>📂 <strong>${item.name}</strong></span> <span style="font-size: 11px; color: var(--text-muted);">#${item.id}</span>`;
+        btn.onclick = () => {
+            window.location.hash = item.id;
+            window.location.reload();
+        };
+        listDiv.appendChild(btn);
+    });
+}
+
+// 導向管理後台
+function navigateToAdmin(event) {
+    event.preventDefault();
+    window.location.hash = "admin";
     window.location.reload();
 }
