@@ -1,22 +1,9 @@
 {
   "playlists": [
     {
-      "id": "playlist-clientA",
+      "id": "clientA",
       "name": "客戶 A 的專屬影音專區",
-      "password": "owl-client-a",
       "videos": [
-        {
-          "id": "vid-1783006529780",
-          "title": "《榮耀頌》I. 在至高之處榮耀歸與上帝｜《Gloria》Gloria in excelsis Deo",
-          "duration": "",
-          "thumbnail": "https://i.ytimg.com/vi/cCegZp_xNLk/hqdefault.jpg",
-          "sources": [
-            {
-              "src": "cCegZp_xNLk",
-              "provider": "youtube"
-            }
-          ]
-        },
         {
           "id": "vid-01",
           "title": "Owldio Art - 測試影片一 (YouTube)",
@@ -28,25 +15,12 @@
               "provider": "youtube"
             }
           ]
-        },
-        {
-          "id": "vid-1783007878006",
-          "title": "《榮耀頌》I. 在至高之處榮耀歸與上帝｜《Gloria》Gloria in excelsis Deo",
-          "duration": "",
-          "thumbnail": "https://i.ytimg.com/vi/cCegZp_xNLk/hqdefault.jpg",
-          "sources": [
-            {
-              "src": "cCegZp_xNLk",
-              "provider": "youtube"
-            }
-          ]
         }
       ]
     },
     {
-      "id": "playlist-clientB",
+      "id": "clientB",
       "name": "客戶 B 的特製影音清單",
-      "password": "owl-client-b",
       "videos": [
         {
           "id": "vid-02",
@@ -67,15 +41,14 @@
       "name": "《兩兔傍地走》鄭之棻小提琴獨奏會",
       "videos": [
         {
-          "id": "vid-1783015690011",
+          "id": "vid-1783015865496",
           "title": "胡宇君：擊破孤立 ｜Yu-Chun Hu: Breaking the Isolation, Fantasy for Violin and Piano",
           "duration": "",
           "thumbnail": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.png",
           "sources": [
             {
               "src": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.mp4",
-              "type": "video/mp4",
-              "size": 2160
+              "provider": "youtube"
             }
           ]
         }
