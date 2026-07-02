@@ -56,6 +56,7 @@ let currentVideoIndex = 0;
 let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播放
 let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
+let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube 或 mp4)
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -247,9 +248,9 @@ function revealContent(role) {
 }
 
 /**
- * 初始化 Plyr
+ * 創建與綁定 Plyr 播放器實例 (解決 HTML5 Video 與 YouTube Iframe 互切時的 DOM 衝突)
  */
-function initPlyr() {
+function setupPlyrInstance() {
     player = new Plyr('#player', {
         controls: [
             'play-large', 'play', 'progress', 'current-time', 
@@ -259,19 +260,15 @@ function initPlyr() {
         keyboard: { focused: true, global: true }
     });
 
-    let isFirstReady = true;
     player.on('ready', () => {
-        if (isFirstReady) {
-            isFirstReady = false;
-            loadVideo(0, false);
-        } else if (shouldPlayAfterReady) {
-            // 切換訊源成功且播放器 Ready 後，才執行播放，解決 YouTube Iframe 載入非同步問題
+        console.log("Plyr 播放器已就緒。");
+        if (shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
                 player.play().catch(error => {
                     console.log("自動播放被瀏覽器安全政策阻擋，需要用戶與網頁互動：", error);
                 });
-            }, 150); // 給予 150ms 讓 API 穩定
+            }, 150);
         }
     });
 
@@ -288,6 +285,15 @@ function initPlyr() {
             console.log("⏹️ 自動連播已停用。");
         }
     });
+}
+
+/**
+ * 初始化 Plyr (首次載入頁面時)
+ */
+function initPlyr() {
+    setupPlyrInstance();
+    // 首次進入時載入第 0 部影片，預設不自動播放
+    loadVideo(0, false);
 }
 
 /**
@@ -338,7 +344,7 @@ function setupPlaylistUI() {
 }
 
 /**
- * 載入影片
+ * 載入影片 (支援跨訊源智能重建播放器)
  */
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
@@ -348,10 +354,34 @@ function loadVideo(index, autoplay = true) {
 
     document.getElementById("current-video-title").textContent = video.title;
 
-    const isYoutube = video.sources[0].provider === 'youtube';
+    // 確定目標類型
+    const isYoutube = video.sources && video.sources[0] && video.sources[0].provider === 'youtube';
+    const targetType = isYoutube ? "youtube" : "mp4";
+
     const accessBadge = document.getElementById("video-access-badge");
     accessBadge.textContent = isYoutube ? "YouTube Player" : "Cloudflare R2 (4K)";
     accessBadge.className = isYoutube ? "meta-tag resolution" : "meta-tag access";
+
+    // 🛡️ 智能重建：如果上一部影片跟這部影片的類型不同，必須銷毀重做，否則 Plyr 會癱瘓 (YouTube Iframe 無法轉回 Video 標籤)
+    if (currentPlayerType && currentPlayerType !== targetType) {
+        console.log(`🔄 偵測到播放訊源類型轉換 (${currentPlayerType} -> ${targetType})，正在重建播放器以防控制列失效...`);
+        if (player) {
+            try {
+                player.destroy();
+            } catch (e) {
+                console.warn("銷毀舊 Plyr 實例失敗:", e);
+            }
+        }
+        // 重建為乾淨的 HTML5 video 標籤
+        const wrapper = document.querySelector(".player-wrapper");
+        wrapper.innerHTML = `<video id="player" playsinline controls></video>`;
+        
+        // 重新初始化 Plyr
+        setupPlyrInstance();
+    }
+
+    // 更新目前播放器類型
+    currentPlayerType = targetType;
 
     // 設定訊源後，若需要 autoplay，則將 flag 設為 true，交由 ready 事件觸發播放
     shouldPlayAfterReady = autoplay;
@@ -367,6 +397,15 @@ function loadVideo(index, autoplay = true) {
             return sourceObj;
         })
     };
+
+    // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
+    if (targetType === "mp4" && autoplay && currentPlayerType === targetType) {
+        setTimeout(() => {
+            player.play().catch(error => {
+                console.log("HTML5 播放被阻擋：", error);
+            });
+        }, 50);
+    }
 
     const cards = document.querySelectorAll(".playlist-card");
     cards.forEach(card => card.classList.remove("active"));
