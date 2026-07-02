@@ -87,8 +87,18 @@
             <!-- 右側：影片清單卡片 (30% 寬度) -->
             <section class="playlist-section">
                 <div class="playlist-header">
-                    <h3>播放清單</h3>
-                    <span id="playlist-count" class="playlist-count">0 部影片</span>
+                    <div>
+                        <h3>播放清單</h3>
+                        <span id="playlist-count" class="playlist-count" style="font-size: 11px; color: var(--text-secondary); background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 10px; margin-top: 4px; display: inline-block;">0 部影片</span>
+                    </div>
+                    <!-- 自動連播開關 -->
+                    <div class="autoplay-toggle-wrapper">
+                        <label class="switch-label">
+                            <input type="checkbox" id="autoplay-next-toggle" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                        <span class="autoplay-text">自動連播</span>
+                    </div>
                 </div>
                 <!-- 影片卡片容器 -->
                 <div id="playlist-items" class="playlist-items">

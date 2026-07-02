@@ -54,6 +54,7 @@ let videoPlaylist = []; // 目前網頁加載的影片播放清單
 let player = null;
 let currentVideoIndex = 0;
 let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
+let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播放
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -243,11 +244,29 @@ function initPlyr() {
         if (isFirstReady) {
             isFirstReady = false;
             loadVideo(0, false);
+        } else if (shouldPlayAfterReady) {
+            // 切換訊源成功且播放器 Ready 後，才執行播放，解決 YouTube Iframe 載入非同步問題
+            shouldPlayAfterReady = false;
+            setTimeout(() => {
+                player.play().catch(error => {
+                    console.log("自動播放被瀏覽器安全政策阻擋，需要用戶與網頁互動：", error);
+                });
+            }, 150); // 給予 150ms 讓 API 穩定
         }
     });
 
+    // 監聽播放結束事件
     player.on('ended', () => {
-        playNextVideo();
+        console.log("🎥 目前影片播放結束。");
+        const autoplayToggle = document.getElementById("autoplay-next-toggle");
+        const shouldAutoplay = autoplayToggle ? autoplayToggle.checked : true;
+
+        if (shouldAutoplay) {
+            console.log("🚀 自動連播已啟用，載入下一首...");
+            playNextVideo();
+        } else {
+            console.log("⏹️ 自動連播已停用。");
+        }
     });
 }
 
@@ -314,6 +333,9 @@ function loadVideo(index, autoplay = true) {
     accessBadge.textContent = isYoutube ? "YouTube Player" : "Cloudflare R2 (4K)";
     accessBadge.className = isYoutube ? "meta-tag resolution" : "meta-tag access";
 
+    // 設定訊源後，若需要 autoplay，則將 flag 設為 true，交由 ready 事件觸發播放
+    shouldPlayAfterReady = autoplay;
+
     player.source = {
         type: 'video',
         title: video.title,
@@ -333,10 +355,6 @@ function loadVideo(index, autoplay = true) {
     if (activeCard) {
         activeCard.classList.add("active");
         activeCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
-
-    if (autoplay) {
-        player.play().catch(error => console.log("自動播放被阻擋：", error));
     }
 }
 
