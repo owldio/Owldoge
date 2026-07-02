@@ -291,30 +291,7 @@ function revealContent(role) {
  * 創建與綁定 Plyr 播放器實例 (支援自訂選項以對接 HLS ABR 多畫質控制)
  */
 function setupPlyrInstance(options = {}) {
-    // 雙工播放器架構：如果 HLS 影片需要更新 html5 播放器自適應畫質選單，在此處重新配置 options
-    if (playerHtml5 && options.quality) {
-        try {
-            playerHtml5.destroy();
-        } catch (e) {}
-
-        const defaultOptions = {
-            controls: [
-                'play-large', 'play', 'progress', 'current-time', 
-                'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
-            ],
-            settings: ['quality', 'speed'],
-            fullscreen: { container: '.player-wrapper' }, // 指定最外層為全螢幕主體
-            tooltips: { controls: true, seek: true },
-            keyboard: { focused: true, global: true }
-        };
-        const mergedOptions = { ...defaultOptions, ...options };
-        playerHtml5 = new Plyr('#player-html5', mergedOptions);
-        setupPlayerEvents(playerHtml5, "html5");
-        
-        if (currentPlayerType !== "youtube") {
-            player = playerHtml5;
-        }
-    }
+    // 雙工播放器架構下，畫質選單更新已轉移至 loadVideo 的 HLS 分支內部，此處為空以作防禦
 }
 
 // 綁定播放器通用事件與全螢幕代理
@@ -505,7 +482,28 @@ function loadVideo(index, autoplay = true) {
     shouldPlayAfterReady = autoplay;
 
     if (targetType === "hls") {
-        const videoEl = document.getElementById("player-html5");
+        // 1. 先銷毀舊的 HTML5 Plyr 實例
+        if (playerHtml5) {
+            try {
+                playerHtml5.destroy();
+                playerHtml5 = null;
+            } catch (e) {
+                console.warn("銷毀舊 HTML5 播放器失敗:", e);
+            }
+        }
+
+        // 2. 替換為全新、乾淨的 video 標籤，防止 hls.js 與舊 Plyr 媒體流衝突
+        let videoEl = document.getElementById("player-html5");
+        if (videoEl) {
+            const newVideo = document.createElement("video");
+            newVideo.id = "player-html5";
+            newVideo.setAttribute("playsinline", "");
+            newVideo.setAttribute("controls", "");
+            videoEl.parentNode.replaceChild(newVideo, videoEl);
+            videoEl = newVideo;
+        }
+
+        // 3. 實例化 hls.js 並附加上媒體流
         hlsInstance = new Hls({
             autoStartLoad: true,
             capLevelToPlayerSize: true
@@ -513,13 +511,16 @@ function loadVideo(index, autoplay = true) {
         hlsInstance.loadSource(srcUrl);
         hlsInstance.attachMedia(videoEl);
 
-        // 監聽 HLS 多畫質清單解析完畢
+        // 4. 監聽 manifest 解析成功後，才對該 clean video 實例化 Plyr 播放器
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
             const availableQualities = hlsInstance.levels.map(l => l.height);
             const qualityOptions = [0, ...availableQualities];
 
-            // 重新配置畫質選單 (僅針對 HTML5 播放器重建)
-            setupPlyrInstance({
+            playerHtml5 = new Plyr('#player-html5', {
+                controls: [
+                    'play-large', 'play', 'progress', 'current-time', 
+                    'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
+                ],
                 settings: ['quality', 'speed'],
                 quality: {
                     default: 0,
@@ -538,8 +539,15 @@ function loadVideo(index, autoplay = true) {
                 },
                 i18n: {
                     qualityLabel: { 0: '自動' }
-                }
+                },
+                fullscreen: { container: '.player-wrapper' },
+                tooltips: { controls: true, seek: true },
+                keyboard: { focused: true, global: true }
             });
+
+            // 重新綁定事件與更新指針
+            setupPlayerEvents(playerHtml5, "html5");
+            player = playerHtml5;
 
             if (autoplay) {
                 setTimeout(() => {
