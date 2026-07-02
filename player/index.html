@@ -116,7 +116,7 @@
                 <div class="admin-tabs">
                     <button class="tab-btn active" onclick="switchTab('tab-videos')">📹 影片庫管理</button>
                     <button class="tab-btn" onclick="switchTab('tab-clients')">👥 客戶權限設定</button>
-                    <button class="tab-btn" onclick="switchTab('tab-export')">💾 匯出最新配置</button>
+                    <button class="tab-btn" onclick="switchTab('tab-export')">🚀 同步 GitHub 設定</button>
                 </div>
 
                 <!-- 內容區 1：影片庫管理 -->
@@ -216,16 +216,43 @@
                     </div>
                 </div>
 
-                <!-- 內容區 3：匯出設定碼 -->
+                <!-- 內容區 3：同步 GitHub 設定 -->
                 <div id="tab-export" class="tab-content">
-                    <div class="export-section">
-                        <h4>💾 保存變更（一鍵複製程式碼）</h4>
+                    <div class="export-section" style="overflow-y: auto;">
+                        <h4>🚀 一鍵同步設定到 GitHub</h4>
                         <p class="export-notice">
-                            ⚠️ <strong>重要提示：</strong> 因為本網頁是部署在 Cloudflare Pages 的「靜態網頁」，並沒有連結外部資料庫。您在下方所做的所有設定目前會暫存在您瀏覽器的 `localStorage` 中。<br>
-                            為了讓**所有客戶**都能在他們的裝置上使用您設定好的最新內容，請點擊下方按鈕複製最新的設定程式碼，並將它貼回您專案中的 <strong>`player/app.js`</strong> 檔案最上方對應的變數中，然後 Push 到 GitHub 即告完成！
+                            💡 <strong>自動部署機制：</strong> 填寫您的 GitHub 個人存取權杖 (PAT) 後，系統將自動提交最新的 <code>config.json</code> 到您的 GitHub 儲存庫中。這會自動觸發 Cloudflare Pages 重新部署更新！<br>
+                            *(您的 Token 僅會安全儲存在本機瀏覽器 LocalStorage，絕不上傳到第三方伺服器)*
                         </p>
-                        <button class="btn-primary btn-copy" onclick="copyConfigCode()">📋 複製最新 app.js 設定碼</button>
-                        <pre class="code-output"><code id="code-export-output"></code></pre>
+                        
+                        <div class="admin-split" style="grid-template-columns: 5fr 5fr; gap: 20px; height: auto; overflow: visible;">
+                            <div class="form-section" style="height: auto;">
+                                <div class="form-group">
+                                    <label>GitHub 個人存取權杖 (PAT - Fine-grained / Classic with repo scope)</label>
+                                    <input type="password" id="github-pat" placeholder="github_pat_..." style="-webkit-text-security: disc;">
+                                    <small style="color: var(--text-muted); font-size: 11px; display: block; margin-top: 4px;">可在 GitHub「Settings -> Developer settings -> Personal access tokens」中建立。</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>GitHub 儲存庫路徑 (格式: 擁有者/專案名)</label>
+                                    <input type="text" id="github-repo" value="owldio/Owldoge">
+                                </div>
+                                <div class="form-group">
+                                    <label>分支 (Branch)</label>
+                                    <input type="text" id="github-branch" value="main">
+                                </div>
+                                <div class="form-group">
+                                    <label>JSON 儲存路徑</label>
+                                    <input type="text" id="github-path" value="player/config.json" readonly style="opacity: 0.7;">
+                                </div>
+                                <button class="btn-primary" onclick="syncToGitHub()">🚀 一鍵更新 GitHub 設定</button>
+                                <p id="sync-status" style="margin-top: 12px; font-size: 13px; font-weight: 500; min-height: 20px;"></p>
+                            </div>
+
+                            <div class="list-section" style="height: auto;">
+                                <h4>設定檔預覽 (config.json)</h4>
+                                <pre class="code-output" style="max-height: 320px; overflow-y: auto;"><code id="code-export-output"></code></pre>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

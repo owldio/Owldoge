@@ -1,0 +1,48 @@
+{
+  "videos": [
+    {
+      "id": "vid-01",
+      "title": "Owldio Art - 測試影片一 (YouTube 範例)",
+      "duration": "05:15",
+      "thumbnail": "https://img.youtube.com/vi/vweqyVqQoFM/maxresdefault.jpg",
+      "sources": [
+        {
+          "src": "vweqyVqQoFM",
+          "provider": "youtube"
+        }
+      ]
+    },
+    {
+      "id": "vid-02",
+      "title": "Owldio Art - 測試影片二 (YouTube 範例)",
+      "duration": "03:40",
+      "thumbnail": "https://img.youtube.com/vi/iRQGeJ5qiMk/maxresdefault.jpg",
+      "sources": [
+        {
+          "src": "iRQGeJ5qiMk",
+          "provider": "youtube"
+        }
+      ]
+    }
+  ],
+  "clients": [
+    {
+      "id": "admin",
+      "password": "owl2026",
+      "role": "admin",
+      "videos": ["vid-01", "vid-02"]
+    },
+    {
+      "id": "clientA",
+      "password": "owl-client-a",
+      "role": "client",
+      "videos": ["vid-01"]
+    },
+    {
+      "id": "clientB",
+      "password": "owl-client-b",
+      "role": "client",
+      "videos": ["vid-02"]
+    }
+  ]
+}
