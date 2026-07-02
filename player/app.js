@@ -60,11 +60,17 @@ let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播�
 // 2. 頁面加載與初始化
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
+    // 優先讀取 Hash 路由 (#playlistId)，例如：http://localhost:3000/#clientA
+    const hashParam = window.location.hash.slice(1);
+    
+    // 同時相容舊版 URL Query 參數 (?playlist=playlistId)
     const urlParams = new URLSearchParams(window.location.search);
     const playlistParam = urlParams.get('playlist');
 
-    // 1. 如果 URL 帶有播放清單參數，先清除任何殘留的舊管理員 Session，確保客戶端載入乾淨
-    if (playlistParam) {
+    // 1. 如果有 Hash 或 Query，先清除可能殘留的舊管理員 Session，確保客戶端載入乾淨
+    if (hashParam && hashParam !== "admin") {
+        sessionStorage.clear();
+    } else if (playlistParam) {
         sessionStorage.clear();
     }
 
@@ -74,8 +80,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. 載入 GitHub 儲存庫同步設定
     loadGitHubSettings();
 
-    // 4. 解析 URL 播放清單參數： ?playlist=xxx
-    if (playlistParam) {
+    // 4. 路由登入解析
+    if (hashParam && hashParam !== "admin") {
+        verifyWithPlaylist(hashParam);
+    } else if (playlistParam) {
         verifyWithPlaylist(playlistParam);
     } else if (sessionStorage.getItem("owldio_auth") === "true") {
         const role = sessionStorage.getItem("owldio_role");
@@ -427,7 +435,7 @@ function toggleProviderInput() {
     }
 }
 
-// 渲染左側播放清單表格 (移除直接刪除的按鈕，安全移至右側編輯區內)
+// 渲染左側播放清單表格 (移除直接刪除的按鈕，安全移至右側編輯區內；並生成美觀的 Hash 分享連結)
 function renderAdminPlaylists() {
     const playlistContainer = document.getElementById("admin-playlist-list");
     playlistContainer.innerHTML = "";
@@ -435,8 +443,14 @@ function renderAdminPlaylists() {
     allPlaylists.forEach(playlist => {
         const tr = document.createElement("tr");
         
-        const currentOrigin = window.location.origin + window.location.pathname;
-        const playlistUrl = `${currentOrigin}?playlist=${playlist.id}`;
+        // 取得乾淨的路徑 (去除 index.html)
+        let cleanPath = window.location.pathname;
+        if (cleanPath.endsWith("index.html")) {
+            cleanPath = cleanPath.substring(0, cleanPath.length - 10);
+        }
+        const currentOrigin = window.location.origin + cleanPath;
+        // 產生更精簡美觀的 Hash 連結：http://.../player/#clientA
+        const playlistUrl = `${currentOrigin}#${playlist.id}`;
 
         tr.innerHTML = `
             <td>
@@ -555,7 +569,7 @@ function toggleAddVideoForm() {
     }
 }
 
-// 渲染選中清單內的影片列表
+// 渲染選中清單內的影片列表 (加固對 sources 欄位遺留舊資料的空值防禦)
 function renderAdminPlaylistVideos() {
     const listBody = document.getElementById("admin-playlist-videos");
     listBody.innerHTML = "";
@@ -567,7 +581,8 @@ function renderAdminPlaylistVideos() {
     }
 
     playlist.videos.forEach((video, index) => {
-        const isYoutube = video.sources[0].provider === 'youtube';
+        const hasSource = video.sources && video.sources[0];
+        const isYoutube = hasSource && video.sources[0].provider === 'youtube';
         const typeLabel = isYoutube ? "🔴 YT" : "🌐 MP4";
 
         const tr = document.createElement("tr");
@@ -593,40 +608,59 @@ function renderAdminPlaylistVideos() {
     });
 }
 
-// 新增影片到播放清單 (不需填寫時長，支援 YouTube 自動抓取資料)
+// 新增影片到播放清單 (不需填寫時長，支援 YouTube 自動抓取資料，加載健壯防禦)
 function addVideoToPlaylist(event) {
     event.preventDefault();
     if (!editingPlaylistId) return;
 
-    const title = document.getElementById("new-video-title").value.trim();
-    const thumbnail = document.getElementById("new-video-thumb").value.trim();
-    const provider = document.getElementById("new-video-provider").value;
-    const src = document.getElementById("new-video-src").value.trim();
+    try {
+        const titleInput = document.getElementById("new-video-title");
+        const thumbnailInput = document.getElementById("new-video-thumb");
+        const providerInput = document.getElementById("new-video-provider");
+        const srcInput = document.getElementById("new-video-src");
 
-    const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
-    if (!playlist) return;
+        const title = titleInput.value.trim();
+        const thumbnail = thumbnailInput.value.trim();
+        const provider = providerInput.value;
+        const src = srcInput.value.trim();
 
-    const finalSrc = provider === "youtube" ? extractYoutubeId(src) : src;
+        const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
+        if (!playlist) {
+            alert("找不到當前正在編輯的播放清單，請點選左側「編輯影片」重試。");
+            return;
+        }
 
-    const newVideo = {
-        id: `vid-${Date.now()}`,
-        title: title,
-        duration: "", // 移除時長，設定為空
-        thumbnail: thumbnail,
-        sources: [
-            provider === "youtube"
-            ? { src: finalSrc, provider: "youtube" }
-            : { src: finalSrc, type: "video/mp4", size: 2160 }
-        ]
-    };
+        const finalSrc = provider === "youtube" ? extractYoutubeId(src) : src;
 
-    playlist.videos.push(newVideo);
-    saveToLocalStorage();
-    renderAdminPlaylistVideos();
-    
-    document.getElementById("add-video-form").reset();
-    toggleProviderInput();
-    refreshExportCode();
+        const newVideo = {
+            id: `vid-${Date.now()}`,
+            title: title,
+            duration: "", // 移除時長，設定為空
+            thumbnail: thumbnail,
+            sources: [
+                provider === "youtube"
+                ? { src: finalSrc, provider: "youtube" }
+                : { src: finalSrc, type: "video/mp4", size: 2160 }
+            ]
+        };
+
+        playlist.videos.push(newVideo);
+        saveToLocalStorage();
+        renderAdminPlaylistVideos();
+        
+        // 重設表單與提示狀態
+        document.getElementById("add-video-form").reset();
+        toggleProviderInput();
+        
+        // 自動摺疊收起表單
+        toggleAddVideoForm();
+        
+        refreshExportCode();
+        alert("🎉 影片新增成功！新影片已放入清單底部。");
+    } catch (error) {
+        console.error("新增影片發生錯誤:", error);
+        alert(`❌ 新增影片失敗，詳細錯誤：${error.message}`);
+    }
 }
 
 // 當 YouTube 網址/ID 輸入框失去焦點時，自動向 oEmbed API 抓取標題與封面圖
