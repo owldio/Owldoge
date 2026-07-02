@@ -51,9 +51,12 @@
             <div class="nav-logo">
                 <span class="logo-accent">Owldio</span> Player
             </div>
-            <div class="nav-badge">
-                <span class="badge-dot"></span>
-                Private Area
+            <div class="nav-actions">
+                <button id="btn-admin-portal" class="btn-admin-portal hidden" onclick="toggleAdminPortal(true)">🛠️ 管理後台</button>
+                <div class="nav-badge">
+                    <span class="badge-dot"></span>
+                    <span id="role-badge-text">Private Area</span>
+                </div>
             </div>
         </header>
 
@@ -73,7 +76,7 @@
                     <div class="video-meta">
                         <span class="meta-tag resolution">4K Ultra HD</span>
                         <span class="meta-tag codec">H.265 / HEVC</span>
-                        <span class="meta-tag access">VIP ACCESS</span>
+                        <span class="meta-tag access" id="video-access-badge">VIP ACCESS</span>
                     </div>
                     <div class="playback-notice">
                         <strong>播放提示：</strong> 4K H.265 (HEVC) 影片需要硬體解碼支援。若播放遇到黑屏或卡頓，建議使用 Safari 瀏覽器，或確認您的瀏覽器已啟用硬體加速。
@@ -98,6 +101,140 @@
         <footer class="footer">
             <p>&copy; 2026 Owldio.art. All Rights Reserved. Private & Confidential.</p>
         </footer>
+    </div>
+
+    <!-- 管理後台 Modal (Admin Portal) -->
+    <div id="admin-portal-modal" class="admin-portal-modal hidden">
+        <div class="admin-card">
+            <header class="admin-header">
+                <h2>🛠️ Owldio Player 控制中心</h2>
+                <button class="btn-close" onclick="toggleAdminPortal(false)">&times;</button>
+            </header>
+            
+            <div class="admin-body">
+                <!-- 頁籤導覽 -->
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('tab-videos')">📹 影片庫管理</button>
+                    <button class="tab-btn" onclick="switchTab('tab-clients')">👥 客戶權限設定</button>
+                    <button class="tab-btn" onclick="switchTab('tab-export')">💾 匯出最新配置</button>
+                </div>
+
+                <!-- 內容區 1：影片庫管理 -->
+                <div id="tab-videos" class="tab-content active">
+                    <div class="admin-split">
+                        <!-- 新增影片表單 -->
+                        <div class="form-section">
+                            <h4>新增影片到資料庫</h4>
+                            <form id="add-video-form" onsubmit="addVideo(event)">
+                                <div class="form-group">
+                                    <label>影片 ID (唯一值, 如 vid-04)</label>
+                                    <input type="text" id="new-video-id" placeholder="e.g. vid-04" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>影片標題</label>
+                                    <input type="text" id="new-video-title" placeholder="e.g. 客戶訂製影片" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>影片時長 (MM:SS)</label>
+                                    <input type="text" id="new-video-duration" placeholder="e.g. 05:40" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>影片封面圖網址 (或 Unsplash / YouTube 封面)</label>
+                                    <input type="url" id="new-video-thumb" placeholder="https://images.unsplash.com/..." required>
+                                </div>
+                                <div class="form-group">
+                                    <label>影片來源類型</label>
+                                    <select id="new-video-provider" onchange="toggleProviderInput()">
+                                        <option value="youtube">YouTube 影片</option>
+                                        <option value="mp4">自主託管 (R2 MP4 連結)</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label id="url-label">YouTube 影片 ID (如 vweqyVqQoFM)</label>
+                                    <input type="text" id="new-video-src" placeholder="e.g. vweqyVqQoFM" required>
+                                </div>
+                                <button type="submit" class="btn-primary">新增影片</button>
+                            </form>
+                        </div>
+                        <!-- 影片列表 -->
+                        <div class="list-section">
+                            <h4>目前影片庫 (<span id="admin-video-count">0</span>)</h4>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>標題</th>
+                                            <th>類型</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-video-list">
+                                        <!-- 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 內容區 2：客戶權限設定 -->
+                <div id="tab-clients" class="tab-content">
+                    <div class="admin-split">
+                        <!-- 新增客戶表單 -->
+                        <div class="form-section">
+                            <h4>建立新客戶與密碼</h4>
+                            <form id="add-client-form" onsubmit="addClient(event)">
+                                <div class="form-group">
+                                    <label>客戶代稱 (英文 ID, 如 clientC)</label>
+                                    <input type="text" id="new-client-id" placeholder="e.g. clientC" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>客戶專屬密碼</label>
+                                    <input type="text" id="new-client-pass" placeholder="e.g. owl-client-c" required>
+                                </div>
+                                <button type="submit" class="btn-primary">新增客戶</button>
+                            </form>
+                        </div>
+                        <!-- 客戶列表與影片核選 -->
+                        <div class="list-section">
+                            <h4>客戶權限設定</h4>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>客戶 ID / 密碼</th>
+                                            <th>可觀看影片 (勾選授權)</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-client-list">
+                                        <!-- 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 內容區 3：匯出設定碼 -->
+                <div id="tab-export" class="tab-content">
+                    <div class="export-section">
+                        <h4>💾 保存變更（一鍵複製程式碼）</h4>
+                        <p class="export-notice">
+                            ⚠️ <strong>重要提示：</strong> 因為本網頁是部署在 Cloudflare Pages 的「靜態網頁」，並沒有連結外部資料庫。您在下方所做的所有設定目前會暫存在您瀏覽器的 `localStorage` 中。<br>
+                            為了讓**所有客戶**都能在他們的裝置上使用您設定好的最新內容，請點擊下方按鈕複製最新的設定程式碼，並將它貼回您專案中的 <strong>`player/app.js`</strong> 檔案最上方對應的變數中，然後 Push 到 GitHub 即告完成！
+                        </p>
+                        <button class="btn-primary btn-copy" onclick="copyConfigCode()">📋 複製最新 app.js 設定碼</button>
+                        <pre class="code-output"><code id="code-export-output"></code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="admin-footer">
+                <button class="btn-danger-outline" onclick="resetToDefault()">⚠️ 重設為初始預設值</button>
+                <p>設定將即時儲存於您的瀏覽器 LocalStorage</p>
+            </footer>
+        </div>
     </div>
 
     <!-- 載入 Plyr 播放器 JS CDN -->
