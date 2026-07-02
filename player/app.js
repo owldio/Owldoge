@@ -76,8 +76,9 @@ document.addEventListener("DOMContentLoaded", async () => {
         sessionStorage.clear();
     }
 
-    // 2. 從伺服器最新 config.json 或 LocalStorage 讀取資料
-    await loadDatabase();
+    // 2. 從伺服器最新 config.json 或 LocalStorage 讀取資料 (若是客戶直連或首頁，強制從伺服器拉取 config.json，避開舊 LocalStorage 快取)
+    const isClientAccess = (hashParam !== "login");
+    await loadDatabase(isClientAccess);
 
     // 3. 載入 GitHub 儲存庫同步設定
     loadGitHubSettings();
@@ -116,11 +117,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 /**
  * 載入播放清單資料庫 (帶有快取防禦與格式防禦)
  */
-async function loadDatabase() {
+async function loadDatabase(forceServer = false) {
     let localDataLoaded = false;
     const localPlaylists = localStorage.getItem('owldio_playlists');
 
-    if (localPlaylists) {
+    if (localPlaylists && !forceServer) {
         try {
             allPlaylists = JSON.parse(localPlaylists);
             localDataLoaded = true;
@@ -129,14 +130,19 @@ async function loadDatabase() {
         }
     }
 
-    // 若本地無資料，則向伺服器拉取最新 config.json (加上時間戳防止快取)
-    if (!localDataLoaded) {
+    // 若本地無資料或強制伺服器，則向伺服器拉取最新 config.json (加上時間戳防止快取)
+    if (!localDataLoaded || forceServer) {
         try {
             const response = await fetch(`config.json?t=${Date.now()}`);
             if (response.ok) {
                 const data = await response.json();
                 serverEncryptedToken = data.encryptedToken || "";
                 allPlaylists = data.playlists || DEFAULT_PLAYLISTS;
+                
+                // 如果強制從伺服器拉取，同步更新 LocalStorage
+                if (forceServer) {
+                    saveToLocalStorage();
+                }
             } else {
                 allPlaylists = DEFAULT_PLAYLISTS;
             }
