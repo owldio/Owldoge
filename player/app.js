@@ -293,6 +293,7 @@ function setupPlyrInstance(options = {}) {
             'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
         ],
         settings: ['speed'], // 預設僅開啟播放速度，不顯示無效的 YouTube 畫質選項
+        fullscreen: { container: '.player-wrapper' }, // 指定最外層 wrapper 為全螢幕載體
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true }
     };
@@ -409,9 +410,19 @@ function loadVideo(index, autoplay = true) {
 
     // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕 (加入安全防禦以防 Plyr 未 initialized 就緒)
     const wasFullscreen = player && player.fullscreen && player.fullscreen.active;
+    const playerWrapper = document.querySelector(".player-wrapper");
     if (wasFullscreen) {
         keepFullscreen = true;
+        // 🛡️ 核心黑科技：在銷毀 Plyr 前，手動讓最外層 wrapper 進入原生全螢幕接管，確保換片時瀏覽器不退出全螢幕！
+        if (playerWrapper && document.fullscreenElement !== playerWrapper) {
+            try {
+                playerWrapper.requestFullscreen().catch(err => {
+                    console.log("原生全螢幕接管受限：", err);
+                });
+            } catch (e) {}
+        }
     }
+
 
     currentVideoIndex = index;
     const video = videoPlaylist[index];
