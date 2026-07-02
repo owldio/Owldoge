@@ -58,7 +58,6 @@ let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播�
 let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
 let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube, mp4, hls)
 let hlsInstance = null; // hls.js 解碼器實例，用於 ABR 自適應多畫質串流播放
-let keepFullscreen = false; // 紀錄切換影片前是否處於全螢幕狀態，以便換片後自動還原
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -293,7 +292,6 @@ function setupPlyrInstance(options = {}) {
             'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
         ],
         settings: ['speed'], // 預設僅開啟播放速度，不顯示無效的 YouTube 畫質選項
-        fullscreen: { container: '.player-wrapper' }, // 指定最外層 wrapper 為全螢幕載體
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true }
     };
@@ -303,21 +301,6 @@ function setupPlyrInstance(options = {}) {
 
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
-        // 延遲淡出遮罩以防 DOM 白屏或閃動，待首影格載入就緒後優化顯示
-        setTimeout(hidePlayerLoader, 250);
-        
-        // 換片後自動還原全螢幕狀態
-        if (keepFullscreen) {
-            keepFullscreen = false;
-            setTimeout(() => {
-                try {
-                    player.fullscreen.enter();
-                } catch (e) {
-                    console.warn("自動還原全螢幕失敗:", e);
-                }
-            }, 100);
-        }
-
         if (shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
@@ -410,24 +393,6 @@ function setupPlaylistUI() {
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
 
-    // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕 (加入安全防禦以防 Plyr 未 initialized 就緒)
-    const wasFullscreen = player && player.fullscreen && player.fullscreen.active;
-    const playerWrapper = document.querySelector(".player-wrapper");
-    if (wasFullscreen) {
-        keepFullscreen = true;
-        // 🛡️ 核心黑科技：在銷毀 Plyr 前，手動讓最外層 wrapper 進入原生全螢幕接管，確保換片時瀏覽器不退出全螢幕！
-        if (playerWrapper && document.fullscreenElement !== playerWrapper) {
-            try {
-                playerWrapper.requestFullscreen().catch(err => {
-                    console.log("原生全螢幕接管受限：", err);
-                });
-            } catch (e) {}
-        }
-    }
-
-    // 拉起優雅的黑底加載遮罩，掩蓋切換訊源時 DOM 摧毀重建的閃爍
-    showPlayerLoader();
-
     currentVideoIndex = index;
     const video = videoPlaylist[index];
 
@@ -515,19 +480,6 @@ function loadVideo(index, autoplay = true) {
         hlsInstance.loadSource(srcUrl);
         hlsInstance.attachMedia(videoEl);
 
-        // 監聽 HLS 致命載入錯誤，防禦網絡請求失敗或 CORS 導致的頁面卡死
-        hlsInstance.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                console.error("HLS 致命錯誤：", data);
-                hidePlayerLoader(); // 發生致命錯誤時立刻關閉遮罩，防止卡死在 loading
-                
-                // 如果尚未初始化 Plyr，則還原出一個基礎的播放器以保全介面操作
-                if (!player) {
-                    setupPlyrInstance();
-                }
-            }
-        });
-
         // 監聽 HLS 多畫質清單解析完畢
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
             // 讀取所有可用的解析度高度 (例如 [1080, 720, 480])
@@ -580,29 +532,11 @@ function loadVideo(index, autoplay = true) {
         // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
         if (targetType === "mp4" && autoplay && !isTypeChanged) {
             setTimeout(() => {
-                player.play().then(() => {
-                    setTimeout(hidePlayerLoader, 200);
-                }).catch(error => {
+                player.play().catch(error => {
                     console.log("HTML5 播放被阻擋：", error);
-                    setTimeout(hidePlayerLoader, 200);
                 });
             }, 50);
-        } else if (!isTypeChanged) {
-            // 如果同類型切換 (無重建) 且不自動播放，也需要手動隱藏 loader
-            setTimeout(hidePlayerLoader, 250);
         }
-    }
-
-    // 如果沒有跨類型重建，則在 loadVideo 結尾直接手動觸發全螢幕狀態還原
-    if (!isTypeChanged && keepFullscreen) {
-        keepFullscreen = false;
-        setTimeout(() => {
-            try {
-                player.fullscreen.enter();
-            } catch (e) {
-                console.warn("自動還原全螢幕失敗:", e);
-            }
-        }, 150);
     }
 
     const cards = document.querySelectorAll(".playlist-card");
@@ -1285,35 +1219,4 @@ function showSeekFeedback(direction) {
     el.classList.add("animate");
 }
 
-// 4. 顯示與隱藏影片載入遮罩 (加入超時安全閥防禦)
-let loaderTimeout = null;
 
-function showPlayerLoader() {
-    const loader = document.getElementById("player-loading-overlay");
-    if (loader) {
-        loader.classList.remove("hidden");
-        void loader.offsetWidth;
-        loader.classList.add("active");
-
-        // 3秒超時安全閥，防禦網絡崩潰或 API 未響應導致的畫面卡死
-        if (loaderTimeout) clearTimeout(loaderTimeout);
-        loaderTimeout = setTimeout(() => {
-            if (loader.classList.contains("active")) {
-                console.warn("⚠️ 影片加載超時安全閥觸發，強制關閉 Loading 遮罩。");
-                hidePlayerLoader();
-            }
-        }, 3000);
-    }
-}
-
-function hidePlayerLoader() {
-    const loader = document.getElementById("player-loading-overlay");
-    if (loader) {
-        loader.classList.remove("active");
-        setTimeout(() => {
-            if (!loader.classList.contains("active")) {
-                loader.classList.add("hidden");
-            }
-        }, 300);
-    }
-}
