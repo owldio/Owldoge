@@ -61,6 +61,25 @@
           ]
         }
       ]
+    },
+    {
+      "id": "Chopeefen",
+      "name": "《兩兔傍地走》鄭之棻小提琴獨奏會",
+      "videos": [
+        {
+          "id": "vid-1783015690011",
+          "title": "胡宇君：擊破孤立 ｜Yu-Chun Hu: Breaking the Isolation, Fantasy for Violin and Piano",
+          "duration": "",
+          "thumbnail": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.png",
+          "sources": [
+            {
+              "src": "https://pub-327847144168416b8bd3e1dfb9c3b6ef.r2.dev/6.mp4",
+              "type": "video/mp4",
+              "size": 2160
+            }
+          ]
+        }
+      ]
     }
   ]
 }
