@@ -268,6 +268,7 @@ body {
 /* 針對普通 HTML5 影片 (MP4/HLS)，解除 Plyr 預設 16:9 的限制，使其跟隨影片實體比例自適應 */
 .player-wrapper:not(.youtube-active) .plyr {
     --plyr-video-aspect-ratio: auto !important;
+    height: auto !important;
 }
 
 .player-wrapper:not(.youtube-active) .plyr__video-wrapper {
