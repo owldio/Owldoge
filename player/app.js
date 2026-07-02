@@ -58,6 +58,7 @@ let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播�
 let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
 let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube, mp4, hls)
 let hlsInstance = null; // hls.js 解碼器實例，用於 ABR 自適應多畫質串流播放
+let keepFullscreen = false; // 紀錄切換影片前是否處於全螢幕狀態，以便換片後自動還原
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -301,6 +302,19 @@ function setupPlyrInstance(options = {}) {
 
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
+        
+        // 換片後自動還原全螢幕狀態
+        if (keepFullscreen) {
+            keepFullscreen = false;
+            setTimeout(() => {
+                try {
+                    player.fullscreen.enter();
+                } catch (e) {
+                    console.warn("自動還原全螢幕失敗:", e);
+                }
+            }, 150);
+        }
+
         if (shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
@@ -392,6 +406,12 @@ function setupPlaylistUI() {
  */
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
+
+    // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕 (加入安全防禦以防 Plyr 未 initialized 就緒)
+    const wasFullscreen = player && player.fullscreen && player.fullscreen.active;
+    if (wasFullscreen) {
+        keepFullscreen = true;
+    }
 
     currentVideoIndex = index;
     const video = videoPlaylist[index];
@@ -537,6 +557,18 @@ function loadVideo(index, autoplay = true) {
                 });
             }, 50);
         }
+    }
+
+    // 如果沒有跨類型重建，則在 loadVideo 結尾直接手動觸發全螢幕狀態還原
+    if (!isTypeChanged && keepFullscreen) {
+        keepFullscreen = false;
+        setTimeout(() => {
+            try {
+                player.fullscreen.enter();
+            } catch (e) {
+                console.warn("自動還原全螢幕失敗:", e);
+            }
+        }, 150);
     }
 
     const cards = document.querySelectorAll(".playlist-card");
