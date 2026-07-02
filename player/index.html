@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owldio Player - 私密影音播放專區</title>
+    
+    <!-- 1. 隱蔽性與安全性：防止搜尋引擎索引 (SEO noindex, nofollow) -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+
+    <!-- 載入 Google Fonts - Outfit，增添現代高級質感 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 載入 Plyr 播放器的 CSS CDN -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+    <!-- 載入自訂樣式表 -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- 密碼驗證遮罩層 (Password Overlay) -->
+    <div id="password-overlay" class="password-overlay">
+        <div class="password-card">
+            <div class="brand-logo">
+                <svg class="owl-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- 貓頭鷹造型 SVG -->
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 10.13 4.64 8.41 5.72 7.03C6.31 8.23 7.54 9 9 9C10.1 9 11.08 8.41 11.62 7.53C11.87 7.83 12.24 8 12.67 8C13.1 8 13.47 7.83 13.72 7.53C14.26 8.41 15.24 9 16.34 9C17.8 9 19.03 8.23 19.62 7.03C20.7 8.41 21.34 10.13 21.34 12C21.34 16.41 17.75 20 12.34 20H12ZM9.5 11.5C9.5 12.33 8.83 13 8 13C7.17 13 6.5 12.33 6.5 11.5C6.5 10.67 7.17 10 8 10C8.83 10 9.5 10.67 9.5 11.5ZM16.5 11.5C16.5 12.33 15.83 13 15 13C14.17 13 13.5 12.33 13.5 11.5C13.5 10.67 14.17 10 15 10C15.83 10 16.5 10.67 16.5 11.5Z" fill="currentColor"/>
+                </svg>
+                <h2>OWLDIO PLAYER</h2>
+                <p>內部私密影音專區，請輸入存取密碼</p>
+            </div>
+            <form id="password-form" onsubmit="verifyPassword(event)">
+                <div class="input-group">
+                    <input type="password" id="access-password" placeholder="輸入存取密碼..." autocomplete="current-password" required>
+                    <span class="focus-border"></span>
+                </div>
+                <button type="submit" class="btn-submit">驗證並進入</button>
+                <p id="error-msg" class="error-msg"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- 主網頁內容 (Main Content) - 驗證成功後顯示 -->
+    <div id="main-content" class="main-content hidden">
+        <!-- 頂部導覽列 -->
+        <header class="navbar">
+            <div class="nav-logo">
+                <span class="logo-accent">Owldio</span> Player
+            </div>
+            <div class="nav-badge">
+                <span class="badge-dot"></span>
+                Private Area
+            </div>
+        </header>
+
+        <!-- 主佈局容器 -->
+        <main class="app-container">
+            <!-- 左側：大型影音播放器 (70% 寬度) -->
+            <section class="player-section">
+                <div class="player-wrapper">
+                    <!-- Plyr 播放器容器 -->
+                    <video id="player" playsinline controls crossorigin>
+                        <!-- JS 動態載入影片來源 -->
+                    </video>
+                </div>
+                <!-- 影片詳細資訊 -->
+                <div class="video-info">
+                    <h1 id="current-video-title" class="video-title">正在載入影片...</h1>
+                    <div class="video-meta">
+                        <span class="meta-tag resolution">4K Ultra HD</span>
+                        <span class="meta-tag codec">H.265 / HEVC</span>
+                        <span class="meta-tag access">VIP ACCESS</span>
+                    </div>
+                    <div class="playback-notice">
+                        <strong>播放提示：</strong> 4K H.265 (HEVC) 影片需要硬體解碼支援。若播放遇到黑屏或卡頓，建議使用 Safari 瀏覽器，或確認您的瀏覽器已啟用硬體加速。
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右側：影片清單卡片 (30% 寬度) -->
+            <section class="playlist-section">
+                <div class="playlist-header">
+                    <h3>播放清單</h3>
+                    <span id="playlist-count" class="playlist-count">0 部影片</span>
+                </div>
+                <!-- 影片卡片容器 -->
+                <div id="playlist-items" class="playlist-items">
+                    <!-- JS 動態產生影片清單卡片 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部頁尾 -->
+        <footer class="footer">
+            <p>&copy; 2026 Owldio.art. All Rights Reserved. Private & Confidential.</p>
+        </footer>
+    </div>
+
+    <!-- 載入 Plyr 播放器 JS CDN -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <!-- 載入自訂邏輯 -->
+    <script src="app.js"></script>
+</body>
+</html>
