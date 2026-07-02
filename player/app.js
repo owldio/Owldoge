@@ -1133,7 +1133,8 @@ function setupKeyboardShortcuts() {
             return;
         }
 
-        if (event.key === "f" || event.key === "F") {
+        // 使用 event.code === "KeyF" 來捕捉實體按鍵的位置，即使切換成中文輸入法也能完美觸發全螢幕
+        if (event.code === "KeyF" || event.key === "f" || event.key === "F") {
             if (player) {
                 event.preventDefault();
                 player.fullscreen.toggle();
