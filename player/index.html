@@ -98,10 +98,14 @@
                     <div id="seek-feedback-right" class="seek-feedback-overlay right">
                         <div class="seek-feedback-text">10 秒 ▶▶</div>
                     </div>
-                    <!-- Plyr 播放器容器 -->
-                    <video id="player" playsinline controls>
-                        <!-- JS 動態載入影片來源 -->
-                    </video>
+                    <!-- HTML5 影音播放器容器 (ABR HLS / MP4) -->
+                    <div id="html5-container" class="player-container">
+                        <video id="player-html5" playsinline controls></video>
+                    </div>
+                    <!-- YouTube 影音播放器容器 -->
+                    <div id="youtube-container" class="player-container hidden">
+                        <video id="player-youtube" playsinline controls></video>
+                    </div>
                 </div>
                 <!-- 影片詳細資訊 -->
                 <div class="video-info">

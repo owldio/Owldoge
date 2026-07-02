@@ -51,14 +51,15 @@ const DEFAULT_PLAYLISTS = [
 // 核心資料狀態
 let allPlaylists = [];
 let videoPlaylist = []; // 目前網頁加載的影片播放清單
-let player = null;
+let player = null; // 動態指向當前 active 播放器的指針
+let playerHtml5 = null; // HTML5 (ABR HLS / MP4) 播放器實例
+let playerYoutube = null; // YouTube 播放器實例
 let currentVideoIndex = 0;
 let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 let shouldPlayAfterReady = false; // 標記切換訊源後是否需要自動播放
 let serverEncryptedToken = ""; // 儲存從伺服器載入的加密 GitHub Token
 let currentPlayerType = ""; // 紀錄目前播放器的底層訊源類型 (youtube, mp4, hls)
 let hlsInstance = null; // hls.js 解碼器實例，用於 ABR 自適應多畫質串流播放
-let keepFullscreen = false; // 紀錄切換影片前是否處於全螢幕狀態，以便換片後自動還原
 
 // ==========================================
 // 2. 頁面加載與初始化
@@ -286,63 +287,102 @@ function revealContent(role) {
 /**
  * 創建與綁定 Plyr 播放器實例 (支援自訂選項以對接 HLS ABR 多畫質控制)
  */
+/**
+ * 創建與綁定 Plyr 播放器實例 (支援自訂選項以對接 HLS ABR 多畫質控制)
+ */
 function setupPlyrInstance(options = {}) {
-    const defaultOptions = {
-        controls: [
-            'play-large', 'play', 'progress', 'current-time', 
-            'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
-        ],
-        settings: ['speed'], // 預設僅開啟播放速度，不顯示無效的 YouTube 畫質選項
-        tooltips: { controls: true, seek: true },
-        keyboard: { focused: true, global: true }
-    };
+    // 雙工播放器架構：如果 HLS 影片需要更新 html5 播放器自適應畫質選單，在此處重新配置 options
+    if (playerHtml5 && options.quality) {
+        try {
+            playerHtml5.destroy();
+        } catch (e) {}
 
-    const mergedOptions = { ...defaultOptions, ...options };
-    player = new Plyr('#player', mergedOptions);
-
-    player.on('ready', () => {
-        console.log("Plyr 播放器已就緒。");
+        const defaultOptions = {
+            controls: [
+                'play-large', 'play', 'progress', 'current-time', 
+                'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
+            ],
+            settings: ['quality', 'speed'],
+            tooltips: { controls: true, seek: true },
+            keyboard: { focused: true, global: true }
+        };
+        const mergedOptions = { ...defaultOptions, ...options };
+        playerHtml5 = new Plyr('#player-html5', mergedOptions);
+        setupPlayerEvents(playerHtml5, "html5");
         
-        // 觸發全螢幕自動重試器
-        startFullscreenRestoreLoop();
+        if (currentPlayerType !== "youtube") {
+            player = playerHtml5;
+        }
+    }
+}
 
-        // 🛡️ 雙保險過濾：如果是 YouTube 影片，必須等到真正的 provider 變為 youtube (非 video 標籤過渡期) 才進行播放與清除
-        const isReadyForPlay = (player.provider === 'youtube' || (typeof currentPlayerType !== 'undefined' && currentPlayerType !== 'youtube'));
-        if (isReadyForPlay && shouldPlayAfterReady) {
+// 綁定播放器通用事件與全螢幕代理
+function setupPlayerEvents(playerInstance, type) {
+    playerInstance.on('ended', () => {
+        console.log(`🎥 影片播放結束 (${type})。`);
+        const autoplayToggle = document.getElementById("autoplay-next-toggle");
+        const shouldAutoplay = autoplayToggle ? autoplayToggle.checked : true;
+        if (shouldAutoplay && player === playerInstance) {
+            playNextVideo();
+        }
+    });
+
+    playerInstance.on('ready', () => {
+        console.log(`Plyr 播放器 [${type}] 已就緒。`);
+        if (player === playerInstance && shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
-                player.play().catch(error => {
-                    console.log("自動播放被瀏覽器安全政策阻擋，需要用戶與網頁互動：", error);
+                playerInstance.play().catch(error => {
+                    console.log("自動播放被瀏覽器安全政策阻擋：", error);
                 });
             }, 150);
         }
     });
 
-    // 監聽播放開始事件以利全螢幕還原 (避開 Iframe 載入延遲與非同步網絡延遲)
-    player.on('play', () => {
-        startFullscreenRestoreLoop();
+    // 🛡️ 核心黑科技：代理全螢幕請求到最外層的 .player-wrapper 上，防止切換訊源時退出全螢幕！
+    playerInstance.on('enterfullscreen', (e) => {
+        e.preventDefault(); // 阻擋 Plyr 原生全螢幕行為
+        const wrapper = document.querySelector(".player-wrapper");
+        if (wrapper && document.fullscreenElement !== wrapper) {
+            wrapper.requestFullscreen().catch(err => {
+                console.log("原生全螢幕代理失敗:", err);
+            });
+        }
     });
 
-    // 監聽播放結束事件
-    player.on('ended', () => {
-        console.log("🎥 目前影片播放結束。");
-        const autoplayToggle = document.getElementById("autoplay-next-toggle");
-        const shouldAutoplay = autoplayToggle ? autoplayToggle.checked : true;
-
-        if (shouldAutoplay) {
-            console.log("🚀 自動連播已啟用，載入下一首...");
-            playNextVideo();
-        } else {
-            console.log("⏹️ 自動連播已停用。");
+    playerInstance.on('exitfullscreen', (e) => {
+        e.preventDefault();
+        if (document.fullscreenElement) {
+            document.exitFullscreen().catch(() => {});
         }
     });
 }
 
 /**
- * 初始化 Plyr (首次載入頁面時)
+ * 初始化 Plyr (首次載入頁面時實例化雙播放器)
  */
 function initPlyr() {
-    setupPlyrInstance();
+    const defaultOptions = {
+        controls: [
+            'play-large', 'play', 'progress', 'current-time', 
+            'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
+        ],
+        settings: ['speed'],
+        tooltips: { controls: true, seek: true },
+        keyboard: { focused: true, global: true }
+    };
+
+    // 初始化 HTML5 播放器 (用於 HLS / MP4)
+    playerHtml5 = new Plyr('#player-html5', defaultOptions);
+    setupPlayerEvents(playerHtml5, "html5");
+
+    // 初始化 YouTube 播放器
+    playerYoutube = new Plyr('#player-youtube', defaultOptions);
+    setupPlayerEvents(playerYoutube, "youtube");
+
+    // 預設指針指向 HTML5 播放器
+    player = playerHtml5;
+}
     // 首次進入時載入第 0 部影片，預設不自動播放
     loadVideo(0, false);
 }
@@ -405,12 +445,6 @@ function setupPlaylistUI() {
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
 
-    // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕 (加入安全防禦以防 Plyr 未 initialized 就緒)
-    const wasFullscreen = player && player.fullscreen && player.fullscreen.active;
-    if (wasFullscreen) {
-        keepFullscreen = true;
-    }
-
     currentVideoIndex = index;
     const video = videoPlaylist[index];
 
@@ -422,6 +456,24 @@ function loadVideo(index, autoplay = true) {
     const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
     const targetType = isHls ? "hls" : (isYoutube ? "youtube" : "mp4");
 
+    // 雙工切換：決定當前 active 的播放器，並顯示/隱藏對應容器
+    const html5Container = document.getElementById("html5-container");
+    const youtubeContainer = document.getElementById("youtube-container");
+
+    if (targetType === "youtube") {
+        player = playerYoutube;
+        if (playerHtml5) playerHtml5.pause();
+        
+        if (html5Container) html5Container.classList.add("hidden");
+        if (youtubeContainer) youtubeContainer.classList.remove("hidden");
+    } else {
+        player = playerHtml5;
+        if (playerYoutube) playerYoutube.pause();
+        
+        if (youtubeContainer) youtubeContainer.classList.add("hidden");
+        if (html5Container) html5Container.classList.remove("hidden");
+    }
+
     // 動態標記是否為 YouTube 播放，以利 CSS 進行比例自適應分流並設定動態高寬比
     const playerWrapper = document.querySelector(".player-wrapper");
     const videoRatio = video.ratio || "16:9";
@@ -430,7 +482,7 @@ function loadVideo(index, autoplay = true) {
             playerWrapper.classList.add("youtube-active");
             playerWrapper.style.aspectRatio = videoRatio.replace(":", " / ");
             // 同時動態設定 Plyr 的影片比例變數以擠掉 iframe 內部黑邊
-            const plyrEl = document.querySelector(".plyr");
+            const plyrEl = youtubeContainer ? youtubeContainer.querySelector(".plyr") : null;
             if (plyrEl) {
                 plyrEl.style.setProperty("--plyr-video-aspect-ratio", videoRatio.replace(":", "/"));
             }
@@ -462,80 +514,60 @@ function loadVideo(index, autoplay = true) {
         }
     }
 
-    // 🛡️ 智能重建：如果訊源類型發生轉換，或者即將播 HLS 串流，均執行重建以獲取乾淨的 DOM 與事件綁定
-    const isTypeChanged = currentPlayerType !== targetType;
-    if (isTypeChanged || targetType === "hls") {
-        console.log(`🔄 訊源類型轉換或進入 HLS (${currentPlayerType} -> ${targetType})，正在重建播放器...`);
-        if (player) {
-            try {
-                player.destroy();
-            } catch (e) {
-                console.warn("銷毀舊 Plyr 實例失敗:", e);
-            }
-        }
-        // 重建為乾淨的 HTML5 video 標籤
-        const wrapper = document.querySelector(".player-wrapper");
-        wrapper.innerHTML = `<video id="player" playsinline controls></video>`;
-        
-        // 如果不是 HLS，在此處可以直接初始化 Plyr；若是 HLS，則延後到 MANIFEST_PARSED 後實例化
-        if (targetType !== "hls") {
-            setupPlyrInstance();
-        }
-    }
-
     // 更新目前播放器類型
     currentPlayerType = targetType;
 
-    // 設定訊源後，若需要 autoplay，則將 flag 設為 true，交由 ready 事件或 hls 就緒時觸發播放
+    // 設定訊源後，若需要 autoplay，則將 flag 設為 true
     shouldPlayAfterReady = autoplay;
 
     if (targetType === "hls") {
-        const videoEl = document.getElementById("player");
+        const videoEl = document.getElementById("player-html5");
         hlsInstance = new Hls({
             autoStartLoad: true,
-            capLevelToPlayerSize: true // 自動根據播放視窗大小限制最高畫質，優化頻寬
+            capLevelToPlayerSize: true
         });
         hlsInstance.loadSource(srcUrl);
         hlsInstance.attachMedia(videoEl);
 
         // 監聽 HLS 多畫質清單解析完畢
         hlsInstance.on(Hls.Events.MANIFEST_PARSED, () => {
-            // 讀取所有可用的解析度高度 (例如 [1080, 720, 480])
             const availableQualities = hlsInstance.levels.map(l => l.height);
-            // options 加入 0 代表「自動 (Auto)」畫質
             const qualityOptions = [0, ...availableQualities];
 
-            // 實例化 Plyr 並綁定自適應畫質選單切換
+            // 重新配置畫質選單 (僅針對 HTML5 播放器重建)
             setupPlyrInstance({
                 settings: ['quality', 'speed'],
                 quality: {
-                    default: 0, // 預設為 Auto 自動
+                    default: 0,
                     options: qualityOptions,
                     forced: true,
                     onChange: (newQuality) => {
                         if (newQuality === 0) {
-                            hlsInstance.currentLevel = -1; // ABR 自動調適
-                            console.log("ABR 自適應畫質切換為：自動 (Auto)");
+                            hlsInstance.currentLevel = -1;
                         } else {
                             const levelIdx = hlsInstance.levels.findIndex(l => l.height === newQuality);
                             if (levelIdx !== -1) {
-                                hlsInstance.currentLevel = levelIdx; // 手動切換
-                                console.log(`畫質手動切換為：${newQuality}p`);
+                                hlsInstance.currentLevel = levelIdx;
                             }
                         }
                     }
                 },
                 i18n: {
-                    qualityLabel: {
-                        0: '自動'
-                    }
+                    qualityLabel: { 0: '自動' }
                 }
             });
+
+            if (autoplay) {
+                setTimeout(() => {
+                    if (playerHtml5) playerHtml5.play().catch(() => {});
+                }, 150);
+            }
         });
 
     } else {
         // YouTube 或普通 MP4 播放流程
-        player.source = {
+        const activePlayer = targetType === "youtube" ? playerYoutube : playerHtml5;
+        activePlayer.source = {
             type: 'video',
             title: video.title,
             sources: video.sources.map(src => {
@@ -547,32 +579,21 @@ function loadVideo(index, autoplay = true) {
             })
         };
 
-        // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
+        const isTypeChanged = currentPlayerType !== targetType;
         if (targetType === "mp4" && autoplay && !isTypeChanged) {
             setTimeout(() => {
-                player.play().catch(error => {
+                activePlayer.play().catch(error => {
                     console.log("HTML5 播放被阻擋：", error);
                 });
             }, 50);
         }
 
-        // 如果是 YouTube 且有進行跨類型重建，則延遲呼叫 play 確保 Iframe 載入就緒後自動開播
-        if (targetType === "youtube" && autoplay && isTypeChanged) {
+        if (autoplay) {
             setTimeout(() => {
-                if (player) {
-                    player.play().then(() => {
-                        // 開始播放後重新觸發全螢幕還原
-                        startFullscreenRestoreLoop();
-                    }).catch(error => {
-                        console.log("YouTube 延遲播放被阻擋：", error);
-                    });
-                }
-            }, 600);
+                activePlayer.play().catch(() => {});
+            }, 250);
         }
     }
-
-    // 在 loadVideo 結尾主動呼叫全螢幕狀態還原重試器
-    startFullscreenRestoreLoop();
 
     const cards = document.querySelectorAll(".playlist-card");
     cards.forEach(card => card.classList.remove("active"));
@@ -1254,36 +1275,6 @@ function showSeekFeedback(direction) {
     el.classList.add("animate");
 }
 
-// 4. 全螢幕自動重試器 (Fullscreen Restorer Loop) - 解決跨訊源、Iframe、Ajax 異步所導致的 User Gesture 權限延遲過期問題
-let fullscreenRestoreInterval = null;
 
-function startFullscreenRestoreLoop() {
-    if (!keepFullscreen) return;
-
-    let attempts = 0;
-    const maxAttempts = 30; // 最多重試 3 秒 (30 * 100ms)
-
-    if (fullscreenRestoreInterval) clearInterval(fullscreenRestoreInterval);
-    
-    fullscreenRestoreInterval = setInterval(() => {
-        attempts++;
-
-        const isCurrentlyFullscreen = player && player.fullscreen && player.fullscreen.active;
-        if (isCurrentlyFullscreen || attempts > maxAttempts || !keepFullscreen) {
-            clearInterval(fullscreenRestoreInterval);
-            keepFullscreen = false;
-            console.log(`🎬 全螢幕還原檢測結束 (成功: ${isCurrentlyFullscreen}, 嘗試次數: ${attempts})`);
-            return;
-        }
-
-        if (player && player.fullscreen) {
-            try {
-                player.fullscreen.enter();
-            } catch (e) {
-                // 吞掉因瀏覽器安全限制 (User Activation) 導致的暫時性 Enter fullscreen error
-            }
-        }
-    }, 100);
-}
 
 
