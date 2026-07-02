@@ -301,6 +301,8 @@ function setupPlyrInstance(options = {}) {
 
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
+        // 延遲淡出遮罩以防 DOM 白屏或閃動，待首影格載入就緒後優化顯示
+        setTimeout(hidePlayerLoader, 250);
         if (shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
@@ -392,6 +394,9 @@ function setupPlaylistUI() {
  */
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
+
+    // 拉起優雅的黑底加載遮罩，掩蓋切換訊源時 DOM 摧毀重建的閃爍
+    showPlayerLoader();
 
     currentVideoIndex = index;
     const video = videoPlaylist[index];
@@ -532,10 +537,16 @@ function loadVideo(index, autoplay = true) {
         // 如果是 MP4 (HTML5 Video) 且沒有進行跨類型重建，則手動呼叫 play，確保 HTML5 切換訊源成功播放
         if (targetType === "mp4" && autoplay && !isTypeChanged) {
             setTimeout(() => {
-                player.play().catch(error => {
+                player.play().then(() => {
+                    setTimeout(hidePlayerLoader, 200);
+                }).catch(error => {
                     console.log("HTML5 播放被阻擋：", error);
+                    setTimeout(hidePlayerLoader, 200);
                 });
             }, 50);
+        } else if (!isTypeChanged) {
+            // 如果同類型切換 (無重建) 且不自動播放，也需要手動隱藏 loader
+            setTimeout(hidePlayerLoader, 250);
         }
     }
 
@@ -1217,4 +1228,26 @@ function showSeekFeedback(direction) {
     void el.offsetWidth;
     // 加上 animate 類別
     el.classList.add("animate");
+}
+
+// 4. 顯示與隱藏影片載入遮罩
+function showPlayerLoader() {
+    const loader = document.getElementById("player-loading-overlay");
+    if (loader) {
+        loader.classList.remove("hidden");
+        void loader.offsetWidth;
+        loader.classList.add("active");
+    }
+}
+
+function hidePlayerLoader() {
+    const loader = document.getElementById("player-loading-overlay");
+    if (loader) {
+        loader.classList.remove("active");
+        setTimeout(() => {
+            if (!loader.classList.contains("active")) {
+                loader.classList.add("hidden");
+            }
+        }, 300);
+    }
 }
