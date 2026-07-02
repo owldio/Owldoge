@@ -253,7 +253,8 @@ body {
     overflow: hidden;
     border: 1px solid var(--border-color);
     box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
-    aspect-ratio: 16 / 9;
+    /* 移除固定 16/9 限制，讓高度完全隨影片真實高寬比自適應，100% 消除黑邊 */
+    height: fit-content;
 }
 
 /* Plyr 客製化樣式調整 */
