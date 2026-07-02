@@ -382,7 +382,7 @@ function initPlyr() {
 
     // 預設指針指向 HTML5 播放器
     player = playerHtml5;
-}
+
     // 首次進入時載入第 0 部影片，預設不自動播放
     loadVideo(0, false);
 }
