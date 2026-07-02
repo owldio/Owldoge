@@ -303,18 +303,8 @@ function setupPlyrInstance(options = {}) {
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
         
-        // 換片後自動還原全螢幕狀態 (對 YouTube 以外的普通影音在 ready 時還原)
-        const isYT = player.provider === 'youtube';
-        if (keepFullscreen && !isYT) {
-            keepFullscreen = false;
-            setTimeout(() => {
-                try {
-                    player.fullscreen.enter();
-                } catch (e) {
-                    console.warn("自動還原全螢幕失敗:", e);
-                }
-            }, 150);
-        }
+        // 觸發全螢幕自動重試器
+        startFullscreenRestoreLoop();
 
         if (shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
@@ -326,18 +316,9 @@ function setupPlyrInstance(options = {}) {
         }
     });
 
-    // 監聽播放開始事件以利 YouTube 影片還原全螢幕 (避開 Iframe 載入延遲)
+    // 監聽播放開始事件以利全螢幕還原 (避開 Iframe 載入延遲與非同步網絡延遲)
     player.on('play', () => {
-        if (keepFullscreen) {
-            keepFullscreen = false;
-            setTimeout(() => {
-                try {
-                    player.fullscreen.enter();
-                } catch (e) {
-                    console.warn("自動還原全螢幕失敗:", e);
-                }
-            }, 150);
-        }
+        startFullscreenRestoreLoop();
     });
 
     // 監聽播放結束事件
@@ -574,17 +555,8 @@ function loadVideo(index, autoplay = true) {
         }
     }
 
-    // 如果沒有跨類型重建，則在 loadVideo 結尾直接手動觸發全螢幕狀態還原
-    if (!isTypeChanged && keepFullscreen) {
-        keepFullscreen = false;
-        setTimeout(() => {
-            try {
-                player.fullscreen.enter();
-            } catch (e) {
-                console.warn("自動還原全螢幕失敗:", e);
-            }
-        }, 150);
-    }
+    // 在 loadVideo 結尾主動呼叫全螢幕狀態還原重試器
+    startFullscreenRestoreLoop();
 
     const cards = document.querySelectorAll(".playlist-card");
     cards.forEach(card => card.classList.remove("active"));
@@ -1258,12 +1230,44 @@ function showSeekFeedback(direction) {
     const el = document.getElementById(elId);
     if (!el) return;
 
-    // 移除舊的 animate 類別以重置動畫
+    // 移除舊 of animate 類別以重置動畫
     el.classList.remove("animate");
     // 強制重繪 (Trigger reflow)
     void el.offsetWidth;
     // 加上 animate 類別
     el.classList.add("animate");
+}
+
+// 4. 全螢幕自動重試器 (Fullscreen Restorer Loop) - 解決跨訊源、Iframe、Ajax 異步所導致的 User Gesture 權限延遲過期問題
+let fullscreenRestoreInterval = null;
+
+function startFullscreenRestoreLoop() {
+    if (!keepFullscreen) return;
+
+    let attempts = 0;
+    const maxAttempts = 30; // 最多重試 3 秒 (30 * 100ms)
+
+    if (fullscreenRestoreInterval) clearInterval(fullscreenRestoreInterval);
+    
+    fullscreenRestoreInterval = setInterval(() => {
+        attempts++;
+
+        const isCurrentlyFullscreen = player && player.fullscreen && player.fullscreen.active;
+        if (isCurrentlyFullscreen || attempts > maxAttempts || !keepFullscreen) {
+            clearInterval(fullscreenRestoreInterval);
+            keepFullscreen = false;
+            console.log(`🎬 全螢幕還原檢測結束 (成功: ${isCurrentlyFullscreen}, 嘗試次數: ${attempts})`);
+            return;
+        }
+
+        if (player && player.fullscreen) {
+            try {
+                player.fullscreen.enter();
+            } catch (e) {
+                // 吞掉因瀏覽器安全限制 (User Activation) 導致的暫時性 Enter fullscreen error
+            }
+        }
+    }, 100);
 }
 
 
