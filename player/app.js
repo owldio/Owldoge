@@ -303,8 +303,9 @@ function setupPlyrInstance(options = {}) {
     player.on('ready', () => {
         console.log("Plyr 播放器已就緒。");
         
-        // 換片後自動還原全螢幕狀態
-        if (keepFullscreen) {
+        // 換片後自動還原全螢幕狀態 (對 YouTube 以外的普通影音在 ready 時還原)
+        const isYT = player.provider === 'youtube';
+        if (keepFullscreen && !isYT) {
             keepFullscreen = false;
             setTimeout(() => {
                 try {
@@ -321,6 +322,20 @@ function setupPlyrInstance(options = {}) {
                 player.play().catch(error => {
                     console.log("自動播放被瀏覽器安全政策阻擋，需要用戶與網頁互動：", error);
                 });
+            }, 150);
+        }
+    });
+
+    // 監聽播放開始事件以利 YouTube 影片還原全螢幕 (避開 Iframe 載入延遲)
+    player.on('play', () => {
+        if (keepFullscreen) {
+            keepFullscreen = false;
+            setTimeout(() => {
+                try {
+                    player.fullscreen.enter();
+                } catch (e) {
+                    console.warn("自動還原全螢幕失敗:", e);
+                }
             }, 150);
         }
     });
