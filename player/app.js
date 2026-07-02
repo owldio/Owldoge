@@ -404,13 +404,21 @@ function loadVideo(index, autoplay = true) {
     const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
     const targetType = isHls ? "hls" : (isYoutube ? "youtube" : "mp4");
 
-    // 動態標記是否為 YouTube 播放，以利 CSS 進行比例自適應分流
+    // 動態標記是否為 YouTube 播放，以利 CSS 進行比例自適應分流並設定動態高寬比
     const playerWrapper = document.querySelector(".player-wrapper");
+    const videoRatio = video.ratio || "16:9";
     if (playerWrapper) {
         if (targetType === "youtube") {
             playerWrapper.classList.add("youtube-active");
+            playerWrapper.style.aspectRatio = videoRatio.replace(":", " / ");
+            // 同時動態設定 Plyr 的影片比例變數以擠掉 iframe 內部黑邊
+            const plyrEl = document.querySelector(".plyr");
+            if (plyrEl) {
+                plyrEl.style.setProperty("--plyr-video-aspect-ratio", videoRatio.replace(":", "/"));
+            }
         } else {
             playerWrapper.classList.remove("youtube-active");
+            playerWrapper.style.aspectRatio = "auto";
         }
     }
 
@@ -795,6 +803,8 @@ function addVideoToPlaylist(event) {
         const thumbnail = thumbnailInput.value.trim();
         const provider = providerInput.value;
         const src = srcInput.value.trim();
+        const ratioInput = document.getElementById("new-video-ratio");
+        const ratio = ratioInput ? ratioInput.value : "16:9";
 
         const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
         if (!playlist) {
@@ -809,6 +819,7 @@ function addVideoToPlaylist(event) {
             title: title,
             duration: "", // 移除時長，設定為空
             thumbnail: thumbnail,
+            ratio: ratio,
             sources: [
                 provider === "youtube"
                 ? { src: finalSrc, provider: "youtube" }
