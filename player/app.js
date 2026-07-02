@@ -306,7 +306,9 @@ function setupPlyrInstance(options = {}) {
         // 觸發全螢幕自動重試器
         startFullscreenRestoreLoop();
 
-        if (shouldPlayAfterReady) {
+        // 🛡️ 雙保險過濾：如果是 YouTube 影片，必須等到真正的 provider 變為 youtube (非 video 標籤過渡期) 才進行播放與清除
+        const isReadyForPlay = (player.provider === 'youtube' || (typeof currentPlayerType !== 'undefined' && currentPlayerType !== 'youtube'));
+        if (isReadyForPlay && shouldPlayAfterReady) {
             shouldPlayAfterReady = false;
             setTimeout(() => {
                 player.play().catch(error => {
@@ -552,6 +554,20 @@ function loadVideo(index, autoplay = true) {
                     console.log("HTML5 播放被阻擋：", error);
                 });
             }, 50);
+        }
+
+        // 如果是 YouTube 且有進行跨類型重建，則延遲呼叫 play 確保 Iframe 載入就緒後自動開播
+        if (targetType === "youtube" && autoplay && isTypeChanged) {
+            setTimeout(() => {
+                if (player) {
+                    player.play().then(() => {
+                        // 開始播放後重新觸發全螢幕還原
+                        startFullscreenRestoreLoop();
+                    }).catch(error => {
+                        console.log("YouTube 延遲播放被阻擋：", error);
+                    });
+                }
+            }, 600);
         }
     }
 
