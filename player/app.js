@@ -535,17 +535,14 @@ function copyShareUrl(url) {
     });
 }
 
-// 選擇播放清單進行右側影片與順序編輯 (將新增影片表單展露於左側)
+// 選擇播放清單進行右側影片與順序編輯 (將新增影片表單展露於右側頂部)
 function selectPlaylistToEdit(id) {
     editingPlaylistId = id;
     const playlist = allPlaylists.find(pl => pl.id === id);
     if (!playlist) return;
 
-    // 展露左側的新增影片容器
+    // 展露新增影片容器
     document.getElementById("playlist-add-video-container").classList.remove("hidden");
-    // 預設將表單隱藏 (呈收起狀態)
-    document.getElementById("add-video-form").style.display = "none";
-    document.getElementById("add-video-collapse-icon").textContent = "[展開]";
     
     // 顯露右側「刪除此清單」按鈕
     document.getElementById("btn-delete-current-playlist").classList.remove("hidden");
@@ -651,9 +648,6 @@ function addVideoToPlaylist(event) {
         // 重設表單與提示狀態
         document.getElementById("add-video-form").reset();
         toggleProviderInput();
-        
-        // 自動摺疊收起表單
-        toggleAddVideoForm();
         
         refreshExportCode();
         alert("🎉 影片新增成功！新影片已放入清單底部。");

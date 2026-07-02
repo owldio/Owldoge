@@ -1,31 +1,37 @@
 /* ==========================================
-   OWLDIO PLAYER - 全域設計系統與 CSS 變數
+   OWLDIO PLAYER - Bauhaus Gallery Light Theme (極簡藝廊明亮版)
+   設計要點：
+   1. 視覺以白色底作為主調，搭配 Slate 灰階層次，呈現高質感畫廊、藝術品專區氛圍。
+   2. 100% 銳角設計 (No border-radius)，展現硬朗、洗鍊的科技與藝術美感。
    ========================================== */
+
 :root {
-    --bg-main: #09090b;          /* 極致暗黑背景 */
-    --bg-card: #18181b;          /* 卡片與區塊背景 */
-    --bg-card-hover: #27272a;    /* 卡片懸停背景 */
-    --accent: #f59e0b;           /* 質感金黃色 (Owldio 貓頭鷹眼亮色) */
-    --accent-hover: #d97706;     /* 亮色懸停 */
-    --text-primary: #f4f4f5;     /* 主要文字 (亮灰白) */
-    --text-secondary: #a1a1aa;   /* 次要文字 (中灰) */
-    --text-muted: #71717a;       /* 隱藏文字 (暗灰) */
-    --border-color: rgba(255, 255, 255, 0.08); /* 細緻邊框 */
-    --glow-color: rgba(245, 158, 11, 0.25);    /* 金色微光 */
+    --bg-main: #ffffff;          /* 白色背景 */
+    --bg-sec: #f8fafc;           /* 輔助淺 Slate 50 背景 */
+    --bg-card: #ffffff;          /* 卡片背景 */
+    --bg-card-hover: #f1f5f9;    /* 卡片懸停 Slate 100 */
+    --accent: #b45309;           /* 高質感古典暗金 (Amber 700) */
+    --accent-hover: #78350f;     /* 深金褐色 */
+    --text-primary: #0f172a;     /* 深 Slate 900 主要文字 */
+    --text-secondary: #475569;   /* 中 Slate 600 次要文字 */
+    --text-muted: #94a3b8;       /* 淺灰 Slate 400 提示文字 */
+    --border-color: #cbd5e1;     /* 清晰邊框 Slate 300 */
+    --glow-color: rgba(180, 83, 9, 0.1); /* 金色微光 */
     --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    --transition-smooth: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* 基本重設 */
+/* 100% 全域銳角化 (Bauhaus 銳角重設) */
 * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+    border-radius: 0 !important; /* 一鍵將全站、Plyr 播放器、卡片、按鈕、輸入框強制為銳角 */
 }
 
 body {
     font-family: var(--font-sans);
-    background-color: var(--bg-main);
+    background-color: var(--bg-sec);
     color: var(--text-primary);
     min-height: 100vh;
     overflow-x: hidden;
@@ -38,11 +44,10 @@ body {
     height: 6px;
 }
 ::-webkit-scrollbar-track {
-    background: var(--bg-main);
+    background: var(--bg-sec);
 }
 ::-webkit-scrollbar-thumb {
-    background: var(--bg-card-hover);
-    border-radius: 3px;
+    background: #e2e8f0;
 }
 ::-webkit-scrollbar-thumb:hover {
     background: var(--accent);
@@ -57,29 +62,24 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: radial-gradient(circle at center, #18181b 0%, #09090b 100%);
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 9999;
-    transition: opacity 0.5s ease, visibility 0.5s ease;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
     padding: 20px;
 }
 
-/* 驗證卡片 - 玻璃擬態質感 */
+/* 驗證卡片 */
 .password-card {
-    background: rgba(24, 24, 27, 0.65);
+    background: #ffffff;
     border: 1px solid var(--border-color);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     padding: 40px;
-    border-radius: 20px;
     width: 100%;
     max-width: 440px;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5), 0 0 40px rgba(245, 158, 11, 0.03);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
     text-align: center;
-    transform: translateY(0);
-    transition: var(--transition-smooth);
 }
 
 .password-overlay.fade-out {
@@ -97,13 +97,6 @@ body {
     height: 64px;
     color: var(--accent);
     margin-bottom: 16px;
-    filter: drop-shadow(0 0 10px var(--glow-color));
-    animation: pulseGlow 3s infinite ease-in-out;
-}
-
-@keyframes pulseGlow {
-    0%, 100% { filter: drop-shadow(0 0 8px rgba(245, 158, 11, 0.2)); }
-    50% { filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.5)); }
 }
 
 .brand-logo h2 {
@@ -111,9 +104,7 @@ body {
     font-weight: 700;
     letter-spacing: 2px;
     margin-bottom: 8px;
-    background: linear-gradient(135deg, #fff 0%, var(--text-secondary) 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--text-primary);
 }
 
 .brand-logo p {
@@ -130,10 +121,9 @@ body {
 .input-group input {
     width: 100%;
     padding: 14px 16px;
-    background: rgba(9, 9, 11, 0.8);
+    background: #ffffff;
     border: 1px solid var(--border-color);
-    border-radius: 10px;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 16px;
     outline: none;
     transition: var(--transition-smooth);
@@ -143,30 +133,22 @@ body {
 
 .input-group input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 10px var(--glow-color);
 }
 
 .btn-submit {
     width: 100%;
     padding: 14px;
-    background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%);
+    background: var(--accent);
     border: none;
-    border-radius: 10px;
-    color: #000;
+    color: #ffffff;
     font-size: 16px;
     font-weight: 600;
     cursor: pointer;
     transition: var(--transition-smooth);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
 }
 
 .btn-submit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(245, 158, 11, 0.4);
-}
-
-.btn-submit:active {
-    transform: translateY(0);
+    background: var(--accent-hover);
 }
 
 .error-msg {
@@ -184,13 +166,11 @@ body {
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-    opacity: 1;
-    transition: opacity 0.5s ease;
+    background-color: var(--bg-main);
 }
 
 .main-content.hidden {
     display: none;
-    opacity: 0;
 }
 
 /* 頂部導覽列 */
@@ -199,9 +179,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 16px 40px;
-    background-color: rgba(9, 9, 11, 0.8);
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px);
+    background-color: #ffffff;
     border-bottom: 1px solid var(--border-color);
     position: sticky;
     top: 0;
@@ -212,6 +190,7 @@ body {
     font-size: 20px;
     font-weight: 700;
     letter-spacing: 1px;
+    color: var(--text-primary);
 }
 
 .logo-accent {
@@ -222,10 +201,9 @@ body {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: rgba(255, 255, 255, 0.05);
+    background: #f1f5f9;
     border: 1px solid var(--border-color);
     padding: 6px 14px;
-    border-radius: 20px;
     font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
@@ -235,8 +213,6 @@ body {
     width: 6px;
     height: 6px;
     background-color: var(--accent);
-    border-radius: 50%;
-    box-shadow: 0 0 8px var(--accent);
 }
 
 /* ==========================================
@@ -245,7 +221,7 @@ body {
 .app-container {
     flex: 1;
     display: grid;
-    grid-template-columns: 1fr; /* 行動版預設為單欄 */
+    grid-template-columns: 1fr;
     gap: 32px;
     max-width: 1720px;
     width: 100%;
@@ -253,7 +229,6 @@ body {
     padding: 24px;
 }
 
-/* 桌面版（大螢幕）: 左 70% (7fr) , 右 30% (3fr) */
 @media (min-width: 1024px) {
     .app-container {
         grid-template-columns: 7fr 3fr;
@@ -270,11 +245,9 @@ body {
 
 .player-wrapper {
     background-color: #000;
-    border-radius: 16px;
     overflow: hidden;
     border: 1px solid var(--border-color);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    /* 保持 16:9 比例 */
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
     aspect-ratio: 16 / 9;
 }
 
@@ -286,6 +259,17 @@ body {
     width: 100%;
 }
 
+/* 強制將 Plyr 控制條的元件皆重置為銳角 */
+.plyr__control, 
+.plyr__controls, 
+.plyr__tooltip, 
+.plyr__progress, 
+.plyr__progress__container, 
+.plyr__slider, 
+.plyr__menu {
+    border-radius: 0 !important;
+}
+
 .video-info {
     padding: 10px 4px;
 }
@@ -294,7 +278,7 @@ body {
     font-size: 24px;
     font-weight: 600;
     margin-bottom: 12px;
-    color: #fff;
+    color: var(--text-primary);
     letter-spacing: 0.5px;
 }
 
@@ -309,48 +293,49 @@ body {
     font-size: 11px;
     font-weight: 600;
     padding: 4px 10px;
-    border-radius: 6px;
     letter-spacing: 0.5px;
 }
 
 .meta-tag.resolution {
-    background-color: rgba(245, 158, 11, 0.1);
+    background-color: rgba(180, 83, 9, 0.06);
     color: var(--accent);
-    border: 1px solid rgba(245, 158, 11, 0.2);
+    border: 1px solid rgba(180, 83, 9, 0.15);
 }
 
 .meta-tag.codec {
-    background-color: rgba(255, 255, 255, 0.05);
+    background-color: #f1f5f9;
     color: var(--text-secondary);
     border: 1px solid var(--border-color);
 }
 
 .meta-tag.access {
-    background-color: rgba(239, 68, 68, 0.1);
-    color: #f87171;
-    border: 1px solid rgba(239, 68, 68, 0.2);
+    background-color: rgba(239, 68, 68, 0.06);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.15);
 }
 
 .playback-notice {
-    background: rgba(255, 255, 255, 0.03);
+    background: #f8fafc;
     border-left: 3px solid var(--accent);
     padding: 12px 16px;
-    border-radius: 0 8px 8px 0;
     font-size: 13px;
     color: var(--text-secondary);
     line-height: 1.6;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
-/* 3-2. 右側/下方影片清單區區塊 */
+/* 3-2. 右側影片清單區區塊 */
 .playlist-section {
     background-color: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 16px;
     display: flex;
     flex-direction: column;
     height: fit-content;
-    max-height: 780px; /* 大螢幕限制高度以維持滾動 */
+    max-height: 780px;
     overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
 }
 
 .playlist-header {
@@ -359,19 +344,20 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--bg-sec);
 }
 
 .playlist-header h3 {
     font-size: 18px;
     font-weight: 600;
+    color: var(--text-primary);
 }
 
 .playlist-count {
     font-size: 13px;
     color: var(--text-secondary);
-    background: rgba(255, 255, 255, 0.05);
+    background: #e2e8f0;
     padding: 2px 10px;
-    border-radius: 12px;
 }
 
 .playlist-items {
@@ -382,28 +368,27 @@ body {
     gap: 12px;
 }
 
-/* 影片卡片 (List Card) */
+/* 影片卡片 */
 .playlist-card {
     display: flex;
     gap: 14px;
     padding: 10px;
-    border-radius: 10px;
-    background-color: rgba(255, 255, 255, 0.02);
-    border: 1px solid transparent;
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
     cursor: pointer;
     transition: var(--transition-smooth);
 }
 
 .playlist-card:hover {
     background-color: var(--bg-card-hover);
-    border-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--accent);
     transform: translateX(4px);
 }
 
 /* 高亮目前播放的卡片 */
 .playlist-card.active {
-    background-color: rgba(245, 158, 11, 0.08);
-    border-color: rgba(245, 158, 11, 0.3);
+    background-color: rgba(180, 83, 9, 0.05);
+    border-color: var(--accent);
 }
 
 .playlist-card.active .card-title {
@@ -414,10 +399,10 @@ body {
     position: relative;
     width: 120px;
     aspect-ratio: 16 / 9;
-    border-radius: 6px;
     overflow: hidden;
     background-color: #000;
     flex-shrink: 0;
+    border: 1px solid var(--border-color);
 }
 
 .card-thumb {
@@ -431,14 +416,13 @@ body {
     transform: scale(1.05);
 }
 
-/* 播放狀態 Overlay */
 .card-play-overlay {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.4);
+    background: rgba(0, 0, 0, 0.3);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -465,12 +449,11 @@ body {
     position: absolute;
     bottom: 6px;
     right: 6px;
-    background: rgba(0, 0, 0, 0.8);
+    background: rgba(15, 23, 42, 0.85);
     color: #fff;
     font-size: 10px;
     font-weight: 500;
     padding: 2px 6px;
-    border-radius: 4px;
     letter-spacing: 0.5px;
 }
 
@@ -498,44 +481,14 @@ body {
     color: var(--text-muted);
 }
 
-/* 行動版特定樣式調整 */
-@media (max-width: 1023px) {
-    .playlist-section {
-        max-height: none; /* 行動版不需要限制高度，直接流動排版 */
-    }
-}
-
 /* ==========================================
-   4. 底部頁尾 (Footer)
+   4. 管理控制台 (Admin Portal Modal)
    ========================================== */
-.footer {
-    text-align: center;
-    padding: 30px 20px;
-    border-top: 1px solid var(--border-color);
-    margin-top: auto;
-}
-
-.footer p {
-    font-size: 12px;
-    color: var(--text-muted);
-    letter-spacing: 0.5px;
-}
-
-/* ==========================================
-   5. 管理後台專用樣式 (Admin Portal CSS)
-   ========================================== */
-.nav-actions {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-}
-
 .btn-admin-portal {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: #ffffff;
+    border: 1px solid var(--border-color);
     color: var(--text-primary);
     padding: 8px 16px;
-    border-radius: 8px;
     cursor: pointer;
     font-size: 13px;
     font-weight: 500;
@@ -544,9 +497,8 @@ body {
 
 .btn-admin-portal:hover {
     background: var(--accent);
-    color: #000;
+    color: #ffffff;
     border-color: var(--accent);
-    box-shadow: 0 0 12px var(--glow-color);
 }
 
 .btn-admin-portal.hidden {
@@ -560,7 +512,7 @@ body {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0, 0, 0, 0.75);
+    background: rgba(15, 23, 42, 0.5); /* 明亮高質感遮罩 */
     backdrop-filter: blur(8px);
     -webkit-backdrop-filter: blur(8px);
     z-index: 1000;
@@ -568,26 +520,22 @@ body {
     justify-content: center;
     align-items: center;
     padding: 20px;
-    transition: opacity 0.3s ease;
 }
 
 .admin-portal-modal.hidden {
     display: none;
-    opacity: 0;
-    pointer-events: none;
 }
 
 .admin-card {
-    background: #121214;
+    background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: 20px;
     width: 100%;
     max-width: 1100px;
     height: 90vh;
     display: flex;
     flex-direction: column;
     overflow: hidden;
-    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
 }
 
 .admin-header {
@@ -596,12 +544,13 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    background-color: var(--bg-sec);
 }
 
 .admin-header h2 {
     font-size: 20px;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .btn-close {
@@ -615,7 +564,7 @@ body {
 }
 
 .btn-close:hover {
-    color: #fff;
+    color: var(--accent);
 }
 
 .admin-body {
@@ -623,12 +572,13 @@ body {
     display: flex;
     flex-direction: column;
     overflow: hidden;
+    background-color: var(--bg-main);
 }
 
 /* 頁籤 */
 .admin-tabs {
     display: flex;
-    background: #18181b;
+    background: var(--bg-sec);
     border-bottom: 1px solid var(--border-color);
     padding: 0 20px;
 }
@@ -646,12 +596,13 @@ body {
 }
 
 .tab-btn:hover {
-    color: #fff;
+    color: var(--text-primary);
 }
 
 .tab-btn.active {
     color: var(--accent);
     border-bottom-color: var(--accent);
+    font-weight: 600;
 }
 
 .tab-content {
@@ -676,17 +627,15 @@ body {
 }
 
 .form-section {
-    background: #18181b;
+    background: var(--bg-sec);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
     padding: 20px;
     overflow-y: auto;
 }
 
 .list-section {
-    background: #18181b;
+    background: var(--bg-sec);
     border: 1px solid var(--border-color);
-    border-radius: 12px;
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -697,7 +646,7 @@ body {
     margin-bottom: 20px;
     font-size: 16px;
     font-weight: 600;
-    color: #fff;
+    color: var(--text-primary);
     border-left: 3px solid var(--accent);
     padding-left: 10px;
 }
@@ -717,10 +666,9 @@ body {
 .form-group input, .form-group select {
     width: 100%;
     padding: 10px 12px;
-    background: #09090b;
+    background: #ffffff;
     border: 1px solid var(--border-color);
-    border-radius: 6px;
-    color: #fff;
+    color: var(--text-primary);
     font-size: 14px;
     outline: none;
     transition: var(--transition-smooth);
@@ -732,10 +680,9 @@ body {
 
 .btn-primary {
     background: var(--accent);
-    color: #000;
+    color: #ffffff;
     border: none;
     padding: 12px 20px;
-    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
     width: 100%;
@@ -749,7 +696,6 @@ body {
 /* 表格樣式 */
 .table-wrapper {
     border: 1px solid var(--border-color);
-    border-radius: 8px;
     overflow: visible;
 }
 
@@ -763,19 +709,20 @@ body {
 .admin-table th, .admin-table td {
     padding: 8px 12px;
     border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
 }
 
 .admin-table th {
-    background: #09090b;
+    background: var(--bg-sec);
     color: var(--text-secondary);
-    font-weight: 500;
+    font-weight: 600;
     position: sticky;
     top: 0;
     z-index: 10;
 }
 
 .admin-table tbody tr:hover {
-    background: rgba(255,255,255,0.02);
+    background: rgba(0, 0, 0, 0.02);
 }
 
 .btn-danger {
@@ -783,7 +730,6 @@ body {
     color: #fff;
     border: none;
     padding: 6px 12px;
-    border-radius: 4px;
     cursor: pointer;
     font-size: 12px;
     transition: var(--transition-smooth);
@@ -798,7 +744,6 @@ body {
     border: 1px solid #ef4444;
     color: #ef4444;
     padding: 8px 16px;
-    border-radius: 6px;
     cursor: pointer;
     font-size: 13px;
     transition: var(--transition-smooth);
@@ -816,9 +761,8 @@ body {
     gap: 8px;
     max-height: 120px;
     overflow-y: auto;
-    background: #09090b;
+    background: #ffffff;
     padding: 8px;
-    border-radius: 6px;
     border: 1px solid var(--border-color);
 }
 
@@ -849,10 +793,12 @@ body {
     font-size: 13px;
     color: var(--text-secondary);
     line-height: 1.6;
-    background: rgba(245, 158, 11, 0.05);
+    background: rgba(180, 83, 9, 0.05);
     border-left: 3px solid var(--accent);
     padding: 16px;
-    border-radius: 0 8px 8px 0;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
 }
 
 .btn-copy {
@@ -862,14 +808,13 @@ body {
 
 .code-output {
     flex: 1;
-    background: #09090b;
+    background: var(--bg-sec);
     border: 1px solid var(--border-color);
-    border-radius: 8px;
     padding: 16px;
     overflow: auto;
     font-family: monospace;
     font-size: 12px;
-    color: #a78bfa; /* 紫色代碼高亮風格 */
+    color: #4f46e5;
     white-space: pre;
 }
 
@@ -877,7 +822,7 @@ body {
 .admin-footer {
     padding: 20px 30px;
     border-top: 1px solid var(--border-color);
-    background: #18181b;
+    background: var(--bg-sec);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -886,7 +831,7 @@ body {
 }
 
 /* ==========================================
-   6. 自動連播開關樣式 (Autoplay Switch CSS)
+   5. 自動連播開關樣式 (Autoplay Switch CSS)
    ========================================== */
 .autoplay-toggle-wrapper {
     display: flex;
@@ -900,7 +845,7 @@ body {
     font-weight: 500;
 }
 
-/* Toggle Switch 經典樣式 */
+/* Toggle Switch 經典方形 Bauhaus 樣式 */
 .switch-label {
     position: relative;
     display: inline-block;
@@ -921,9 +866,8 @@ body {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: #27272a;
-    transition: .3s ease;
-    border-radius: 20px;
+    background-color: #e2e8f0;
+    transition: .2s ease;
     border: 1px solid var(--border-color);
 }
 
@@ -935,12 +879,11 @@ body {
     left: 3px;
     bottom: 3px;
     background-color: var(--text-secondary);
-    transition: .3s ease;
-    border-radius: 50%;
+    transition: .2s ease;
 }
 
 .switch-label input:checked + .switch-slider {
-    background-color: rgba(245, 158, 11, 0.25);
+    background-color: rgba(180, 83, 9, 0.15);
     border-color: var(--accent);
 }
 
