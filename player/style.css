@@ -29,6 +29,11 @@
     border-radius: 0 !important; /* 一鍵將全站、Plyr 播放器、卡片、按鈕、輸入框強制為銳角 */
 }
 
+/* 全域隱藏類別 */
+.hidden {
+    display: none !important;
+}
+
 body {
     font-family: var(--font-sans);
     background-color: var(--bg-sec);

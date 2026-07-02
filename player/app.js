@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const playlistParam = urlParams.get('playlist');
 
     // 1. 清除過期的不一致 Session 資訊
-    if (hashParam && hashParam !== "admin") {
+    if (hashParam && hashParam !== "login") {
         sessionStorage.clear();
     } else if (playlistParam) {
         sessionStorage.clear();
@@ -83,7 +83,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadGitHubSettings();
 
     // 4. 路由分流登入解析
-    if (hashParam === "admin") {
+    if (hashParam === "login") {
         // 造訪管理後台
         const auth = sessionStorage.getItem("owldio_auth");
         const role = sessionStorage.getItem("owldio_role");
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.getElementById("welcome-overlay").classList.add("hidden");
             document.getElementById("main-content").classList.add("hidden");
         }
-    } else if (hashParam && hashParam !== "admin") {
+    } else if (hashParam && hashParam !== "login") {
         // 客戶播放清單直連
         verifyWithPlaylist(hashParam);
     } else if (playlistParam) {
@@ -1031,6 +1031,6 @@ function renderVisitedHistory() {
 // 導向管理後台
 function navigateToAdmin(event) {
     event.preventDefault();
-    window.location.hash = "admin";
+    window.location.hash = "login";
     window.location.reload();
 }
