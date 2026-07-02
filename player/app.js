@@ -410,8 +410,8 @@ function setupPlaylistUI() {
 function loadVideo(index, autoplay = true) {
     if (index < 0 || index >= videoPlaylist.length) return;
 
-    // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕
-    const wasFullscreen = player && player.fullscreen.active;
+    // 紀錄換片前的全螢幕狀態，以便在新播放器載入就緒後自動重返全螢幕 (加入安全防禦以防 Plyr 未 initialized 就緒)
+    const wasFullscreen = player && player.fullscreen && player.fullscreen.active;
     const playerWrapper = document.querySelector(".player-wrapper");
     if (wasFullscreen) {
         keepFullscreen = true;
