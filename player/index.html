@@ -156,34 +156,32 @@
                         <div class="list-section">
                             <div class="playlist-edit-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
                                 <h4 style="margin-bottom: 6px; border-left: none; padding-left: 0;">正在管理清單：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
-                                <small style="color: var(--text-secondary)">金鑰連結：<span id="editing-playlist-link">無</span></small>
+                                <small style="color: var(--text-secondary)">分享連結：<span id="editing-playlist-link">無</span></small>
                             </div>
                             
                             <!-- 新增影片表單 (只有在選中清單時顯示) -->
                             <div id="playlist-add-video-container" class="hidden" style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
                                 <h5 style="color: #fff; margin-bottom: 10px; font-size: 13px;">➕ 新增影片至此清單</h5>
                                 <form id="add-video-form" onsubmit="addVideoToPlaylist(event)">
-                                    <div class="admin-split" style="grid-template-columns: 1fr 1fr; gap: 10px; height: auto; overflow: visible; margin-bottom: 10px;">
-                                        <div class="form-group" style="margin-bottom: 0;">
-                                            <input type="text" id="new-video-title" placeholder="影片標題..." required>
-                                        </div>
-                                        <div class="form-group" style="margin-bottom: 0;">
-                                            <input type="text" id="new-video-duration" placeholder="時長 e.g. 05:30" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-group" style="margin-bottom: 10px;">
-                                        <input type="url" id="new-video-thumb" placeholder="封面圖網址 (https://...)" required>
-                                    </div>
+                                    <!-- 來源類型與影片 ID/網址置頂 -->
                                     <div class="admin-split" style="grid-template-columns: 1fr 1.5fr; gap: 10px; height: auto; overflow: visible; margin-bottom: 10px;">
                                         <div class="form-group" style="margin-bottom: 0;">
                                             <select id="new-video-provider" onchange="toggleProviderInput()">
-                                                <option value="youtube">YouTube</option>
-                                                <option value="mp4">MP4 / R2</option>
+                                                <option value="youtube">YouTube 影片</option>
+                                                <option value="mp4">MP4 / R2 直連</option>
                                             </select>
                                         </div>
                                         <div class="form-group" style="margin-bottom: 0;">
-                                            <input type="text" id="new-video-src" placeholder="YouTube ID 或影片網址..." required>
+                                            <input type="text" id="new-video-src" placeholder="YouTube ID 或影片網址..." required onblur="handleVideoSrcBlur()">
                                         </div>
+                                    </div>
+                                    
+                                    <!-- 標題與封面圖改在下方 -->
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <input type="text" id="new-video-title" placeholder="影片標題 (自動抓取或手動輸入)..." required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <input type="url" id="new-video-thumb" placeholder="封面圖網址 (自動抓取或手動輸入)..." required>
                                     </div>
                                     <button type="submit" class="btn-primary" style="padding: 8px;">確定新增影片</button>
                                 </form>

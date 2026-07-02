@@ -275,6 +275,9 @@ function setupPlaylistUI() {
 
         const isYoutube = video.sources[0].provider === 'youtube';
         const tagText = isYoutube ? 'YouTube 4K' : '4K H.265';
+        
+        // 若無時長欄位則不渲染黑色時長標籤
+        const durationHtml = video.duration ? `<span class="card-duration">${video.duration}</span>` : '';
 
         card.innerHTML = `
             <div class="card-thumb-wrapper">
@@ -284,7 +287,7 @@ function setupPlaylistUI() {
                         <path d="M8 5v14l11-7z"/>
                     </svg>
                 </div>
-                <span class="card-duration">${video.duration}</span>
+                ${durationHtml}
             </div>
             <div class="card-info">
                 <span class="card-title">${video.title}</span>
@@ -544,13 +547,12 @@ function renderAdminPlaylistVideos() {
     });
 }
 
-// 新增影片到播放清單
+// 新增影片到播放清單 (不需填寫時長，支援 YouTube 自動抓取資料)
 function addVideoToPlaylist(event) {
     event.preventDefault();
     if (!editingPlaylistId) return;
 
     const title = document.getElementById("new-video-title").value.trim();
-    const duration = document.getElementById("new-video-duration").value.trim();
     const thumbnail = document.getElementById("new-video-thumb").value.trim();
     const provider = document.getElementById("new-video-provider").value;
     const src = document.getElementById("new-video-src").value.trim();
@@ -558,15 +560,17 @@ function addVideoToPlaylist(event) {
     const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
     if (!playlist) return;
 
+    const finalSrc = provider === "youtube" ? extractYoutubeId(src) : src;
+
     const newVideo = {
         id: `vid-${Date.now()}`,
         title: title,
-        duration: duration,
+        duration: "", // 移除時長，設定為空
         thumbnail: thumbnail,
         sources: [
             provider === "youtube"
-            ? { src: src, provider: "youtube" }
-            : { src: src, type: "video/mp4", size: 2160 }
+            ? { src: finalSrc, provider: "youtube" }
+            : { src: finalSrc, type: "video/mp4", size: 2160 }
         ]
     };
 
@@ -577,6 +581,58 @@ function addVideoToPlaylist(event) {
     document.getElementById("add-video-form").reset();
     toggleProviderInput();
     refreshExportCode();
+}
+
+// 當 YouTube 網址/ID 輸入框失去焦點時，自動向 oEmbed API 抓取標題與封面圖
+async function handleVideoSrcBlur() {
+    const provider = document.getElementById("new-video-provider").value;
+    const srcInput = document.getElementById("new-video-src");
+    const urlOrId = srcInput.value.trim();
+
+    if (provider !== "youtube" || !urlOrId) return;
+
+    const ytId = extractYoutubeId(urlOrId);
+    srcInput.value = ytId; // 幫管理員自動收束成乾淨的 11 字元 ID
+
+    const titleInput = document.getElementById("new-video-title");
+    const thumbInput = document.getElementById("new-video-thumb");
+
+    // 提示正在抓取
+    titleInput.value = "⏳ 正在自動抓取影片標題...";
+    thumbInput.value = "⏳ 正在自動抓取封面圖...";
+
+    try {
+        // 使用 noembed 提供的免費且支援 CORS 的 YouTube oEmbed 轉接服務
+        const res = await fetch(`https://noembed.com/embed?url=https://www.youtube.com/watch?v=${ytId}`);
+        if (res.ok) {
+            const data = await res.json();
+            if (data.title) {
+                titleInput.value = data.title;
+            } else {
+                titleInput.value = "";
+            }
+            if (data.thumbnail_url) {
+                thumbInput.value = data.thumbnail_url;
+            } else {
+                thumbInput.value = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+            }
+        } else {
+            throw new Error("oEmbed fetch failed");
+        }
+    } catch (err) {
+        console.warn("自動讀取 YouTube Metadata 失敗，退回手動輸入:", err);
+        titleInput.value = "";
+        thumbInput.value = `https://img.youtube.com/vi/${ytId}/maxresdefault.jpg`;
+        alert("無法自動抓取此 YouTube 影片資料（可能為私人影片或地區限制），請手動輸入影片標題與封面。");
+    }
+}
+
+// 提取 YouTube 的 11 位字元影片 ID
+function extractYoutubeId(url) {
+    url = url.trim();
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : url;
 }
 
 // 影片排序：上移
