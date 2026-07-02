@@ -291,6 +291,7 @@ function setupPlyrInstance(options = {}) {
             'play-large', 'play', 'progress', 'current-time', 
             'duration', 'mute', 'volume', 'settings', 'pip', 'fullscreen'
         ],
+        settings: ['quality', 'speed'], // 預設開啟畫質與播放速度選單
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true }
     };
