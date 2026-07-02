@@ -365,6 +365,11 @@ function toggleAdminPortal(show) {
         refreshExportCode();
     } else {
         modal.classList.add("hidden");
+        // 清除後台按鈕與表單的顯示狀態，以防下次點開殘留
+        document.getElementById("btn-toggle-add-form").classList.add("hidden");
+        document.getElementById("btn-delete-current-playlist").classList.add("hidden");
+        document.getElementById("playlist-add-video-container").classList.add("hidden");
+        
         if (sessionStorage.getItem("owldio_role") === "admin") {
             setupSessionPlaylist("admin", null);
         } else {
@@ -405,7 +410,7 @@ function toggleProviderInput() {
     }
 }
 
-// 渲染左側播放清單表格
+// 渲染左側播放清單表格 (移除直接刪除的按鈕，安全移至右側編輯區內)
 function renderAdminPlaylists() {
     const playlistContainer = document.getElementById("admin-playlist-list");
     playlistContainer.innerHTML = "";
@@ -425,7 +430,6 @@ function renderAdminPlaylists() {
                 <div style="display: flex; flex-direction: column; gap: 6px;">
                     <button class="btn-primary" style="padding: 6px 8px; font-size: 11px;" onclick="selectPlaylistToEdit('${playlist.id}')">✏️ 編輯影片</button>
                     <button class="btn-primary" style="padding: 6px 8px; font-size: 11px; background: #4b5563; color: #fff;" onclick="copyShareUrl('${playlistUrl}')">📋 複製連結</button>
-                    <button class="btn-danger" style="padding: 6px 8px; font-size: 11px;" onclick="deletePlaylist('${playlist.id}')">刪除</button>
                 </div>
             </td>
         `;
@@ -468,7 +472,7 @@ function addPlaylist(event) {
 
 // 刪除播放清單
 function deletePlaylist(id) {
-    if (!confirm(`確定要刪除整個清單 ${id} 嗎？此操作無法還原。`)) return;
+    if (!confirm(`確定要刪除整個清單 "${id}" 嗎？此操作無法還原。`)) return;
     allPlaylists = allPlaylists.filter(pl => pl.id !== id);
     saveToLocalStorage();
     renderAdminPlaylists();
@@ -478,10 +482,19 @@ function deletePlaylist(id) {
         document.getElementById("editing-playlist-title").textContent = "請選擇左側清單";
         document.getElementById("editing-playlist-link").textContent = "無";
         document.getElementById("playlist-add-video-container").classList.add("hidden");
+        document.getElementById("btn-toggle-add-form").classList.add("hidden");
+        document.getElementById("btn-delete-current-playlist").classList.add("hidden");
         document.getElementById("admin-playlist-videos").innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">請點選左側清單的「編輯影片」按鈕開始管理</td></tr>`;
     }
     
     refreshExportCode();
+}
+
+// 供右側頂部「刪除此清單」按鈕呼叫的接口
+function deleteCurrentPlaylist() {
+    if (editingPlaylistId) {
+        deletePlaylist(editingPlaylistId);
+    }
 }
 
 // 複製專屬連結
@@ -493,20 +506,42 @@ function copyShareUrl(url) {
     });
 }
 
-// 選擇播放清單進行右側影片與順序編輯
+// 選擇播放清單進行右側影片與順序編輯 (實作折疊表單與刪除按鈕安全移入)
 function selectPlaylistToEdit(id) {
     editingPlaylistId = id;
     const playlist = allPlaylists.find(pl => pl.id === id);
     if (!playlist) return;
 
-    document.getElementById("playlist-add-video-container").classList.remove("hidden");
+    // 預設摺疊「新增影片」的表單，以釋放右側最大高度
+    document.getElementById("playlist-add-video-container").classList.add("hidden");
     
+    // 顯露「新增影片」與「刪除此清單」按鈕
+    const toggleBtn = document.getElementById("btn-toggle-add-form");
+    toggleBtn.classList.remove("hidden");
+    toggleBtn.textContent = "➕ 新增影片";
+    
+    document.getElementById("btn-delete-current-playlist").classList.remove("hidden");
+    
+    // 更新標頭與連結
     document.getElementById("editing-playlist-title").textContent = playlist.name;
     const currentOrigin = window.location.origin + window.location.pathname;
     const link = `${currentOrigin}?playlist=${playlist.id}`;
     document.getElementById("editing-playlist-link").innerHTML = `<a href="${link}" target="_blank" style="color: var(--accent); text-decoration: underline;">${link}</a>`;
 
     renderAdminPlaylistVideos();
+}
+
+// 切換新增影片表單的摺疊狀態
+function toggleAddVideoForm() {
+    const container = document.getElementById("playlist-add-video-container");
+    const btn = document.getElementById("btn-toggle-add-form");
+    if (container.classList.contains("hidden")) {
+        container.classList.remove("hidden");
+        btn.textContent = "收起表單";
+    } else {
+        container.classList.add("hidden");
+        btn.textContent = "➕ 新增影片";
+    }
 }
 
 // 渲染選中清單內的影片列表

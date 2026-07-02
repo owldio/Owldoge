@@ -154,9 +154,15 @@
 
                         <!-- 右側：當前選中播放清單的影片管理與排序 -->
                         <div class="list-section">
-                            <div class="playlist-edit-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
-                                <h4 style="margin-bottom: 6px; border-left: none; padding-left: 0;">正在管理清單：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
-                                <small style="color: var(--text-secondary)">分享連結：<span id="editing-playlist-link">無</span></small>
+                            <div class="playlist-edit-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
+                                <div>
+                                    <h4 style="margin-bottom: 6px; border-left: none; padding-left: 0;">正在管理清單：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
+                                    <small style="color: var(--text-secondary)">分享連結：<span id="editing-playlist-link">無</span></small>
+                                </div>
+                                <div style="display: flex; gap: 8px;">
+                                    <button id="btn-toggle-add-form" class="btn-primary hidden" style="padding: 6px 12px; font-size: 12px; width: auto;" onclick="toggleAddVideoForm()">➕ 新增影片</button>
+                                    <button id="btn-delete-current-playlist" class="btn-danger hidden" style="padding: 6px 12px; font-size: 12px;" onclick="deleteCurrentPlaylist()">❌ 刪除清單</button>
+                                </div>
                             </div>
                             
                             <!-- 新增影片表單 (只有在選中清單時顯示) -->
