@@ -91,6 +91,13 @@
             <!-- 左側：大型影音播放器 (70% 寬度) -->
             <section class="player-section">
                 <div class="player-wrapper">
+                    <!-- 雙擊快進快退回饋 Overlay -->
+                    <div id="seek-feedback-left" class="seek-feedback-overlay left">
+                        <div class="seek-feedback-text">◀◀ 10 秒</div>
+                    </div>
+                    <div id="seek-feedback-right" class="seek-feedback-overlay right">
+                        <div class="seek-feedback-text">10 秒 ▶▶</div>
+                    </div>
                     <!-- Plyr 播放器容器 -->
                     <video id="player" playsinline controls>
                         <!-- JS 動態載入影片來源 -->

@@ -113,6 +113,10 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("main-content").classList.add("hidden");
         renderVisitedHistory();
     }
+    
+    // 初始化全域快速鍵與雙擊快進退
+    setupKeyboardShortcuts();
+    setupDoubleTapToSeek();
 });
 
 /**
@@ -1118,4 +1122,76 @@ function navigateToAdmin(event) {
     event.preventDefault();
     window.location.hash = "login";
     window.location.reload();
+}
+
+// 1. 全域鍵盤快捷鍵：按 F/f 切換全螢幕
+function setupKeyboardShortcuts() {
+    document.addEventListener("keydown", (event) => {
+        // 避免在輸入框打字時誤觸
+        const activeEl = document.activeElement;
+        if (activeEl && (activeEl.tagName === "INPUT" || activeEl.tagName === "TEXTAREA" || activeEl.tagName === "SELECT")) {
+            return;
+        }
+
+        if (event.key === "f" || event.key === "F") {
+            if (player) {
+                event.preventDefault();
+                player.fullscreen.toggle();
+            }
+        }
+    });
+}
+
+// 2. 手機雙擊影片左側快退 10 秒、右側快進 10 秒 (ABR/MP4)
+function setupDoubleTapToSeek() {
+    const container = document.querySelector(".player-wrapper");
+    if (!container) return;
+
+    let lastTap = 0;
+    container.addEventListener("touchstart", (e) => {
+        const now = Date.now();
+        const DOUBLE_TAP_DELAY = 300;
+        if (now - lastTap < DOUBLE_TAP_DELAY) {
+            // 雙擊命中
+            handleSeekTap(e);
+        }
+        lastTap = now;
+    }, { passive: false });
+
+    function handleSeekTap(e) {
+        if (!player) return;
+
+        // 當前如果是 YouTube 訊源，由於 Iframe 的交互限制，觸摸主要是對 MP4/HLS 原生 Video 體驗最佳
+        const rect = container.getBoundingClientRect();
+        const touch = e.touches[0] || e.changedTouches[0];
+        const touchX = touch.clientX - rect.left; // 相對於容器的 X 坐標
+        const width = rect.width;
+
+        const isLeft = touchX < (width * 0.4); // 點擊在左側 40% 區間
+        const isRight = touchX > (width * 0.6); // 點擊在右側 60% 區間
+
+        if (isLeft) {
+            e.preventDefault();
+            player.currentTime = Math.max(0, player.currentTime - 10);
+            showSeekFeedback("left");
+        } else if (isRight) {
+            e.preventDefault();
+            player.currentTime = Math.min(player.duration || 9999, player.currentTime + 10);
+            showSeekFeedback("right");
+        }
+    }
+}
+
+// 3. 顯示雙擊 Seeking 的光暈與文字反饋
+function showSeekFeedback(direction) {
+    const elId = direction === "left" ? "seek-feedback-left" : "seek-feedback-right";
+    const el = document.getElementById(elId);
+    if (!el) return;
+
+    // 移除舊的 animate 類別以重置動畫
+    el.classList.remove("animate");
+    // 強制重繪 (Trigger reflow)
+    void el.offsetWidth;
+    // 加上 animate 類別
+    el.classList.add("animate");
 }
