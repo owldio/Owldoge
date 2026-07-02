@@ -969,13 +969,9 @@ body {
 }
 
 /* ==========================================
-   7. 雙工鏡像播放器佈局
+   7. 雙工鏡像播放器隱藏樣式
    ========================================== */
-.player-container {
-    width: 100%;
-    height: 100%;
-}
-.player-container.hidden {
+.plyr.hidden {
     display: none !important;
 }
 
@@ -986,7 +982,7 @@ body {
     align-items: center !important;
     justify-content: center !important;
 }
-.player-wrapper:fullscreen .player-container {
+.player-wrapper:fullscreen .plyr {
     width: 100% !important;
     height: 100% !important;
 }

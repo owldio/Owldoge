@@ -18,7 +18,7 @@
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
 
     <!-- 載入自訂樣式表 -->
-    <link rel="stylesheet" href="style.css?v=20260703c">
+    <link rel="stylesheet" href="style.css?v=20260703d">
 </head>
 <body>
 
@@ -98,14 +98,10 @@
                     <div id="seek-feedback-right" class="seek-feedback-overlay right">
                         <div class="seek-feedback-text">10 秒 ▶▶</div>
                     </div>
-                    <!-- HTML5 影音播放器容器 (ABR HLS / MP4) -->
-                    <div id="html5-container" class="player-container">
-                        <video id="player-html5" playsinline controls></video>
-                    </div>
-                    <!-- YouTube 影音播放器容器 -->
-                    <div id="youtube-container" class="player-container hidden">
-                        <video id="player-youtube" playsinline controls></video>
-                    </div>
+                    <!-- HTML5 影音播放器 (ABR HLS / MP4) -->
+                    <video id="player-html5" playsinline controls></video>
+                    <!-- YouTube 影音播放器 -->
+                    <video id="player-youtube" playsinline controls></video>
                 </div>
                 <!-- 影片詳細資訊 -->
                 <div class="video-info">

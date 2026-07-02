@@ -456,22 +456,22 @@ function loadVideo(index, autoplay = true) {
     const isHls = srcUrl && (srcUrl.endsWith(".m3u8") || srcUrl.includes(".m3u8"));
     const targetType = isHls ? "hls" : (isYoutube ? "youtube" : "mp4");
 
-    // 雙工切換：決定當前 active 的播放器，並顯示/隱藏對應容器
-    const html5Container = document.getElementById("html5-container");
-    const youtubeContainer = document.getElementById("youtube-container");
+    // 雙工切換：決定當前 active 的播放器，並顯示/隱藏對應 Plyr 容器
+    const html5El = playerHtml5 && playerHtml5.elements ? playerHtml5.elements.container : null;
+    const youtubeEl = playerYoutube && playerYoutube.elements ? playerYoutube.elements.container : null;
 
     if (targetType === "youtube") {
         player = playerYoutube;
         if (playerHtml5) playerHtml5.pause();
         
-        if (html5Container) html5Container.classList.add("hidden");
-        if (youtubeContainer) youtubeContainer.classList.remove("hidden");
+        if (html5El) html5El.classList.add("hidden");
+        if (youtubeEl) youtubeEl.classList.remove("hidden");
     } else {
         player = playerHtml5;
         if (playerYoutube) playerYoutube.pause();
         
-        if (youtubeContainer) youtubeContainer.classList.add("hidden");
-        if (html5Container) html5Container.classList.remove("hidden");
+        if (youtubeEl) youtubeEl.classList.add("hidden");
+        if (html5El) html5El.classList.remove("hidden");
     }
 
     // 動態標記是否為 YouTube 播放，以利 CSS 進行比例自適應分流並設定動態高寬比
@@ -482,9 +482,8 @@ function loadVideo(index, autoplay = true) {
             playerWrapper.classList.add("youtube-active");
             playerWrapper.style.aspectRatio = videoRatio.replace(":", " / ");
             // 同時動態設定 Plyr 的影片比例變數以擠掉 iframe 內部黑邊
-            const plyrEl = youtubeContainer ? youtubeContainer.querySelector(".plyr") : null;
-            if (plyrEl) {
-                plyrEl.style.setProperty("--plyr-video-aspect-ratio", videoRatio.replace(":", "/"));
+            if (youtubeEl) {
+                youtubeEl.style.setProperty("--plyr-video-aspect-ratio", videoRatio.replace(":", "/"));
             }
         } else {
             playerWrapper.classList.remove("youtube-active");
