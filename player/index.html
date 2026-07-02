@@ -114,101 +114,99 @@
             <div class="admin-body">
                 <!-- 頁籤導覽 -->
                 <div class="admin-tabs">
-                    <button class="tab-btn active" onclick="switchTab('tab-videos')">📹 影片庫管理</button>
-                    <button class="tab-btn" onclick="switchTab('tab-clients')">👥 客戶權限設定</button>
+                    <button class="tab-btn active" onclick="switchTab('tab-playlists')">📋 播放清單管理</button>
                     <button class="tab-btn" onclick="switchTab('tab-export')">🚀 同步 GitHub 設定</button>
                 </div>
 
-                <!-- 內容區 1：影片庫管理 -->
-                <div id="tab-videos" class="tab-content active">
-                    <div class="admin-split">
-                        <!-- 新增影片表單 -->
+                <!-- 內容區 1：播放清單管理 -->
+                <div id="tab-playlists" class="tab-content active">
+                    <div class="admin-split" style="grid-template-columns: 4.5fr 5.5fr;">
+                        <!-- 左側：播放清單建立與列表 -->
                         <div class="form-section">
-                            <h4>新增影片到資料庫</h4>
-                            <form id="add-video-form" onsubmit="addVideo(event)">
+                            <h4>建立新播放清單</h4>
+                            <form id="add-playlist-form" onsubmit="addPlaylist(event)" style="margin-bottom: 24px;">
                                 <div class="form-group">
-                                    <label>影片 ID (唯一值, 如 vid-04)</label>
-                                    <input type="text" id="new-video-id" placeholder="e.g. vid-04" required>
+                                    <label>播放清單 ID (唯一值, 如 playlist-clientC)</label>
+                                    <input type="text" id="new-playlist-id" placeholder="e.g. playlist-clientC" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>影片標題</label>
-                                    <input type="text" id="new-video-title" placeholder="e.g. 客戶訂製影片" required>
+                                    <label>清單展示名稱 (如 客戶 C 的專屬影音)</label>
+                                    <input type="text" id="new-playlist-name" placeholder="e.g. 客戶 C 專屬專區" required>
                                 </div>
                                 <div class="form-group">
-                                    <label>影片時長 (MM:SS)</label>
-                                    <input type="text" id="new-video-duration" placeholder="e.g. 05:40" required>
+                                    <label>分享金鑰/密碼 (如 owl-client-c)</label>
+                                    <input type="text" id="new-playlist-pass" placeholder="e.g. owl-client-c" required>
                                 </div>
-                                <div class="form-group">
-                                    <label>影片封面圖網址 (或 Unsplash / YouTube 封面)</label>
-                                    <input type="url" id="new-video-thumb" placeholder="https://images.unsplash.com/..." required>
-                                </div>
-                                <div class="form-group">
-                                    <label>影片來源類型</label>
-                                    <select id="new-video-provider" onchange="toggleProviderInput()">
-                                        <option value="youtube">YouTube 影片</option>
-                                        <option value="mp4">自主託管 (R2 MP4 連結)</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label id="url-label">YouTube 影片 ID (如 vweqyVqQoFM)</label>
-                                    <input type="text" id="new-video-src" placeholder="e.g. vweqyVqQoFM" required>
-                                </div>
-                                <button type="submit" class="btn-primary">新增影片</button>
+                                <button type="submit" class="btn-primary">建立清單</button>
                             </form>
-                        </div>
-                        <!-- 影片列表 -->
-                        <div class="list-section">
-                            <h4>目前影片庫 (<span id="admin-video-count">0</span>)</h4>
+
+                            <h4>目前播放清單列表</h4>
                             <div class="table-wrapper">
                                 <table class="admin-table">
                                     <thead>
                                         <tr>
-                                            <th>標題</th>
-                                            <th>類型</th>
+                                            <th>名稱 / 金鑰</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="admin-video-list">
+                                    <tbody id="admin-playlist-list">
                                         <!-- 動態生成 -->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <!-- 內容區 2：客戶權限設定 -->
-                <div id="tab-clients" class="tab-content">
-                    <div class="admin-split">
-                        <!-- 新增客戶表單 -->
-                        <div class="form-section">
-                            <h4>建立新客戶與密碼</h4>
-                            <form id="add-client-form" onsubmit="addClient(event)">
-                                <div class="form-group">
-                                    <label>客戶代稱 (英文 ID, 如 clientC)</label>
-                                    <input type="text" id="new-client-id" placeholder="e.g. clientC" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>客戶專屬密碼</label>
-                                    <input type="text" id="new-client-pass" placeholder="e.g. owl-client-c" required>
-                                </div>
-                                <button type="submit" class="btn-primary">新增客戶</button>
-                            </form>
-                        </div>
-                        <!-- 客戶列表與影片核選 -->
+                        <!-- 右側：當前選中播放清單的影片管理與排序 -->
                         <div class="list-section">
-                            <h4>客戶權限設定</h4>
+                            <div class="playlist-edit-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                <h4 style="margin-bottom: 6px; border-left: none; padding-left: 0;">正在管理清單：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
+                                <small style="color: var(--text-secondary)">金鑰連結：<span id="editing-playlist-link">無</span></small>
+                            </div>
+                            
+                            <!-- 新增影片表單 (只有在選中清單時顯示) -->
+                            <div id="playlist-add-video-container" class="hidden" style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                <h5 style="color: #fff; margin-bottom: 10px; font-size: 13px;">➕ 新增影片至此清單</h5>
+                                <form id="add-video-form" onsubmit="addVideoToPlaylist(event)">
+                                    <div class="admin-split" style="grid-template-columns: 1fr 1fr; gap: 10px; height: auto; overflow: visible; margin-bottom: 10px;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <input type="text" id="new-video-title" placeholder="影片標題..." required>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <input type="text" id="new-video-duration" placeholder="時長 e.g. 05:30" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <input type="url" id="new-video-thumb" placeholder="封面圖網址 (https://...)" required>
+                                    </div>
+                                    <div class="admin-split" style="grid-template-columns: 1fr 1.5fr; gap: 10px; height: auto; overflow: visible; margin-bottom: 10px;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <select id="new-video-provider" onchange="toggleProviderInput()">
+                                                <option value="youtube">YouTube</option>
+                                                <option value="mp4">MP4 / R2</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <input type="text" id="new-video-src" placeholder="YouTube ID 或影片網址..." required>
+                                        </div>
+                                    </div>
+                                    <button type="submit" class="btn-primary" style="padding: 8px;">確定新增影片</button>
+                                </form>
+                            </div>
+
                             <div class="table-wrapper">
                                 <table class="admin-table">
                                     <thead>
                                         <tr>
-                                            <th>客戶 ID / 密碼</th>
-                                            <th>可觀看影片 (勾選授權)</th>
-                                            <th>操作</th>
+                                            <th>影片名稱</th>
+                                            <th>類型</th>
+                                            <th>排序</th>
+                                            <th>移除</th>
                                         </tr>
                                     </thead>
-                                    <tbody id="admin-client-list">
-                                        <!-- 動態生成 -->
+                                    <tbody id="admin-playlist-videos">
+                                        <tr>
+                                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">請點選左側清單的「編輯影片」按鈕開始管理</td>
+                                        </tr>
                                     </tbody>
                                 </table>
                             </div>

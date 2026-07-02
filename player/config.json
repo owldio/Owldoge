@@ -1,48 +1,42 @@
 {
-  "videos": [
+  "playlists": [
     {
-      "id": "vid-01",
-      "title": "Owldio Art - 測試影片一 (YouTube 範例)",
-      "duration": "05:15",
-      "thumbnail": "https://img.youtube.com/vi/vweqyVqQoFM/maxresdefault.jpg",
-      "sources": [
-        {
-          "src": "vweqyVqQoFM",
-          "provider": "youtube"
-        }
-      ]
-    },
-    {
-      "id": "vid-02",
-      "title": "Owldio Art - 測試影片二 (YouTube 範例)",
-      "duration": "03:40",
-      "thumbnail": "https://img.youtube.com/vi/iRQGeJ5qiMk/maxresdefault.jpg",
-      "sources": [
-        {
-          "src": "iRQGeJ5qiMk",
-          "provider": "youtube"
-        }
-      ]
-    }
-  ],
-  "clients": [
-    {
-      "id": "admin",
-      "password": "owl2026",
-      "role": "admin",
-      "videos": ["vid-01", "vid-02"]
-    },
-    {
-      "id": "clientA",
+      "id": "playlist-clientA",
+      "name": "客戶 A 的專屬影音專區",
       "password": "owl-client-a",
-      "role": "client",
-      "videos": ["vid-01"]
+      "videos": [
+        {
+          "id": "vid-01",
+          "title": "Owldio Art - 測試影片一 (YouTube)",
+          "duration": "05:15",
+          "thumbnail": "https://img.youtube.com/vi/vweqyVqQoFM/maxresdefault.jpg",
+          "sources": [
+            {
+              "src": "vweqyVqQoFM",
+              "provider": "youtube"
+            }
+          ]
+        }
+      ]
     },
     {
-      "id": "clientB",
+      "id": "playlist-clientB",
+      "name": "客戶 B 的特製影音清單",
       "password": "owl-client-b",
-      "role": "client",
-      "videos": ["vid-02"]
+      "videos": [
+        {
+          "id": "vid-02",
+          "title": "Owldio Art - 測試影片二 (YouTube)",
+          "duration": "03:40",
+          "thumbnail": "https://img.youtube.com/vi/iRQGeJ5qiMk/maxresdefault.jpg",
+          "sources": [
+            {
+              "src": "iRQGeJ5qiMk",
+              "provider": "youtube"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
