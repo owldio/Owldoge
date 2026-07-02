@@ -13,25 +13,25 @@ const AUTH_KEY = "owldio_authorized";
 const videoPlaylist = [
     {
         id: "vid-01",
-        title: "Owldio Art 藝術宣傳 - Tears of Steel (4K H.265 範例)",
-        duration: "12:14",
+        title: "Owldio Art 藝術宣傳 - Oceans (4K H.265 示範範例)",
+        duration: "00:46",
         thumbnail: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&auto=format&fit=crop&q=80",
         sources: [
             {
-                src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/TearsOfSteel.mp4",
+                src: "https://vjs.zencdn.net/v/oceans.mp4",
                 type: "video/mp4",
-                size: 2160 // 4K 標記
+                size: 2160
             }
         ]
     },
     {
         id: "vid-02",
-        title: "Owldoge 私密展示 - Sintel (高畫質範例)",
-        duration: "08:48",
+        title: "Owldoge 私密展示 - Sintel Trailer (高畫質範例)",
+        duration: "00:52",
         thumbnail: "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?w=600&auto=format&fit=crop&q=80",
         sources: [
             {
-                src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/Sintel.mp4",
+                src: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
                 type: "video/mp4",
                 size: 1080
             }
@@ -40,11 +40,11 @@ const videoPlaylist = [
     {
         id: "vid-03",
         title: "森林極致光影 - Big Buck Bunny (經典測試影片)",
-        duration: "09:56",
+        duration: "00:10",
         thumbnail: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
         sources: [
             {
-                src: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+                src: "https://www.w3schools.com/html/mov_bbb.mp4",
                 type: "video/mp4",
                 size: 1080
             }
@@ -99,12 +99,9 @@ function revealContent() {
     // 2. 顯示主網頁內容
     mainContent.classList.remove("hidden");
 
-    // 3. 初始化播放器與清單 UI
+    // 3. 初始化播放器與清單 UI (第一首影片改由 ready 事件載入)
     initPlyr();
     setupPlaylistUI();
-
-    // 4. 預載入第一首影片 (不自動播放)
-    loadVideo(0, false);
 }
 
 /**
@@ -129,6 +126,11 @@ function initPlyr() {
         tooltips: { controls: true, seek: true },
         keyboard: { focused: true, global: true },
         title: videoPlaylist[0].title
+    });
+
+    // 重要：必須等 Plyr 播放器 Ready 之後，再載入第一首影片的 Source
+    player.on('ready', () => {
+        loadVideo(0, false);
     });
 
     // 監聽影片結束 (ended) 事件，觸發自動連播邏輯
