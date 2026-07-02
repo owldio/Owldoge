@@ -13,40 +13,25 @@ const AUTH_KEY = "owldio_authorized";
 const videoPlaylist = [
     {
         id: "vid-01",
-        title: "Owldio Art 藝術宣傳 - Oceans (4K H.265 示範範例)",
-        duration: "00:46",
-        thumbnail: "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=600&auto=format&fit=crop&q=80",
+        title: "Owldio Art - 測試影片一 (YouTube 範例)",
+        duration: "05:15",
+        thumbnail: "https://img.youtube.com/vi/vweqyVqQoFM/maxresdefault.jpg",
         sources: [
             {
-                src: "https://vjs.zencdn.net/v/oceans.mp4",
-                type: "video/mp4",
-                size: 2160
+                src: "vweqyVqQoFM",
+                provider: "youtube"
             }
         ]
     },
     {
         id: "vid-02",
-        title: "Owldoge 私密展示 - Sintel Trailer (高畫質範例)",
-        duration: "00:52",
-        thumbnail: "https://images.unsplash.com/photo-1518156677180-95a2893f3e9f?w=600&auto=format&fit=crop&q=80",
+        title: "Owldio Art - 測試影片二 (YouTube 範例)",
+        duration: "03:40",
+        thumbnail: "https://img.youtube.com/vi/iRQGeJ5qiMk/maxresdefault.jpg",
         sources: [
             {
-                src: "https://media.w3.org/2010/05/sintel/trailer_hd.mp4",
-                type: "video/mp4",
-                size: 1080
-            }
-        ]
-    },
-    {
-        id: "vid-03",
-        title: "森林極致光影 - Big Buck Bunny (經典測試影片)",
-        duration: "00:10",
-        thumbnail: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=600&auto=format&fit=crop&q=80",
-        sources: [
-            {
-                src: "https://www.w3schools.com/html/mov_bbb.mp4",
-                type: "video/mp4",
-                size: 1080
+                src: "iRQGeJ5qiMk",
+                provider: "youtube"
             }
         ]
     }
@@ -157,6 +142,9 @@ function setupPlaylistUI() {
         card.id = `card-${index}`;
         card.onclick = () => loadVideo(index, true);
 
+        const isYoutube = video.sources[0].provider === 'youtube';
+        const tagText = isYoutube ? 'YouTube 4K' : `${video.sources[0].size}p 4K H.265`;
+
         card.innerHTML = `
             <div class="card-thumb-wrapper">
                 <img class="card-thumb" src="${video.thumbnail}" alt="${video.title}">
@@ -169,7 +157,7 @@ function setupPlaylistUI() {
             </div>
             <div class="card-info">
                 <span class="card-title">${video.title}</span>
-                <span class="card-tag">${video.sources[0].size}p 4K H.265</span>
+                <span class="card-tag">${tagText}</span>
             </div>
         `;
         playlistItems.appendChild(card);
@@ -195,11 +183,13 @@ function loadVideo(index, autoplay = true) {
     player.source = {
         type: 'video',
         title: video.title,
-        sources: video.sources.map(src => ({
-            src: src.src,
-            type: src.type,
-            size: src.size
-        }))
+        sources: video.sources.map(src => {
+            const sourceObj = { src: src.src };
+            if (src.type) sourceObj.type = src.type;
+            if (src.size) sourceObj.size = src.size;
+            if (src.provider) sourceObj.provider = src.provider;
+            return sourceObj;
+        })
     };
 
     // 更新清單卡片的高亮 (Active) 狀態
