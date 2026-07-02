@@ -113,9 +113,14 @@ function initPlyr() {
         title: videoPlaylist[0].title
     });
 
-    // 重要：必須等 Plyr 播放器 Ready 之後，再載入第一首影片的 Source
+    // 防止無限循環：Plyr 每次切換 YouTube 訊源都會重新觸發 ready 事件
+    // 透過 flag 限制只有在網頁第一次載入初始化時才自動載入第 0 首影片
+    let isFirstReady = true;
     player.on('ready', () => {
-        loadVideo(0, false);
+        if (isFirstReady) {
+            isFirstReady = false;
+            loadVideo(0, false);
+        }
     });
 
     // 監聽影片結束 (ended) 事件，觸發自動連播邏輯
