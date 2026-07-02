@@ -146,39 +146,13 @@
                                 <button type="submit" class="btn-primary">建立清單</button>
                             </form>
 
-                            <h4>目前播放清單列表</h4>
-                            <div class="table-wrapper">
-                                <table class="admin-table">
-                                    <thead>
-                                        <tr>
-                                            <th>清單名稱 / ID</th>
-                                            <th>操作</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="admin-playlist-list">
-                                        <!-- 動態生成 -->
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <!-- 右側：當前選中播放清單的影片管理與排序 -->
-                        <div class="list-section">
-                            <div class="playlist-edit-header" style="margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: flex-start;">
-                                <div>
-                                    <h4 style="margin-bottom: 6px; border-left: none; padding-left: 0;">正在管理清單：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
-                                    <small style="color: var(--text-secondary)">分享連結：<span id="editing-playlist-link">無</span></small>
+                            <!-- 新增影片表單 (只有在右側選中清單時在左側顯示，支援摺疊縮放) -->
+                            <div id="playlist-add-video-container" class="hidden" style="margin-bottom: 24px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
+                                <div style="display: flex; justify-content: space-between; align-items: center; cursor: pointer; user-select: none;" onclick="toggleAddVideoForm()">
+                                    <h5 style="color: var(--accent); margin-bottom: 0; font-size: 13px; font-weight: 600;">➕ 新增影片至此清單</h5>
+                                    <span id="add-video-collapse-icon" style="font-size: 11px; color: var(--text-secondary)">[展開]</span>
                                 </div>
-                                <div style="display: flex; gap: 8px;">
-                                    <button id="btn-toggle-add-form" class="btn-primary hidden" style="padding: 6px 12px; font-size: 12px; width: auto;" onclick="toggleAddVideoForm()">➕ 新增影片</button>
-                                    <button id="btn-delete-current-playlist" class="btn-danger hidden" style="padding: 6px 12px; font-size: 12px;" onclick="deleteCurrentPlaylist()">❌ 刪除清單</button>
-                                </div>
-                            </div>
-                            
-                            <!-- 新增影片表單 (只有在選中清單時顯示) -->
-                            <div id="playlist-add-video-container" class="hidden" style="margin-bottom: 20px; background: rgba(255,255,255,0.02); padding: 14px; border-radius: 8px; border: 1px solid var(--border-color);">
-                                <h5 style="color: #fff; margin-bottom: 10px; font-size: 13px;">➕ 新增影片至此清單</h5>
-                                <form id="add-video-form" onsubmit="addVideoToPlaylist(event)">
+                                <form id="add-video-form" onsubmit="addVideoToPlaylist(event)" style="margin-top: 12px; display: none;">
                                     <!-- 來源類型與影片 ID/網址置頂 -->
                                     <div class="admin-split" style="grid-template-columns: 1fr 1.5fr; gap: 10px; height: auto; overflow: visible; margin-bottom: 10px;">
                                         <div class="form-group" style="margin-bottom: 0;">
@@ -199,8 +173,33 @@
                                     <div class="form-group" style="margin-bottom: 10px;">
                                         <input type="url" id="new-video-thumb" placeholder="封面圖網址 (自動抓取或手動輸入)..." required>
                                     </div>
-                                    <button type="submit" class="btn-primary" style="padding: 8px;">確定新增影片</button>
+                                    <button type="submit" class="btn-primary" style="padding: 8px; font-size: 12px;">確定新增影片</button>
                                 </form>
+                            </div>
+
+                            <h4>目前播放清單列表</h4>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>清單名稱 / ID</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-playlist-list">
+                                        <!-- 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 右側：當前選中播放清單的影片管理與排序 -->
+                        <div class="list-section">
+                            <div class="playlist-edit-header" style="margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin-bottom: 0; border-left: none; padding-left: 0; font-size: 15px;">正在管理：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
+                                </div>
+                                <button id="btn-delete-current-playlist" class="btn-danger hidden" style="padding: 6px 12px; font-size: 12px;" onclick="deleteCurrentPlaylist()">❌ 刪除此清單</button>
                             </div>
 
                             <div class="table-wrapper">

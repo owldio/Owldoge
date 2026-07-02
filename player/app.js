@@ -384,7 +384,6 @@ function toggleAdminPortal(show) {
     } else {
         modal.classList.add("hidden");
         // 清除後台按鈕與表單的顯示狀態，以防下次點開殘留
-        document.getElementById("btn-toggle-add-form").classList.add("hidden");
         document.getElementById("btn-delete-current-playlist").classList.add("hidden");
         document.getElementById("playlist-add-video-container").classList.add("hidden");
         
@@ -498,9 +497,7 @@ function deletePlaylist(id) {
     if (editingPlaylistId === id) {
         editingPlaylistId = null;
         document.getElementById("editing-playlist-title").textContent = "請選擇左側清單";
-        document.getElementById("editing-playlist-link").textContent = "無";
         document.getElementById("playlist-add-video-container").classList.add("hidden");
-        document.getElementById("btn-toggle-add-form").classList.add("hidden");
         document.getElementById("btn-delete-current-playlist").classList.add("hidden");
         document.getElementById("admin-playlist-videos").innerHTML = `<tr><td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">請點選左側清單的「編輯影片」按鈕開始管理</td></tr>`;
     }
@@ -524,41 +521,37 @@ function copyShareUrl(url) {
     });
 }
 
-// 選擇播放清單進行右側影片與順序編輯 (實作折疊表單與刪除按鈕安全移入)
+// 選擇播放清單進行右側影片與順序編輯 (將新增影片表單展露於左側)
 function selectPlaylistToEdit(id) {
     editingPlaylistId = id;
     const playlist = allPlaylists.find(pl => pl.id === id);
     if (!playlist) return;
 
-    // 預設摺疊「新增影片」的表單，以釋放右側最大高度
-    document.getElementById("playlist-add-video-container").classList.add("hidden");
+    // 展露左側的新增影片容器
+    document.getElementById("playlist-add-video-container").classList.remove("hidden");
+    // 預設將表單隱藏 (呈收起狀態)
+    document.getElementById("add-video-form").style.display = "none";
+    document.getElementById("add-video-collapse-icon").textContent = "[展開]";
     
-    // 顯露「新增影片」與「刪除此清單」按鈕
-    const toggleBtn = document.getElementById("btn-toggle-add-form");
-    toggleBtn.classList.remove("hidden");
-    toggleBtn.textContent = "➕ 新增影片";
-    
+    // 顯露右側「刪除此清單」按鈕
     document.getElementById("btn-delete-current-playlist").classList.remove("hidden");
     
-    // 更新標頭與連結
+    // 更新右側管理標題
     document.getElementById("editing-playlist-title").textContent = playlist.name;
-    const currentOrigin = window.location.origin + window.location.pathname;
-    const link = `${currentOrigin}?playlist=${playlist.id}`;
-    document.getElementById("editing-playlist-link").innerHTML = `<a href="${link}" target="_blank" style="color: var(--accent); text-decoration: underline;">${link}</a>`;
 
     renderAdminPlaylistVideos();
 }
 
-// 切換新增影片表單的摺疊狀態
+// 切換左側新增影片表單的摺疊縮放狀態
 function toggleAddVideoForm() {
-    const container = document.getElementById("playlist-add-video-container");
-    const btn = document.getElementById("btn-toggle-add-form");
-    if (container.classList.contains("hidden")) {
-        container.classList.remove("hidden");
-        btn.textContent = "收起表單";
+    const form = document.getElementById("add-video-form");
+    const icon = document.getElementById("add-video-collapse-icon");
+    if (form.style.display === "none" || form.style.display === "") {
+        form.style.display = "block";
+        icon.textContent = "[收起]";
     } else {
-        container.classList.add("hidden");
-        btn.textContent = "➕ 新增影片";
+        form.style.display = "none";
+        icon.textContent = "[展開]";
     }
 }
 
