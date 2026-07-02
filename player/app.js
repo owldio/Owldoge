@@ -1,8 +1,9 @@
 /**
  * OWLDIO PLAYER - 核心管理與播放控制系統 (JS)
- * 1. 播放清單（Playlist）為核心的客戶權限映射與免密連結訪問 (?key=xxx)
- * 2. 支援管理員後台：新增播放清單、對特定清單加片/刪片、上下移動按鈕調整順序
- * 3. 整合 GitHub API：一鍵同步 config.json，自動觸發 Cloudflare Pages 重新建置部署
+ * 1. 播放清單（Playlist）免密碼直連路由 (?playlist=xxx)，客戶點開直接播放影片。
+ * 2. 只有管理員密碼 (owl2026) 才能登入控制台。
+ * 3. 支援管理員後台：新增播放清單、對特定清單加片/刪片、上下移動按鈕調整順序。
+ * 4. 整合 GitHub API：一鍵同步 config.json，自動觸發 Cloudflare Pages 重新建置部署。
  */
 
 // ==========================================
@@ -10,9 +11,8 @@
 // ==========================================
 const DEFAULT_PLAYLISTS = [
     {
-        id: "playlist-clientA",
+        id: "clientA",
         name: "客戶 A 的專屬影音專區",
-        password: "owl-client-a",
         videos: [
             {
                 id: "vid-01",
@@ -29,9 +29,8 @@ const DEFAULT_PLAYLISTS = [
         ]
     },
     {
-        id: "playlist-clientB",
+        id: "clientB",
         name: "客戶 B 的特製影音清單",
-        password: "owl-client-b",
         videos: [
             {
                 id: "vid-02",
@@ -61,10 +60,10 @@ let editingPlaylistId = null; // 管理員目前正在編輯的播放清單 ID
 // ==========================================
 document.addEventListener("DOMContentLoaded", async () => {
     const urlParams = new URLSearchParams(window.location.search);
-    const keyParam = urlParams.get('key');
+    const playlistParam = urlParams.get('playlist');
 
-    // 1. 如果 URL 帶有免密金鑰，先清除任何殘留的舊 Session
-    if (keyParam) {
+    // 1. 如果 URL 帶有播放清單參數，先清除任何殘留的舊管理員 Session，確保客戶端載入乾淨
+    if (playlistParam) {
         sessionStorage.clear();
     }
 
@@ -74,9 +73,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     // 3. 載入 GitHub 儲存庫同步設定
     loadGitHubSettings();
 
-    // 4. 解析 URL 免密金鑰參數： ?key=xxx
-    if (keyParam) {
-        verifyWithKey(keyParam);
+    // 4. 解析 URL 播放清單參數： ?playlist=xxx
+    if (playlistParam) {
+        verifyWithPlaylist(playlistParam);
     } else if (sessionStorage.getItem("owldio_auth") === "true") {
         const role = sessionStorage.getItem("owldio_role");
         const playlistId = sessionStorage.getItem("owldio_playlist_id");
@@ -101,7 +100,7 @@ async function loadDatabase() {
         }
     }
 
-    // 若本地無資料，或解析失敗，則向伺服器拉取最新 config.json (加上時間戳防止瀏覽器快取)
+    // 若本地無資料，則向伺服器拉取最新 config.json (加上時間戳防止快取)
     if (!localDataLoaded) {
         try {
             const response = await fetch(`config.json?t=${Date.now()}`);
@@ -117,12 +116,12 @@ async function loadDatabase() {
         }
     }
 
-    // 🛡️ 資料格式安全性防禦：避免瀏覽器中殘留不相容的舊版本 LocalStorage 資料造成 JS 卡死
+    // 🛡️ 資料格式防禦：若資料庫遺留舊版本格式，自動重置
     let isDataValid = true;
     if (allPlaylists && Array.isArray(allPlaylists) && allPlaylists.length > 0) {
         const sample = allPlaylists[0];
-        // 舊架構可能不具備 playlists 結構。如果發現沒有 password 或 videos 欄位，判定為無效資料
-        if (sample.password === undefined || sample.videos === undefined) {
+        // 舊版可能具備 password 欄位，或者沒有 id/videos。新版只需檢查 id 和 videos 即可
+        if (sample.id === undefined || sample.videos === undefined) {
             isDataValid = false;
         }
     } else {
@@ -130,7 +129,7 @@ async function loadDatabase() {
     }
 
     if (!isDataValid) {
-        console.warn("⚠️ 檢測到瀏覽器留有不相容的舊版資料結構，正自動重設為最新播放清單模式...");
+        console.warn("⚠️ 檢測到瀏覽器留有舊版資料，自動重置為最新播放清單模式...");
         localStorage.removeItem('owldio_playlists');
         allPlaylists = DEFAULT_PLAYLISTS;
     }
@@ -166,12 +165,12 @@ function setupSessionPlaylist(role, playlistId) {
 }
 
 // ==========================================
-// 3. 認證邏輯 (URL 金鑰 or 密碼)
+// 3. 認證邏輯 (URL 免密登入 or 管理員密碼)
 // ==========================================
 
-// 免密連結認證
-function verifyWithKey(key) {
-    const matchedPlaylist = allPlaylists.find(pl => pl.password === key);
+// URL 播放清單參數免密碼登入
+function verifyWithPlaylist(playlistId) {
+    const matchedPlaylist = allPlaylists.find(pl => pl.id === playlistId);
 
     if (matchedPlaylist) {
         sessionStorage.setItem("owldio_auth", "true");
@@ -181,18 +180,18 @@ function verifyWithKey(key) {
         setupSessionPlaylist("client", matchedPlaylist.id);
         revealContent("client");
     } else {
-        document.getElementById("error-msg").textContent = "無效的專屬連結！";
+        document.getElementById("error-msg").textContent = `找不到 ID 為 "${playlistId}" 的播放清單，請確認連結！`;
     }
 }
 
-// 手動輸入密碼認證
+// 手動輸入密碼認證 (限管理員使用)
 function verifyPassword(event) {
     event.preventDefault();
     const passwordInput = document.getElementById("access-password");
     const errorMsg = document.getElementById("error-msg");
     const enteredPassword = passwordInput.value.trim();
 
-    // 1. 檢查是否為管理員
+    // 只有管理員密碼 "owl2026" 才能登入控制台
     if (enteredPassword === "owl2026") {
         sessionStorage.setItem("owldio_auth", "true");
         sessionStorage.setItem("owldio_role", "admin");
@@ -200,21 +199,8 @@ function verifyPassword(event) {
         setupSessionPlaylist("admin", null);
         errorMsg.textContent = "";
         revealContent("admin");
-        return;
-    }
-
-    // 2. 檢查是否為客戶清單金鑰
-    const matchedPlaylist = allPlaylists.find(pl => pl.password === enteredPassword);
-    if (matchedPlaylist) {
-        sessionStorage.setItem("owldio_auth", "true");
-        sessionStorage.setItem("owldio_role", "client");
-        sessionStorage.setItem("owldio_playlist_id", matchedPlaylist.id);
-
-        setupSessionPlaylist("client", matchedPlaylist.id);
-        errorMsg.textContent = "";
-        revealContent("client");
     } else {
-        errorMsg.textContent = "密碼無效，請確認後重試！";
+        errorMsg.textContent = "密碼無效！該密碼並非管理員密碼。";
         passwordInput.value = "";
         passwordInput.focus();
     }
@@ -376,7 +362,6 @@ function toggleAdminPortal(show) {
         refreshExportCode();
     } else {
         modal.classList.add("hidden");
-        // 關閉後台時，重新整理前台以反映最新修改
         if (sessionStorage.getItem("owldio_role") === "admin") {
             setupSessionPlaylist("admin", null);
         } else {
@@ -426,13 +411,12 @@ function renderAdminPlaylists() {
         const tr = document.createElement("tr");
         
         const currentOrigin = window.location.origin + window.location.pathname;
-        const playlistUrl = `${currentOrigin}?key=${playlist.password}`;
+        const playlistUrl = `${currentOrigin}?playlist=${playlist.id}`;
 
         tr.innerHTML = `
             <td>
                 <strong>${playlist.name}</strong><br>
-                <small style="color: var(--text-muted)">ID: ${playlist.id}</small><br>
-                <small style="color: var(--accent)">🔑 金鑰: ${playlist.password}</small>
+                <small style="color: var(--text-secondary)">ID: ${playlist.id}</small>
             </td>
             <td>
                 <div style="display: flex; flex-direction: column; gap: 6px;">
@@ -451,21 +435,22 @@ function addPlaylist(event) {
     event.preventDefault();
     const id = document.getElementById("new-playlist-id").value.trim();
     const name = document.getElementById("new-playlist-name").value.trim();
-    const password = document.getElementById("new-playlist-pass").value.trim();
+
+    // 檢查 ID 格式 (不允許特殊字元，方便作為網址參數)
+    const idRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!idRegex.test(id)) {
+        alert("清單 ID 僅能包含英文、數字、底線或減號！");
+        return;
+    }
 
     if (allPlaylists.some(pl => pl.id === id)) {
         alert("清單 ID 已存在！");
-        return;
-    }
-    if (allPlaylists.some(pl => pl.password === password)) {
-        alert("此分享密鑰已存在，請使用獨立的金鑰！");
         return;
     }
 
     const newPlaylist = {
         id: id,
         name: name,
-        password: password,
         videos: [] // 初始影片為空
     };
 
@@ -485,7 +470,6 @@ function deletePlaylist(id) {
     saveToLocalStorage();
     renderAdminPlaylists();
     
-    // 如果刪除的是當前正在編輯的清單，清空右側編輯狀態
     if (editingPlaylistId === id) {
         editingPlaylistId = null;
         document.getElementById("editing-playlist-title").textContent = "請選擇左側清單";
@@ -512,16 +496,13 @@ function selectPlaylistToEdit(id) {
     const playlist = allPlaylists.find(pl => pl.id === id);
     if (!playlist) return;
 
-    // 顯露新增影片表單
     document.getElementById("playlist-add-video-container").classList.remove("hidden");
     
-    // 更新標頭與連結
     document.getElementById("editing-playlist-title").textContent = playlist.name;
     const currentOrigin = window.location.origin + window.location.pathname;
-    const link = `${currentOrigin}?key=${playlist.password}`;
+    const link = `${currentOrigin}?playlist=${playlist.id}`;
     document.getElementById("editing-playlist-link").innerHTML = `<a href="${link}" target="_blank" style="color: var(--accent); text-decoration: underline;">${link}</a>`;
 
-    // 渲染右側影片列表
     renderAdminPlaylistVideos();
 }
 
@@ -578,7 +559,7 @@ function addVideoToPlaylist(event) {
     if (!playlist) return;
 
     const newVideo = {
-        id: `vid-${Date.now()}`, // 使用時間戳作為唯一 ID
+        id: `vid-${Date.now()}`,
         title: title,
         duration: duration,
         thumbnail: thumbnail,
@@ -593,7 +574,6 @@ function addVideoToPlaylist(event) {
     saveToLocalStorage();
     renderAdminPlaylistVideos();
     
-    // 清除影片表單
     document.getElementById("add-video-form").reset();
     toggleProviderInput();
     refreshExportCode();
@@ -604,7 +584,6 @@ function moveVideoUp(index) {
     const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
     if (!playlist || index <= 0) return;
 
-    // 交換位置
     const temp = playlist.videos[index];
     playlist.videos[index] = playlist.videos[index - 1];
     playlist.videos[index - 1] = temp;
@@ -619,7 +598,6 @@ function moveVideoDown(index) {
     const playlist = allPlaylists.find(pl => pl.id === editingPlaylistId);
     if (!playlist || index >= playlist.videos.length - 1) return;
 
-    // 交換位置
     const temp = playlist.videos[index];
     playlist.videos[index] = playlist.videos[index + 1];
     playlist.videos[index + 1] = temp;
@@ -694,7 +672,6 @@ async function syncToGitHub() {
         playlists: allPlaylists
     };
     const newContent = JSON.stringify(fullConfig, null, 2);
-    // 轉成 Base64 格式 (支援中文)
     const base64Content = btoa(unescape(encodeURIComponent(newContent)));
 
     try {
@@ -713,7 +690,7 @@ async function syncToGitHub() {
 
         const commitUrl = `https://api.github.com/repos/${repo}/contents/${path}`;
         const body = {
-            message: "chore: update player playlists via admin portal",
+            message: "chore: update player playlists config.json via admin portal",
             content: base64Content,
             branch: branch
         };

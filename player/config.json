@@ -1,9 +1,8 @@
 {
   "playlists": [
     {
-      "id": "playlist-clientA",
+      "id": "clientA",
       "name": "客戶 A 的專屬影音專區",
-      "password": "owl-client-a",
       "videos": [
         {
           "id": "vid-01",
@@ -20,9 +19,8 @@
       ]
     },
     {
-      "id": "playlist-clientB",
+      "id": "clientB",
       "name": "客戶 B 的特製影音清單",
-      "password": "owl-client-b",
       "videos": [
         {
           "id": "vid-02",

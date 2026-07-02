@@ -126,16 +126,12 @@
                             <h4>建立新播放清單</h4>
                             <form id="add-playlist-form" onsubmit="addPlaylist(event)" style="margin-bottom: 24px;">
                                 <div class="form-group">
-                                    <label>播放清單 ID (唯一值, 如 playlist-clientC)</label>
-                                    <input type="text" id="new-playlist-id" placeholder="e.g. playlist-clientC" required>
+                                    <label>播放清單 ID (英文唯一值，如 clientC)</label>
+                                    <input type="text" id="new-playlist-id" placeholder="e.g. clientC" required>
                                 </div>
                                 <div class="form-group">
                                     <label>清單展示名稱 (如 客戶 C 的專屬影音)</label>
                                     <input type="text" id="new-playlist-name" placeholder="e.g. 客戶 C 專屬專區" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>分享金鑰/密碼 (如 owl-client-c)</label>
-                                    <input type="text" id="new-playlist-pass" placeholder="e.g. owl-client-c" required>
                                 </div>
                                 <button type="submit" class="btn-primary">建立清單</button>
                             </form>
@@ -145,7 +141,7 @@
                                 <table class="admin-table">
                                     <thead>
                                         <tr>
-                                            <th>名稱 / 金鑰</th>
+                                            <th>清單名稱 / ID</th>
                                             <th>操作</th>
                                         </tr>
                                     </thead>
