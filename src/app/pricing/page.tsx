@@ -225,8 +225,11 @@ export default function PricingPage() {
                   STUDENT FRIENDLY — 學生專屬優惠
                 </p>
                 <p className="text-sm font-light leading-loose text-parchment-dim">
-                  憑學生證享超值價格，音樂系所、社團亦可洽談學期合作專案。選擇學生方案即表示同意授權
-                  Owldio 以專業方式呈現您的演出，作為作品集展示與推廣之用。
+                  憑學生證享超值價格，音樂系所、社團亦可洽談學期合作專案。
+                </p>
+                <p className="mt-3 text-sm font-light leading-loose text-parchment-dim">
+                  ※ 選擇學生方案即表示同意授權 Owldio
+                  使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。
                 </p>
               </div>
               <Link

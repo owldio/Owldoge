@@ -22,6 +22,8 @@
   --color-copper-deep: #8a5f2e;
   --color-hairline: rgb(243 238 227 / 0.12);
   --color-hairline-strong: rgb(243 238 227 / 0.24);
+  --color-night-veil: rgb(11 8 5 / 0.88);
+  --color-night-veil-strong: rgb(11 8 5 / 0.92);
 }
 
 @layer base {

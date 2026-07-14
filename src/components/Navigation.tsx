@@ -44,7 +44,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
     <header
       className={`fixed top-0 z-50 w-full transition-colors duration-500 ${
         isScrolled || showMobileMenu
-          ? "border-b border-hairline bg-night/85 backdrop-blur-md"
+          ? "border-b border-hairline bg-night-veil backdrop-blur-md"
           : "border-b border-transparent bg-transparent"
       }`}
     >
@@ -128,7 +128,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-[69px] z-40 flex flex-col bg-night/97 backdrop-blur-lg lg:hidden"
+            className="fixed inset-0 top-[69px] z-40 flex flex-col bg-night backdrop-blur-lg lg:hidden"
           >
             <nav aria-label="行動選單" className="flex flex-1 flex-col justify-center px-8">
               {navItems.map((item, index) => {
@@ -187,7 +187,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
             animate={{ y: 0 }}
             exit={{ y: "110%" }}
             transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-night/90 px-5 pb-[calc(env(safe-area-inset-bottom)+0.7rem)] pt-3 backdrop-blur-md lg:hidden"
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-night-veil-strong px-5 pb-[calc(env(safe-area-inset-bottom)+0.7rem)] pt-3 backdrop-blur-md lg:hidden"
           >
             <Link
               href="/contact"
