@@ -4,25 +4,98 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { 
-  Mail, 
-  Clock, 
-  Send, 
-  Music,
-  Video,
-  Users,
-  MessageCircle,
-  CheckCircle2,
-  Facebook,
-  Instagram
-} from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import BackgroundGradient from "@/components/BackgroundGradient";
-import EmailModal from "@/components/EmailModal";
+import SiteFooter from "@/components/SiteFooter";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { RevealLine, HeroRule } from "@/components/HeroReveal";
+
+const fieldClass =
+  "w-full border border-hairline bg-night-raised/40 px-4 py-3 text-sm font-light text-parchment transition-colors duration-300 placeholder:text-parchment-faint focus:border-copper focus:outline-none";
+
+const labelClass = "mb-2 block font-mono text-[10px] tracking-[0.25em] text-parchment-faint";
+
+const optionClass =
+  "flex cursor-pointer items-center gap-3 border border-hairline bg-night-raised/40 px-4 py-3.5 text-sm font-light text-parchment transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10";
+
+const lineOfficialAccountUrl = "https://line.me/R/ti/p/@447nguoe";
+
+const eventTypes = [
+  "獨奏 / 個人演出",
+  "室內樂（雙重奏 / 三重奏 / 四重奏...）",
+  "合唱 / 重唱",
+  "管弦 / 大型樂團",
+  "戲劇 / 舞蹈",
+  "其他",
+];
+
+const durationOptions = ["30分鐘", "60分鐘", "90分鐘", "120分鐘", "其他"];
+
+const timeOptions = [
+  "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
+  "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
+  "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
+  "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
+  "21:00", "21:30", "22:00",
+];
+
+const pricingPlans = [
+  {
+    value: "single",
+    label: "單機方案",
+    price: "NT$ 7,800 起",
+    description: "內容：單機 4K 錄影、2 小時拍攝、基礎剪輯、雲端交付、一次小改",
+  },
+  {
+    value: "double",
+    label: "雙機套餐",
+    price: "NT$ 14,800 起",
+    description: "內容：雙機位拍攝、4K Ultra HD、60 秒精華版、專業剪輯、多角度切換、雲端＋USB 交付",
+  },
+  {
+    value: "triple",
+    label: "三機旗艦或客製",
+    price: "NT$ 21,200 起",
+    description: "內容：三機位拍攝、多視角剪輯、色彩校正、專業混音、完整後製、實體光碟",
+  },
+  {
+    value: "recommend",
+    label: "請為我推薦最適合的方案",
+    description: "根據您的演出類型、場地與需求，我們將為您推薦最合適的拍攝方案與報價",
+  },
+  {
+    value: "other",
+    label: "其他需求",
+  },
+];
+
+const serviceOptions = [
+  { id: "recording", label: "專業錄音" },
+  { id: "video", label: "錄影服務" },
+  { id: "live", label: "直播服務" },
+  { id: "editing", label: "後製剪輯" },
+];
+
+const contactChannels = [
+  { label: "EMAIL", value: "owldio.art@gmail.com", href: "mailto:owldio.art@gmail.com" },
+  { label: "LINE", value: "@447nguoe", href: lineOfficialAccountUrl, external: true },
+  {
+    label: "FACEBOOK",
+    value: "@owldio.art",
+    href: "https://www.facebook.com/owldio.art",
+    external: true,
+  },
+  {
+    label: "INSTAGRAM",
+    value: "@owldio.art",
+    href: "https://instagram.com/owldio.art",
+    external: true,
+  },
+];
+
+const promises = ["24 小時內回覆報價", "免費檔期查詢", "學生優惠價格", "專業品質保證"];
 
 const ContactPage = () => {
-  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -39,27 +112,29 @@ const ContactPage = () => {
     useStudentPlan: "",
     pricingPlan: "",
     deliveryTime: "",
-    additionalInfo: ""
+    additionalInfo: "",
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   const handleServiceChange = (service: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       services: prev.services.includes(service)
-        ? prev.services.filter(s => s !== service)
-        : [...prev.services, service]
+        ? prev.services.filter((s) => s !== service)
+        : [...prev.services, service],
     }));
   };
 
@@ -70,8 +145,8 @@ const ContactPage = () => {
 
     try {
       // 將服務選項轉換為中文標籤
-      const serviceLabels = formData.services.map(serviceId => {
-        const service = serviceOptions.find(s => s.id === serviceId);
+      const serviceLabels = formData.services.map((serviceId) => {
+        const service = serviceOptions.find((s) => s.id === serviceId);
         return service ? service.label : serviceId;
       });
 
@@ -85,32 +160,42 @@ const ContactPage = () => {
         eventDate: formData.eventDate,
         eventTime: formData.eventTime,
         instrument: formData.instrument,
-        eventDateTime: formData.eventDate && formData.eventTime ? (() => {
-          const d = new Date(formData.eventDate + 'T00:00:00');
-          const yyyy = d.getFullYear();
-          const mm = String(d.getMonth() + 1).padStart(2, '0');
-          const dd = String(d.getDate()).padStart(2, '0');
-          const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
-          const weekday = weekdays[d.getDay()];
-          return `${yyyy}年${mm}月${dd}日（週${weekday}）${formData.eventTime}`;
-        })() : "",
+        eventDateTime:
+          formData.eventDate && formData.eventTime
+            ? (() => {
+                const d = new Date(formData.eventDate + "T00:00:00");
+                const yyyy = d.getFullYear();
+                const mm = String(d.getMonth() + 1).padStart(2, "0");
+                const dd = String(d.getDate()).padStart(2, "0");
+                const weekdays = ["日", "一", "二", "三", "四", "五", "六"];
+                const weekday = weekdays[d.getDay()];
+                return `${yyyy}年${mm}月${dd}日（週${weekday}）${formData.eventTime}`;
+              })()
+            : "",
         venue: formData.venue,
         duration: formData.duration,
         participants: formData.participants,
         services: serviceLabels,
-        useStudentPlan: formData.useStudentPlan === "yes" ? "是" : formData.useStudentPlan === "no" ? "否" : "",
-        pricingPlan: pricingPlans.find(p => p.value === formData.pricingPlan)?.label || formData.pricingPlan,
-        deliveryTime: formData.deliveryTime === "standard" ? "一般交件（7~10 個工作天）" : formData.deliveryTime === "rush72" ? "72 小時交件（加購）" : "",
-        additionalInfo: formData.additionalInfo
+        useStudentPlan:
+          formData.useStudentPlan === "yes" ? "是" : formData.useStudentPlan === "no" ? "否" : "",
+        pricingPlan:
+          pricingPlans.find((p) => p.value === formData.pricingPlan)?.label || formData.pricingPlan,
+        deliveryTime:
+          formData.deliveryTime === "standard"
+            ? "一般交件（7~10 個工作天）"
+            : formData.deliveryTime === "rush72"
+              ? "72 小時交件（加購）"
+              : "",
+        additionalInfo: formData.additionalInfo,
       };
 
       // 透過同源 API route 提交到 Google Apps Script（伺服器端持有 URL，避免 NEXT_PUBLIC_ 洩漏）
-      const response = await fetch('/api/submit-contact', {
-        method: 'POST',
+      const response = await fetch("/api/submit-contact", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(submitData)
+        body: JSON.stringify(submitData),
       });
 
       if (!response.ok) {
@@ -119,104 +204,39 @@ const ContactPage = () => {
 
       setIsSubmitting(false);
       setIsSubmitted(true);
-
     } catch (error) {
       setIsSubmitting(false);
-      const message = error instanceof Error ? error.message : '發生未知錯誤，請稍後再試';
+      const message = error instanceof Error ? error.message : "發生未知錯誤，請稍後再試";
       setSubmitError(message);
     }
   };
 
-  const eventTypes = [
-    "獨奏 / 個人演出",
-    "室內樂（雙重奏 / 三重奏 / 四重奏...）",
-    "合唱 / 重唱",
-    "管弦 / 大型樂團",
-    "戲劇 / 舞蹈",
-    "其他"
-  ];
-
-  const durationOptions = [
-    "30分鐘",
-    "60分鐘",
-    "90分鐘",
-    "120分鐘",
-    "其他"
-  ];
-
-  const timeOptions = [
-    "09:00", "09:30", "10:00", "10:30", "11:00", "11:30",
-    "12:00", "12:30", "13:00", "13:30", "14:00", "14:30",
-    "15:00", "15:30", "16:00", "16:30", "17:00", "17:30",
-    "18:00", "18:30", "19:00", "19:30", "20:00", "20:30",
-    "21:00", "21:30", "22:00"
-  ];
-
-  const pricingPlans = [
-    {
-      value: "single",
-      label: "單機方案",
-      price: "NT$ 7,800 起",
-      description: "內容：單機 4K 錄影、2 小時拍攝、基礎剪輯、雲端交付、一次小改"
-    },
-    {
-      value: "double",
-      label: "雙機套餐",
-      price: "NT$ 14,800 起",
-      description: "內容：雙機位拍攝、4K Ultra HD、60 秒精華版、專業剪輯、多角度切換、雲端＋USB 交付"
-    },
-    {
-      value: "triple",
-      label: "三機旗艦或客製",
-      price: "NT$ 21,200 起",
-      description: "內容：三機位拍攝、多視角剪輯、色彩校正、專業混音、完整後製、實體光碟"
-    },
-    {
-      value: "recommend",
-      label: "請為我推薦最適合的方案",
-      description: "根據您的演出類型、場地與需求，我們將為您推薦最合適的拍攝方案與報價"
-    },
-    {
-      value: "other",
-      label: "其他需求"
-    }
-  ];
-
-  const serviceOptions = [
-    { id: "recording", label: "專業錄音", icon: <Music className="h-4 w-4" /> },
-    { id: "video", label: "錄影服務", icon: <Video className="h-4 w-4" /> },
-    { id: "live", label: "直播服務", icon: <Users className="h-4 w-4" /> },
-    { id: "editing", label: "後製剪輯", icon: <CheckCircle2 className="h-4 w-4" /> }
-  ];
-
-  const lineOfficialAccountUrl = "https://line.me/R/ti/p/@447nguoe";
-
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-black flex items-center justify-center px-4 py-12">
+      <div className="flex min-h-screen items-center justify-center bg-night px-5 py-16 text-parchment">
         <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
           className="w-full max-w-lg text-center"
         >
-          <div className="mb-8">
-            <div className="w-20 h-20 bg-amber-500/20 backdrop-blur-xl rounded-full flex items-center justify-center mx-auto mb-4 border border-amber-500/30">
-              <CheckCircle2 className="h-10 w-10 text-amber-500" />
-            </div>
-            <h1 className="text-2xl font-thin text-amber-50 mb-2 tracking-[0.2em]">預約申請已送出</h1>
-            <p className="text-amber-100/60 font-normal">
-              感謝您的預約申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
-            </p>
-          </div>
+          <p className="mb-6 font-mono text-[11px] tracking-[0.4em] text-copper">
+            REQUEST RECEIVED — 預約已送出
+          </p>
+          <h1 className="mb-5 font-display text-4xl font-light italic text-copper-bright">
+            預約申請已送出
+          </h1>
+          <p className="mb-10 text-sm font-light leading-loose text-parchment-dim">
+            感謝您的預約申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
+          </p>
 
-          <div className="mb-8 border-y border-amber-500/20 py-8">
+          <div className="mb-10 border-y border-hairline py-10">
             <a
               href={lineOfficialAccountUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="加入 Owldio LINE 官方帳號"
-              className="mx-auto mb-5 block w-44 overflow-hidden rounded-lg border border-amber-500/20 bg-white p-3 shadow-2xl shadow-black/40 transition-transform duration-300 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-[#06c755]"
+              className="mx-auto mb-6 block w-44 overflow-hidden border border-hairline bg-white p-3 transition-transform duration-300 hover:scale-105"
             >
               <Image
                 src="/pic/LINEQR.jpg"
@@ -227,556 +247,497 @@ const ContactPage = () => {
                 priority
               />
             </a>
-            <p className="mx-auto mb-5 max-w-sm text-sm font-normal leading-relaxed tracking-[0.05em] text-amber-100/70">
-              表單送出完成後，請加入 Owldio LINE 官方帳號，讓我們可以更即時地和您確認檔期、需求細節與後續安排。
+            <p className="mx-auto mb-6 max-w-sm text-sm font-light leading-loose text-parchment-dim">
+              表單送出後，請加入 Owldio LINE 官方帳號，讓我們能更即時地與您確認檔期、需求細節與後續安排。
             </p>
-            <Button
-              className="bg-[#06c755] text-white hover:bg-[#05b84f] hover:scale-105 font-normal tracking-[0.1em] border-none transition-all duration-300"
-              asChild
+            <a
+              href={lineOfficialAccountUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="group inline-flex items-center gap-3 bg-copper px-8 py-3.5 text-sm tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
             >
-              <a href={lineOfficialAccountUrl} target="_blank" rel="noopener noreferrer">
-                <MessageCircle className="mr-2 h-4 w-4" />
-                加入 LINE 官方帳號
-              </a>
-            </Button>
+              加入 LINE 官方帳號
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+            </a>
           </div>
 
-          <Button
-            className="bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-normal tracking-[0.1em] border-none transition-all duration-300"
-            asChild
+          <Link
+            href="/"
+            className="inline-flex items-center justify-center border border-hairline-strong px-8 py-3.5 text-sm tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
           >
-            <Link href="/">返回首頁</Link>
-          </Button>
+            返回首頁
+          </Link>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-black text-amber-50">
-      <BackgroundGradient />
+    <div className="min-h-screen overflow-x-hidden bg-night text-parchment">
       <Navigation currentPage="contact" />
 
-      <main className="py-32">
-        <div className="mx-auto max-w-7xl px-4">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6 }}
-            className="text-center mb-20"
-          >
-            <h1 className="text-5xl md:text-7xl font-thin mb-8 tracking-[0.3em] leading-[1.2]">
-              <span className="bg-gradient-to-r from-amber-200 via-amber-500 to-yellow-400 bg-clip-text text-transparent">
+      <main>
+        {/* ============ Hero ============ */}
+        <section className="grain relative overflow-hidden border-b border-hairline">
+          <HeroBackdrop src="/pic/IMG_9114.JPG" />
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-8 lg:pb-20 lg:pt-48">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper"
+            >
+              CONTACT — 聯絡預約
+            </motion.p>
+            <HeroRule />
+            <h1 className="mb-8 font-serif font-extralight leading-[1.1] text-parchment">
+              <RevealLine delay={0.2} className="text-[clamp(2.6rem,7vw,6rem)] text-copper-bright">
                 聯絡預約
-              </span>
+              </RevealLine>
             </h1>
-            <p className="text-xl text-amber-100/60 max-w-2xl mx-auto font-normal tracking-[0.1em]">
-              填寫表單告訴我們您的需求
-              <br />
-              我們將在 24 小時內回覆詳細報價與檔期安排
-            </p>
-          </motion.div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="max-w-xl text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
+            >
+              填寫表單告訴我們您的需求，我們將在 24 小時內回覆詳細報價與檔期安排。
+            </motion.p>
+          </div>
+        </section>
 
-          <div className="grid lg:grid-cols-3 gap-12">
+        {/* ============ Form + sidebar ============ */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto grid max-w-7xl gap-12 px-5 py-20 md:px-8 lg:grid-cols-3 lg:py-28">
+            {/* Form */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="lg:col-span-2"
             >
-              <div className="bg-black/40 backdrop-blur-xl rounded-2xl border border-amber-500/20 p-8 shadow-2xl">
-                <h2 className="text-2xl font-thin text-amber-50 mb-6 tracking-[0.2em]">預約表單</h2>
-                
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
+              <div className="border border-hairline bg-night-raised/30 p-7 md:p-10">
+                <h2 className="mb-8 font-mono text-[11px] tracking-[0.35em] text-copper">
+                  預約表單 — BOOKING FORM
+                </h2>
+
+                <form onSubmit={handleSubmit} className="space-y-10">
+                  {/* Contact basics */}
+                  <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        姓名（聯絡人）*
-                      </label>
+                      <label className={labelClass}>姓名（聯絡人）*</label>
                       <input
                         type="text"
                         name="name"
                         value={formData.name}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="簡答文字"
+                        className={fieldClass}
+                        placeholder="您的姓名"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        Email（會用此信箱發送估價與繳費連結）*
-                      </label>
+                      <label className={labelClass}>EMAIL（用於寄送估價與繳費連結）*</label>
                       <input
                         type="email"
                         name="email"
                         value={formData.email}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="簡答文字"
+                        className={fieldClass}
+                        placeholder="you@example.com"
                       />
                     </div>
-                  </div>
-
-                  <div className="grid md:grid-cols-2 gap-6">
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        連絡電話 *
-                      </label>
+                      <label className={labelClass}>聯絡電話 *</label>
                       <input
                         type="tel"
                         name="phone"
                         value={formData.phone}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="簡答文字"
+                        className={fieldClass}
+                        placeholder="0900 000 000"
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        學校 / 機構
-                      </label>
+                      <label className={labelClass}>學校 / 機構</label>
                       <input
                         type="text"
                         name="school"
                         value={formData.school}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="簡答文字"
+                        className={fieldClass}
+                        placeholder="選填"
                       />
                     </div>
                   </div>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">演出資訊</h3>
-                    
+                  {/* Event info */}
+                  <fieldset className="space-y-6 border-t border-hairline pt-9">
+                    <legend className="mb-2 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      演出資訊 · EVENT
+                    </legend>
+
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        演出類型 *
-                      </label>
+                      <label className={labelClass}>演出類型 *</label>
                       <select
                         name="eventType"
                         value={formData.eventType}
                         onChange={handleInputChange}
                         required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                        className={fieldClass}
                       >
                         <option value="">請選擇演出類型</option>
-                        {eventTypes.map(type => (
-                          <option key={type} value={type} className="bg-black text-amber-50">{type}</option>
+                        {eventTypes.map((type) => (
+                          <option key={type} value={type} className="bg-night text-parchment">
+                            {type}
+                          </option>
                         ))}
                       </select>
                     </div>
 
                     <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        樂器 / 編制
-                      </label>
+                      <label className={labelClass}>樂器 / 編制</label>
                       <input
                         type="text"
                         name="instrument"
                         value={formData.instrument}
                         onChange={handleInputChange}
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                        className={fieldClass}
                         placeholder="例：鋼琴、小提琴、聲樂、弦樂四重奏"
                       />
                     </div>
 
-                    <div className="grid md:grid-cols-3 gap-6">
+                    <div className="grid gap-6 md:grid-cols-3">
                       <div>
-                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出日期 *
-                        </label>
+                        <label className={labelClass}>演出日期 *</label>
                         <input
                           type="date"
                           name="eventDate"
                           value={formData.eventDate}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:filter [&::-webkit-calendar-picker-indicator]:invert [&::-webkit-calendar-picker-indicator]:cursor-pointer"
+                          className={`${fieldClass} [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert`}
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出時間 *
-                        </label>
+                        <label className={labelClass}>演出時間 *</label>
                         <select
                           name="eventTime"
                           value={formData.eventTime}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
+                          className={fieldClass}
                         >
                           <option value="">請選擇時間</option>
-                          {timeOptions.map(time => (
-                            <option key={time} value={time} className="bg-black text-amber-50">{time}</option>
+                          {timeOptions.map((time) => (
+                            <option key={time} value={time} className="bg-night text-parchment">
+                              {time}
+                            </option>
                           ))}
                         </select>
                       </div>
                       <div>
-                        <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                          演出場地 *
-                        </label>
+                        <label className={labelClass}>演出場地 *</label>
                         <input
                           type="text"
                           name="venue"
                           value={formData.venue}
                           onChange={handleInputChange}
                           required
-                          className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                          placeholder="簡答文字"
+                          className={fieldClass}
+                          placeholder="場地名稱"
                         />
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        演出時長 *
-                      </label>
-                      <select
-                        name="duration"
-                        value={formData.duration}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                      >
-                        <option value="">請選擇演出時長</option>
-                        {durationOptions.map(option => (
-                          <option key={option} value={option} className="bg-black text-amber-50">{option}</option>
-                        ))}
-                      </select>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      <div>
+                        <label className={labelClass}>演出時長 *</label>
+                        <select
+                          name="duration"
+                          value={formData.duration}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClass}
+                        >
+                          <option value="">請選擇演出時長</option>
+                          {durationOptions.map((option) => (
+                            <option key={option} value={option} className="bg-night text-parchment">
+                              {option}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <div>
+                        <label className={labelClass}>參與人數 *</label>
+                        <input
+                          type="text"
+                          name="participants"
+                          value={formData.participants}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClass}
+                          placeholder="例：1 人、四重奏 4 人"
+                        />
+                      </div>
                     </div>
+                  </fieldset>
 
-                    <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                        參與人數 *
-                      </label>
-                      <input
-                        type="text"
-                        name="participants"
-                        value={formData.participants}
-                        onChange={handleInputChange}
-                        required
-                        className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                        placeholder="簡答文字"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">服務內容</h3>
-                    <div className="grid md:grid-cols-2 gap-4">
-                      {serviceOptions.map(service => (
-                        <label key={service.id} className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                  {/* Services */}
+                  <fieldset className="border-t border-hairline pt-9">
+                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      服務內容 · SERVICES
+                    </legend>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {serviceOptions.map((service) => (
+                        <label key={service.id} className={optionClass}>
                           <input
                             type="checkbox"
                             checked={formData.services.includes(service.id)}
                             onChange={() => handleServiceChange(service.id)}
-                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 rounded focus:ring-amber-500/50"
+                            className="h-4 w-4 accent-copper"
                           />
-                          <div className="flex items-center gap-2">
-                            {service.icon}
-                            <span className="font-normal text-amber-50 tracking-[0.05em]">{service.label}</span>
-                          </div>
+                          {service.label}
                         </label>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">學生方案</h3>
-                    <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-3 tracking-[0.1em]">
-                        是否使用學生方案 *
-                      </label>
-                      <div className="space-y-3">
-                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                  {/* Student plan */}
+                  <fieldset className="border-t border-hairline pt-9">
+                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      學生方案 · STUDENT PLAN
+                    </legend>
+                    <label className={labelClass}>是否使用學生方案 *</label>
+                    <div className="grid gap-3 md:grid-cols-2">
+                      {[
+                        { value: "yes", label: "是" },
+                        { value: "no", label: "否" },
+                      ].map((opt) => (
+                        <label key={opt.value} className={optionClass}>
                           <input
                             type="radio"
                             name="useStudentPlan"
-                            value="yes"
-                            checked={formData.useStudentPlan === "yes"}
+                            value={opt.value}
+                            checked={formData.useStudentPlan === opt.value}
                             onChange={handleInputChange}
-                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                            className="h-4 w-4 accent-copper"
                           />
-                          <span className="font-normal text-amber-50 tracking-[0.05em]">是</span>
+                          {opt.label}
                         </label>
-                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
-                          <input
-                            type="radio"
-                            name="useStudentPlan"
-                            value="no"
-                            checked={formData.useStudentPlan === "no"}
-                            onChange={handleInputChange}
-                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
-                          />
-                          <span className="font-normal text-amber-50 tracking-[0.05em]">否</span>
-                        </label>
-                      </div>
+                      ))}
                     </div>
 
                     {formData.useStudentPlan === "yes" && (
-                      <div className="mt-4 p-4 bg-gradient-to-r from-amber-500/10 to-yellow-500/10 border border-amber-500/30 rounded-xl">
-                        <p className="text-sm text-amber-100/80 font-normal tracking-[0.05em] leading-relaxed">
-                          <span className="text-amber-500 font-medium">學生方案授權說明</span><br />
-                          選擇學生方案即表示同意授權 Owldio 使用您的演出錄音錄影作為作品集展示。經過您同意後或許社群發佈，若您希望成為推薦案藝術家，共同推廣音樂藝術之美。
+                      <div className="mt-4 border border-copper/40 bg-copper/5 p-5">
+                        <p className="mb-4 text-xs font-light leading-loose text-parchment-dim">
+                          <span className="text-copper">學生方案授權說明</span>
+                          <br />
+                          選擇學生方案即表示同意授權 Owldio 使用您的演出錄音錄影作為作品集展示。經您同意後或於社群發佈，誠摯邀請您成為推薦藝術家，共同推廣音樂藝術之美。
                         </p>
-                        <div className="mt-3 flex items-start gap-2">
+                        <label className="flex items-start gap-3 text-sm font-light text-parchment-dim">
                           <input
                             type="checkbox"
                             id="studentPlanAgreement"
                             required={formData.useStudentPlan === "yes"}
-                            className="mt-1 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 rounded focus:ring-amber-500/50"
+                            className="mt-1 h-4 w-4 accent-copper"
                           />
-                          <label htmlFor="studentPlanAgreement" className="text-sm text-amber-100/80 font-normal">
-                            我已閱讀並同意上述授權內容
-                          </label>
-                        </div>
+                          我已閱讀並同意上述授權內容
+                        </label>
                       </div>
                     )}
-                  </div>
+                  </fieldset>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">方案選擇</h3>
-                    <div className="space-y-4">
-                      {pricingPlans.map(plan => (
-                        <label key={plan.value} className="block">
-                          <div className={`p-4 bg-black/30 border rounded-xl cursor-pointer transition-all duration-300 backdrop-blur-xl ${
-                            formData.pricingPlan === plan.value
-                              ? 'border-amber-500 bg-amber-500/10'
-                              : 'border-amber-500/20 hover:bg-amber-500/5 hover:border-amber-500/40'
-                          }`}>
-                            <div className="flex items-start gap-3">
-                              <input
-                                type="radio"
-                                name="pricingPlan"
-                                value={plan.value}
-                                checked={formData.pricingPlan === plan.value}
-                                onChange={handleInputChange}
-                                className="mt-1 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
-                              />
-                              <div className="flex-1">
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="font-medium text-amber-50 tracking-[0.05em]">{plan.label}</span>
-                                  {plan.price && <span className="text-amber-500 font-normal">{plan.price}</span>}
-                                </div>
-                                {plan.description && (
-                                  <p className="text-sm text-amber-100/60 font-normal tracking-[0.05em] leading-relaxed">
-                                    {plan.description}
-                                  </p>
+                  {/* Pricing plan */}
+                  <fieldset className="border-t border-hairline pt-9">
+                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      方案選擇 · PLAN
+                    </legend>
+                    <div className="space-y-3">
+                      {pricingPlans.map((plan) => (
+                        <label
+                          key={plan.value}
+                          className="block cursor-pointer border border-hairline bg-night-raised/40 p-4 transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10"
+                        >
+                          <div className="flex items-start gap-3">
+                            <input
+                              type="radio"
+                              name="pricingPlan"
+                              value={plan.value}
+                              checked={formData.pricingPlan === plan.value}
+                              onChange={handleInputChange}
+                              className="mt-1 h-4 w-4 accent-copper"
+                            />
+                            <div className="flex-1">
+                              <div className="flex flex-wrap items-baseline justify-between gap-2">
+                                <span className="text-sm font-light tracking-[0.04em] text-parchment">
+                                  {plan.label}
+                                </span>
+                                {plan.price && (
+                                  <span className="font-mono text-[11px] text-copper">
+                                    {plan.price}
+                                  </span>
                                 )}
                               </div>
+                              {plan.description && (
+                                <p className="mt-1.5 text-xs font-light leading-relaxed text-parchment-faint">
+                                  {plan.description}
+                                </p>
+                              )}
                             </div>
                           </div>
                         </label>
                       ))}
                     </div>
-                  </div>
+                  </fieldset>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <h3 className="text-lg font-normal text-amber-50 mb-4 tracking-[0.15em]">交件時程</h3>
-                    <div>
-                      <label className="block text-sm font-normal text-amber-100/80 mb-3 tracking-[0.1em]">
-                        交件時程 *
-                      </label>
-                      <div className="space-y-3">
-                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
+                  {/* Delivery time */}
+                  <fieldset className="border-t border-hairline pt-9">
+                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      交件時程 · DELIVERY
+                    </legend>
+                    <label className={labelClass}>交件時程 *</label>
+                    <div className="space-y-3">
+                      {[
+                        { value: "standard", label: "一般交件（7~10 個工作天）" },
+                        { value: "rush72", label: "72 小時交件（加購）" },
+                      ].map((opt) => (
+                        <label key={opt.value} className={optionClass}>
                           <input
                             type="radio"
                             name="deliveryTime"
-                            value="standard"
-                            checked={formData.deliveryTime === "standard"}
+                            value={opt.value}
+                            checked={formData.deliveryTime === opt.value}
                             onChange={handleInputChange}
-                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
+                            className="h-4 w-4 accent-copper"
                           />
-                          <span className="font-normal text-amber-50 tracking-[0.05em]">一般交件（7~10 個工作天）</span>
+                          {opt.label}
                         </label>
-                        <label className="flex items-center p-4 bg-black/30 border border-amber-500/20 rounded-xl cursor-pointer hover:bg-amber-500/10 hover:border-amber-500/40 transition-all duration-300 backdrop-blur-xl">
-                          <input
-                            type="radio"
-                            name="deliveryTime"
-                            value="rush72"
-                            checked={formData.deliveryTime === "rush72"}
-                            onChange={handleInputChange}
-                            className="mr-3 w-4 h-4 text-amber-500 bg-black/50 border-amber-500/30 focus:ring-amber-500/50"
-                          />
-                          <span className="font-normal text-amber-50 tracking-[0.05em]">72 小時交件（加購）</span>
-                        </label>
-                      </div>
+                      ))}
                     </div>
-                  </div>
+                  </fieldset>
 
-                  <div className="border-t border-amber-500/20 pt-6">
-                    <label className="block text-sm font-normal text-amber-100/80 mb-2 tracking-[0.1em]">
-                      其他需求說明
-                    </label>
+                  {/* Additional info */}
+                  <div className="border-t border-hairline pt-9">
+                    <label className={labelClass}>其他需求說明</label>
                     <textarea
                       name="additionalInfo"
                       value={formData.additionalInfo}
                       onChange={handleInputChange}
                       rows={4}
-                      className="w-full px-4 py-3 bg-black/50 border border-amber-500/30 text-amber-50 rounded-xl focus:outline-none focus:ring-2 focus:ring-amber-500/50 focus:border-amber-500 hover:border-amber-500/50 transition-all backdrop-blur-xl"
-                      placeholder="詳答文字"
+                      className={fieldClass}
+                      placeholder="任何想讓我們知道的細節"
                     />
                   </div>
 
                   {submitError && (
-                    <div role="alert" className="rounded-lg border border-red-500/40 bg-red-500/10 p-4 text-sm text-red-200">
+                    <div
+                      role="alert"
+                      className="border border-red-500/40 bg-red-500/10 p-4 text-sm font-light text-red-200"
+                    >
                       {submitError}
                     </div>
                   )}
 
-                  <Button
+                  <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="w-full py-4 text-lg font-medium tracking-[0.15em] bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black border-none transition-all duration-300"
+                    className="group inline-flex w-full items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {isSubmitting ? (
-                      <div className="flex items-center gap-2">
-                        <div className="w-5 h-5 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
-                        送出中...
-                      </div>
+                      <>
+                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-night border-t-transparent" />
+                        送出中…
+                      </>
                     ) : (
-                      <div className="flex items-center gap-2">
-                        <Send className="h-5 w-5" />
+                      <>
                         送出預約申請
-                      </div>
+                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                      </>
                     )}
-                  </Button>
+                  </button>
                 </form>
               </div>
             </motion.div>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-              className="space-y-8"
+            {/* Sidebar */}
+            <motion.aside
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.35 }}
+              className="space-y-6"
             >
-              <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-amber-500/20 shadow-2xl">
-                <h3 className="text-xl font-thin text-amber-50 mb-6 tracking-[0.2em]">聯絡資訊</h3>
-                
-                <div className="space-y-4">
-                  <button
-                    onClick={() => setIsEmailModalOpen(true)}
-                    className="flex items-center gap-4 w-full text-left group hover:translate-x-1 transition-transform"
-                  >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 group-hover:bg-amber-500/30 transition-all">
-                      <Mail className="h-6 w-6 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="font-normal text-amber-50 tracking-[0.1em]">Email</p>
-                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">owldio.art@gmail.com</p>
-                    </div>
-                  </button>
-                  
-                  <a href={lineOfficialAccountUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 group-hover:bg-amber-500/30 transition-all">
-                      <MessageCircle className="h-6 w-6 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="font-normal text-amber-50 tracking-[0.1em]">LINE</p>
-                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@447nguoe</p>
-                    </div>
-                  </a>
-                  
-                  <a href="https://www.facebook.com/owldio.art" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 group-hover:bg-amber-500/30 transition-all">
-                      <Facebook className="h-6 w-6 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="font-normal text-amber-50 tracking-[0.1em]">Facebook</p>
-                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio.art</p>
-                    </div>
-                  </a>
-                  
-                  <a href="https://instagram.com/owldio.art" target="_blank" rel="noopener noreferrer" className="flex items-center gap-4 group">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30 group-hover:bg-amber-500/30 transition-all">
-                      <Instagram className="h-6 w-6 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="font-normal text-amber-50 tracking-[0.1em]">Instagram</p>
-                      <p className="text-amber-100/60 font-normal group-hover:text-amber-500 transition-colors">@owldio.art</p>
-                    </div>
-                  </a>
-                  
-                  <div className="flex items-center gap-4">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-amber-500/20 backdrop-blur-xl border border-amber-500/30">
-                      <Clock className="h-6 w-6 text-amber-500" />
-                    </div>
-                    <div>
-                      <p className="font-normal text-amber-50 tracking-[0.1em]">回覆時間</p>
-                      <p className="text-amber-100/60 font-normal">24 小時內回覆</p>
-                    </div>
+              <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
+                <h3 className="mb-6 font-mono text-[11px] tracking-[0.35em] text-copper">
+                  聯絡資訊 — CONTACT
+                </h3>
+                <div className="divide-y divide-hairline">
+                  {contactChannels.map((channel) => (
+                    <a
+                      key={channel.label}
+                      href={channel.href}
+                      {...(channel.external
+                        ? { target: "_blank", rel: "noopener noreferrer" }
+                        : {})}
+                      className="group flex items-baseline justify-between gap-4 py-4 first:pt-0 last:pb-0"
+                    >
+                      <span className="font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        {channel.label}
+                      </span>
+                      <span className="text-sm font-light text-parchment transition-colors duration-300 group-hover:text-copper-bright">
+                        {channel.value}
+                      </span>
+                    </a>
+                  ))}
+                  <div className="flex items-baseline justify-between gap-4 py-4 last:pb-0">
+                    <span className="font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                      回覆時間
+                    </span>
+                    <span className="text-sm font-light text-parchment-dim">24 小時內</span>
                   </div>
                 </div>
               </div>
 
-              <div className="bg-black/40 backdrop-blur-xl rounded-2xl p-8 border border-amber-500/20 shadow-2xl">
-                <h3 className="text-xl font-thin text-amber-50 mb-4 tracking-[0.2em]">服務承諾</h3>
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">24 小時內回覆報價</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">免費檔期查詢</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">學生優惠價格</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <CheckCircle2 className="h-5 w-5 text-amber-500" />
-                    <span className="text-amber-100/80 font-normal tracking-[0.05em]">專業品質保證</span>
-                  </div>
-                </div>
+              <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
+                <h3 className="mb-6 font-mono text-[11px] tracking-[0.35em] text-copper">
+                  服務承諾 — PROMISE
+                </h3>
+                <ul className="space-y-3.5">
+                  {promises.map((promise) => (
+                    <li
+                      key={promise}
+                      className="flex items-baseline gap-3 text-sm font-light text-parchment"
+                    >
+                      <span className="font-mono text-[10px] text-copper">+</span>
+                      {promise}
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <div className="bg-gradient-to-br from-amber-500/20 via-yellow-500/20 to-orange-500/20 backdrop-blur-xl rounded-2xl p-8 border border-amber-500/30 shadow-2xl">
-                <h3 className="text-xl font-thin text-amber-50 mb-4 tracking-[0.2em]">急件諮詢</h3>
-                <p className="text-amber-100/60 mb-6 font-normal tracking-[0.05em]">
-                  如有急件需求或特殊情況，歡迎直接與我們聯絡
+              <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
+                <h3 className="mb-3 font-mono text-[11px] tracking-[0.35em] text-copper">
+                  急件諮詢 — URGENT
+                </h3>
+                <p className="mb-6 text-sm font-light leading-loose text-parchment-dim">
+                  如有急件需求或特殊情況，歡迎直接來信與我們聯絡。
                 </p>
-                <Button 
-                  className="w-full bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black font-medium tracking-[0.1em] border-none transition-all duration-300"
-                  onClick={() => setIsEmailModalOpen(true)}
+                <a
+                  href="mailto:owldio.art@gmail.com"
+                  className="group inline-flex w-full items-center justify-center gap-3 border border-hairline-strong px-7 py-3.5 text-sm tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
                 >
-                  <Mail className="h-4 w-4 mr-2" />
-                  立即聯絡
-                </Button>
+                  立即來信
+                  <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </a>
               </div>
-            </motion.div>
+            </motion.aside>
           </div>
-        </div>
+        </section>
       </main>
-      
-      <EmailModal 
-        isOpen={isEmailModalOpen}
-        onClose={() => setIsEmailModalOpen(false)}
-        recipientEmail="owldio.art@gmail.com"
-      />
 
-      <footer className="border-t border-amber-500/20 mt-20">
-        <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-4 px-4 py-8 text-sm md:flex-row">
-          <div className="flex items-center gap-2">
-            <div className="flex h-10 w-10 items-center justify-center">
-              <Image src="/Owldio.svg" alt="Owldio" width={32} height={32} className="h-8 w-8 brightness-0 invert" />
-            </div>
-            <span className="font-normal tracking-[0.1em] text-amber-50">Owldio</span>
-            <span className="text-amber-100/60 font-normal">© 2024</span>
-          </div>
-          <div className="flex gap-4 font-normal tracking-[0.05em]">
-            <Link href="/" className="text-amber-100/80 hover:text-amber-500 transition-colors">首頁</Link>
-            <Link href="/services" className="text-amber-100/80 hover:text-amber-500 transition-colors">服務</Link>
-            <Link href="/pricing" className="text-amber-100/80 hover:text-amber-500 transition-colors">價目</Link>
-            {/* <Link href="/portfolio" className="text-amber-100/80 hover:text-amber-500 transition-colors">作品</Link> */}
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 };

@@ -21,9 +21,13 @@ const navItems = [
 const Navigation = ({ currentPage }: NavigationProps) => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isPastHero, setIsPastHero] = useState(false);
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 24);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24);
+      setIsPastHero(window.scrollY > window.innerHeight * 0.6);
+    };
     handleScroll();
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
@@ -170,6 +174,27 @@ const Navigation = ({ currentPage }: NavigationProps) => {
                 詢問檔期
               </Link>
             </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile sticky CTA — appears once the hero has scrolled past */}
+      <AnimatePresence>
+        {isPastHero && !showMobileMenu && currentPage !== "contact" && (
+          <motion.div
+            key="mobile-cta"
+            initial={{ y: "110%" }}
+            animate={{ y: 0 }}
+            exit={{ y: "110%" }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-x-0 bottom-0 z-40 border-t border-hairline bg-night/90 px-5 pb-[calc(env(safe-area-inset-bottom)+0.7rem)] pt-3 backdrop-blur-md lg:hidden"
+          >
+            <Link
+              href="/contact"
+              className="flex items-center justify-center gap-3 bg-copper py-3.5 text-sm tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
+            >
+              詢問檔期 · 24 小時內回覆
+            </Link>
           </motion.div>
         )}
       </AnimatePresence>

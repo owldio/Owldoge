@@ -3,163 +3,156 @@
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
-import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import BackgroundGradient from "@/components/BackgroundGradient";
+import SiteFooter from "@/components/SiteFooter";
+import SectionMark from "@/components/SectionMark";
+import HeroBackdrop from "@/components/HeroBackdrop";
+import { RevealLine, HeroRule } from "@/components/HeroReveal";
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: { opacity: 1, y: 0 },
+};
+
+const viewportOnce = { once: true, margin: "-80px" } as const;
+
+const reasons = [
+  {
+    no: "01",
+    title: "專業品質",
+    en: "QUALITY",
+    description: "4K 多機位錄影搭配多軌收音，舞台全景、演奏細節與現場氛圍都被完整留下。",
+  },
+  {
+    no: "02",
+    title: "學生友善",
+    en: "STUDENT FRIENDLY",
+    description: "畢業音樂會、成果發表與作品集需求不同，方案可依機位、收音與後製範圍彈性調整。",
+  },
+  {
+    no: "03",
+    title: "如期交付",
+    en: "ON TIME",
+    description: "演出後整理鏡頭、調色與音訊平衡，一般 7–10 個工作天交付，可上傳、投件與留存。",
+  },
+];
 
 export default function PortfolioPage() {
   return (
-    <div className="min-h-screen bg-black text-amber-50">
-      <BackgroundGradient />
+    <div className="min-h-screen overflow-x-hidden bg-night text-parchment">
       <Navigation currentPage="portfolio" />
 
-      <main className="pt-32">
-        {/* Coming Soon Section */}
-        <section className="relative min-h-[80vh] flex items-center justify-center">
-          <div className="absolute inset-0 bg-black"></div>
-          
-          <div className="relative z-10 text-center px-4 max-w-4xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
+      <main>
+        {/* ============ Hero — coming soon ============ */}
+        <section className="grain relative flex min-h-svh flex-col justify-end overflow-hidden">
+          <HeroBackdrop src="/pic/edited/owldio-piano-strings-detail.jpg" />
+
+          <div className="writing-vertical absolute right-5 top-28 hidden font-extralight tracking-[0.5em] text-parchment-faint lg:block">
+            正在編寫的篇章
+          </div>
+
+          <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-8 lg:pb-24">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper"
             >
-              <div className="inline-block px-6 py-3 bg-amber-500/10 backdrop-blur-sm border border-amber-500/20 rounded-full text-amber-100/60 text-sm font-normal tracking-[0.3em] mb-8">
-                COMING SOON
-              </div>
-              
-              <h1 className="text-[clamp(3rem,8vw,6rem)] font-thin leading-[1.2] mb-8">
+              PORTFOLIO — 作品輯
+            </motion.p>
+
+            <HeroRule />
+
+            <h1 className="mb-8 font-serif font-extralight leading-[1.1] text-parchment">
+              <RevealLine delay={0.25} className="text-[clamp(2.6rem,7vw,6rem)]">
                 精選作品
-                <br />
-                <span className="font-extralight italic text-transparent bg-clip-text bg-gradient-to-r from-amber-500 to-orange-500 inline-block pr-4">
-                  即將推出
-                </span>
-              </h1>
-              
-              <p className="text-xl md:text-2xl font-normal text-amber-100/60 mb-4 max-w-3xl mx-auto leading-relaxed tracking-[0.1em]">
-                我們正在精心準備精彩的作品集，敬請期待
-              </p>
-              
-              <p className="text-base font-normal text-amber-100/40 mb-12 max-w-2xl mx-auto leading-relaxed tracking-[0.05em]">
-                欲瀏覽相關作品樣本，歡迎私訊洽詢或與我們聯絡！
-              </p>
+              </RevealLine>
+              <RevealLine delay={0.45} className="text-[clamp(2.6rem,7vw,6rem)] text-copper-bright">
+                即將推出
+              </RevealLine>
+            </h1>
 
-              <div className="flex items-center justify-center gap-8 text-sm font-normal text-amber-100/40 mb-12">
-                <span className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
-                  即將上線
-                </span>
-                <span>·</span>
-                <span>專業作品集</span>
-                <span>·</span>
-                <span>高品質展示</span>
-              </div>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.7 }}
+              className="mb-12 max-w-xl text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
+            >
+              我們正在整理近期的音樂會錄製成果。在作品輯上線前，歡迎直接來信或透過 LINE
+              洽詢相關影音樣本。
+            </motion.p>
 
-              <div className="flex flex-col sm:flex-row gap-6 justify-center">
-                <Button
-                  size="lg"
-                  className="group bg-amber-500 hover:bg-amber-600 hover:scale-105 text-black px-12 py-6 text-sm font-normal tracking-[0.15em] transition-all duration-300 border-none"
-                  asChild
-                >
-                  <Link href="/contact">
-                    聯絡我們
-                    <ArrowRight className="ml-3 h-4 w-4 group-hover:translate-x-2 transition-transform" />
-                  </Link>
-                </Button>
-                
-                <Button
-                  variant="outline"
-                  size="lg"
-                  className="border-amber-500/30 hover:border-amber-500 hover:bg-amber-500/10 text-amber-50 px-12 py-6 text-sm font-normal tracking-[0.15em] transition-all duration-300"
-                  asChild
-                >
-                  <Link href="/services">
-                    瀏覽服務
-                  </Link>
-                </Button>
-              </div>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.85 }}
+              className="flex flex-col gap-4 sm:flex-row"
+            >
+              <Link
+                href="/contact"
+                className="group inline-flex items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
+              >
+                洽詢作品樣本
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center border border-hairline-strong px-9 py-4 text-base tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
+              >
+                瀏覽服務項目
+              </Link>
             </motion.div>
           </div>
         </section>
 
-        {/* Placeholder Content */}
-        <section className="py-20 bg-zinc-950 relative">
-          <div className="max-w-4xl mx-auto px-4 text-center">
+        {/* ============ 01 — Why Owldio ============ */}
+        <section className="border-t border-hairline">
+          <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 lg:py-36">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              transition={{ duration: 0.7 }}
             >
-              <h2 className="text-3xl lg:text-4xl font-thin mb-8 tracking-[0.15em] text-amber-50">
-                為什麼選擇 Owldio？
-              </h2>
-              
-              <div className="grid md:grid-cols-3 gap-8 mt-12">
-                {[
-                  {
-                    title: "專業品質",
-                    description: "4K高畫質錄影，專業級音響設備"
-                  },
-                  {
-                    title: "學生友善",
-                    description: "專為學生設計的優惠方案與靈活服務"
-                  },
-                  {
-                    title: "快速交付",
-                    description: "高效後製流程，確保準時交付"
-                  }
-                ].map((feature, i) => (
-                  <motion.div
-                    key={i}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.5, delay: i * 0.1 }}
-                    className="p-6 bg-black/40 backdrop-blur-xl border border-amber-500/20 rounded-lg"
-                  >
-                    <h3 className="text-lg font-normal text-amber-50 mb-3 tracking-[0.1em]">
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm font-normal text-amber-100/60 leading-relaxed tracking-[0.05em]">
-                      {feature.description}
-                    </p>
-                  </motion.div>
-                ))}
-              </div>
+              <SectionMark no="01" zh="為什麼選擇 Owldio" en="WHY OWLDIO" />
+              <p className="mb-14 max-w-2xl text-base font-light leading-loose text-parchment-dim">
+                作品還在路上，但我們對每一場演出的標準不變。
+              </p>
             </motion.div>
+
+            <div className="grid gap-12 md:grid-cols-3 md:gap-0">
+              {reasons.map((reason, index) => (
+                <motion.article
+                  key={reason.no}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewportOnce}
+                  transition={{ duration: 0.6, delay: index * 0.15 }}
+                  className="border-l border-hairline pl-7 md:pr-10"
+                >
+                  <div className="mb-7 font-display text-5xl font-light italic text-copper/80">
+                    {reason.no}
+                  </div>
+                  <h3 className="mb-2 text-xl font-light tracking-[0.06em] text-parchment">
+                    {reason.title}
+                  </h3>
+                  <p className="mb-4 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                    {reason.en}
+                  </p>
+                  <p className="text-sm font-light leading-loose text-parchment-dim">
+                    {reason.description}
+                  </p>
+                </motion.article>
+              ))}
+            </div>
           </div>
         </section>
       </main>
 
-      {/* Footer */}
-      <footer className="border-t border-amber-500/20 bg-black">
-        <div className="max-w-7xl mx-auto px-4 py-12">
-          <div className="flex flex-col lg:flex-row justify-between items-center gap-6">
-            <div className="flex items-center gap-3">
-              <Image src="/Owldio.svg" alt="Owldio" width={24} height={24} className="h-6 w-6 brightness-0 invert" />
-              <span className="text-lg font-normal tracking-[0.1em] text-amber-50">OWLDIO</span>
-              <span className="text-xs font-normal text-amber-100/40">© 2024</span>
-            </div>
-            <div className="flex gap-6">
-              <Link href="/" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
-                首頁
-              </Link>
-              <Link href="/student-projects" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
-                學生專案
-              </Link>
-              <Link href="/services" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
-                服務
-              </Link>
-              <Link href="/contact" className="text-xs font-normal text-amber-100/60 hover:text-amber-500 transition-colors tracking-[0.05em]">
-                聯絡
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

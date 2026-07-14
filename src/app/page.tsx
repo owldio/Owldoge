@@ -7,6 +7,12 @@ import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import InkBackground from "@/components/InkBackground";
+import SectionMark from "@/components/SectionMark";
+import SiteFooter from "@/components/SiteFooter";
+import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import StageInterlude from "@/components/StageInterlude";
+import EventMarquee from "@/components/EventMarquee";
+import StepBeam from "@/components/StepBeam";
 
 const studioMoments = {
   main: {
@@ -76,38 +82,12 @@ const workflowMovements = [
   },
 ];
 
-const footerLinks = [
-  { name: "關於我們", href: "/about" },
-  { name: "服務項目", href: "/services" },
-  { name: "價目方案", href: "/pricing" },
-  { name: "聯絡預約", href: "/contact" },
-];
-
-const socialLinks = [
-  { name: "Instagram", href: "https://www.instagram.com/owldio.art/" },
-  { name: "Facebook", href: "https://www.facebook.com/share/19xTqkqM9Y/?mibextid=wwXIfr" },
-  { name: "YouTube", href: "https://youtube.com/@owldioart?si=ypYR6wo0a1LLiGeS" },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
   visible: { opacity: 1, y: 0 },
 };
 
 const viewportOnce = { once: true, margin: "-80px" } as const;
-
-function SectionMark({ no, zh, en }: { no: string; zh: string; en: string }) {
-  return (
-    <div className="mb-12 flex items-baseline gap-5">
-      <span className="font-display text-lg italic text-copper">{no}</span>
-      <h2 className="text-2xl font-light tracking-[0.1em] text-parchment md:text-3xl">{zh}</h2>
-      <span className="hidden font-mono text-[11px] tracking-[0.3em] text-parchment-faint sm:inline">
-        {en}
-      </span>
-      <span className="ml-auto hidden h-px max-w-40 flex-1 bg-hairline md:block" />
-    </div>
-  );
-}
 
 export default function OwldioSite() {
   return (
@@ -164,23 +144,18 @@ export default function OwldioSite() {
               OWLDIO STUDIO — 音樂會錄影 · 錄音 · 後製
             </motion.p>
 
+            <HeroRule />
+
             <h1 className="mb-8 font-display font-light leading-[1.02] text-parchment">
-              <motion.span
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.25 }}
-                className="block text-[clamp(2.9rem,8vw,7rem)]"
-              >
+              <RevealLine delay={0.25} className="text-[clamp(2.9rem,8vw,7rem)]">
                 Be the moment.
-              </motion.span>
-              <motion.span
-                initial={{ opacity: 0, y: 28 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.7, delay: 0.45 }}
-                className="block text-[clamp(2.9rem,8vw,7rem)] italic text-copper-bright"
+              </RevealLine>
+              <RevealLine
+                delay={0.45}
+                className="text-[clamp(2.9rem,8vw,7rem)] italic text-copper-bright"
               >
                 We make it stay.
-              </motion.span>
+              </RevealLine>
             </h1>
 
             <motion.p
@@ -223,19 +198,24 @@ export default function OwldioSite() {
           >
             <div className="mx-auto grid max-w-7xl grid-cols-2 sm:grid-cols-4">
               {proofPoints.map((item, index) => (
-                <div
+                <motion.div
                   key={item.code}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.55, delay: 1.05 + index * 0.12 }}
                   className={`px-5 py-5 md:px-8 ${index > 0 ? "border-l border-hairline" : ""}`}
                 >
                   <div className="mb-1.5 font-mono text-sm tracking-[0.2em] text-copper">
                     {item.code}
                   </div>
                   <div className="text-sm font-light text-parchment-dim">{item.label}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </motion.div>
         </section>
+
+        <EventMarquee />
 
         {/* ============ 01 — Promise ============ */}
         <section id="about-studio" className="relative border-t border-hairline">
@@ -262,7 +242,7 @@ export default function OwldioSite() {
                   quality={78}
                   sizes="(max-width: 1024px) 80vw, 34vw"
                   loading="lazy"
-                  className="object-cover object-[47%_48%]"
+                  className="object-cover object-[28%_42%]"
                 />
               </div>
               <div className="grain absolute -bottom-12 right-0 aspect-[4/3] w-3/5 overflow-hidden border-[6px] border-night">
@@ -315,6 +295,15 @@ export default function OwldioSite() {
           </div>
         </section>
 
+        {/* ============ Interlude — a quiet look at the stage ============ */}
+        <StageInterlude
+          src="/pic/IMG_9130.JPG"
+          alt="攝影機螢幕中的琴鍵特寫，演奏者在環形燈前彈奏"
+          kicker="ON STAGE — 錄製現場"
+          line1="每一場演出，"
+          line2="都值得被完整留下"
+        />
+
         {/* ============ 02 — Services as a tracklist ============ */}
         <section id="services" className="border-t border-hairline">
           <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 lg:py-36">
@@ -349,8 +338,18 @@ export default function OwldioSite() {
                       {track.no}
                     </span>
                     <span>
-                      <span className="block text-2xl font-extralight tracking-[0.08em] text-parchment transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-copper-bright md:text-4xl">
-                        {track.title}
+                      <span className="flex items-center gap-4">
+                        <span className="block text-2xl font-extralight tracking-[0.08em] text-parchment transition-all duration-300 group-hover:translate-x-1.5 group-hover:text-copper-bright md:text-4xl">
+                          {track.title}
+                        </span>
+                        <span
+                          aria-hidden
+                          className="inline-flex h-[15px] items-end gap-[3px] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                        >
+                          <span className="eq-bar h-full w-[3px] bg-copper" />
+                          <span className="eq-bar h-full w-[3px] bg-copper [animation-delay:0.3s]" />
+                          <span className="eq-bar h-full w-[3px] bg-copper [animation-delay:0.55s]" />
+                        </span>
                       </span>
                       <span className="mt-2 block font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
                         {track.en.toUpperCase()}
@@ -392,11 +391,18 @@ export default function OwldioSite() {
                   whileInView="visible"
                   viewport={viewportOnce}
                   transition={{ duration: 0.6, delay: index * 0.15 }}
-                  className="border-l border-hairline pl-7 md:pr-10"
+                  className="relative border-l border-hairline pl-7 md:pr-10"
                 >
-                  <div className="mb-7 font-display text-5xl font-light italic text-copper/80">
+                  <StepBeam delay={index * 0.2} />
+                  <motion.div
+                    initial={{ opacity: 0.25 }}
+                    whileInView={{ opacity: 1 }}
+                    viewport={viewportOnce}
+                    transition={{ duration: 0.7, delay: index * 0.2 + 0.45 }}
+                    className="mb-7 font-display text-5xl font-light italic text-copper/80"
+                  >
                     {movement.numeral}
-                  </div>
+                  </motion.div>
                   <h3 className="mb-4 text-xl font-light tracking-[0.06em] text-parchment">
                     {movement.title}
                   </h3>
@@ -461,71 +467,7 @@ export default function OwldioSite() {
         </section>
       </main>
 
-      {/* ============ Footer ============ */}
-      <footer className="border-t border-hairline bg-night-deep">
-        <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
-          <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
-            <div>
-              <div className="mb-5 flex items-center gap-3">
-                <Image
-                  src="/Owldio.svg"
-                  alt="Owldio"
-                  width={30}
-                  height={30}
-                  className="h-7 w-7 brightness-0 invert opacity-90"
-                />
-                <span className="font-display text-lg font-medium tracking-[0.28em] text-parchment">
-                  OWLDIO
-                </span>
-              </div>
-              <p className="text-sm font-light leading-relaxed text-parchment-faint">
-                音樂會錄影、錄音與後製服務
-                <br />
-                owldio.art@gmail.com
-              </p>
-            </div>
-
-            <div className="flex gap-16">
-              <nav aria-label="網站導覽" className="flex flex-col gap-3.5">
-                <span className="mb-1 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                  SITE
-                </span>
-                {footerLinks.map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="text-sm font-light text-parchment-dim transition-colors duration-300 hover:text-copper-bright"
-                  >
-                    {item.name}
-                  </Link>
-                ))}
-              </nav>
-
-              <nav aria-label="社群連結" className="flex flex-col gap-3.5">
-                <span className="mb-1 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                  SOCIAL
-                </span>
-                {socialLinks.map((item) => (
-                  <a
-                    key={item.href}
-                    href={item.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-sm font-light text-parchment-dim transition-colors duration-300 hover:text-copper-bright"
-                  >
-                    {item.name}
-                  </a>
-                ))}
-              </nav>
-            </div>
-          </div>
-
-          <div className="mt-14 flex flex-col gap-2 border-t border-hairline pt-7 font-mono text-[10px] tracking-[0.25em] text-parchment-faint sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} OWLDIO. ALL RIGHTS RESERVED.</span>
-            <span>BE THE MOMENT — WE MAKE IT STAY</span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </div>
   );
 }

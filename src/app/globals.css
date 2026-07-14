@@ -95,6 +95,40 @@
     text-orientation: upright;
   }
 
+  /* Programme marquee — slow tape-label drift, loops on the duplicated half */
+  @keyframes marquee-scroll {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-track {
+    animation: marquee-scroll 48s linear infinite;
+  }
+
+  .marquee-track:hover {
+    animation-play-state: paused;
+  }
+
+  /* Equalizer bars — tracklist hover, echoing a level meter */
+  @keyframes eq-pulse {
+    0%,
+    100% {
+      transform: scaleY(0.3);
+    }
+    50% {
+      transform: scaleY(1);
+    }
+  }
+
+  .eq-bar {
+    transform-origin: bottom;
+    animation: eq-pulse 0.9s ease-in-out infinite;
+  }
+
   /* Recording indicator pulse */
   @keyframes rec-pulse {
     0%,
