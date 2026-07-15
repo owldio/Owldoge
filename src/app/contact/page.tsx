@@ -8,6 +8,7 @@ import { ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import SiteFooter from "@/components/SiteFooter";
 import HeroBackdrop from "@/components/HeroBackdrop";
+import DatePicker from "@/components/DatePicker";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
 
 const fieldClass =
@@ -412,13 +413,13 @@ const ContactPage = () => {
                     <div className="grid gap-6 md:grid-cols-3">
                       <div>
                         <label className={labelClass}>演出日期 *</label>
-                        <input
-                          type="date"
+                        <DatePicker
                           name="eventDate"
                           value={formData.eventDate}
-                          onChange={handleInputChange}
                           required
-                          className={`${fieldClass} [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-100 [&::-webkit-calendar-picker-indicator]:invert`}
+                          onChange={(iso) =>
+                            setFormData((prev) => ({ ...prev, eventDate: iso }))
+                          }
                         />
                       </div>
                       <div>
