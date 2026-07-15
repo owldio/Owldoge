@@ -44,7 +44,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
     <header
       className={`fixed top-0 z-50 w-full transition-colors duration-500 ${
         isScrolled || showMobileMenu
-          ? "border-b border-hairline bg-night-veil backdrop-blur-md"
+          ? "border-b border-hairline bg-night-veil-strong"
           : "border-b border-transparent bg-transparent"
       }`}
     >
@@ -124,11 +124,11 @@ const Navigation = ({ currentPage }: NavigationProps) => {
         {showMobileMenu && (
           <motion.div
             key="mobile-menu"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
+            initial={{ y: -14 }}
+            animate={{ y: 0 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
-            className="fixed inset-0 top-[69px] z-40 flex flex-col bg-night backdrop-blur-lg lg:hidden"
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 top-[69px] z-40 flex flex-col bg-night lg:hidden"
           >
             <nav aria-label="行動選單" className="flex flex-1 flex-col justify-center px-8">
               {navItems.map((item, index) => {
