@@ -1,0 +1,996 @@
+/* ==========================================
+   OWLDIO PLAYER - Bauhaus Gallery Light Theme (極簡藝廊明亮版)
+   設計要點：
+   1. 視覺以白色底作為主調，搭配 Slate 灰階層次，呈現高質感畫廊、藝術品專區氛圍。
+   2. 100% 銳角設計 (No border-radius)，展現硬朗、洗鍊的科技與藝術美感。
+   ========================================== */
+
+:root {
+    --bg-main: #ffffff;          /* 白色背景 */
+    --bg-sec: #f8fafc;           /* 輔助淺 Slate 50 背景 */
+    --bg-card: #ffffff;          /* 卡片背景 */
+    --bg-card-hover: #f1f5f9;    /* 卡片懸停 Slate 100 */
+    --accent: #b45309;           /* 高質感古典暗金 (Amber 700) */
+    --accent-hover: #78350f;     /* 深金褐色 */
+    --text-primary: #0f172a;     /* 深 Slate 900 主要文字 */
+    --text-secondary: #475569;   /* 中 Slate 600 次要文字 */
+    --text-muted: #94a3b8;       /* 淺灰 Slate 400 提示文字 */
+    --border-color: #cbd5e1;     /* 清晰邊框 Slate 300 */
+    --glow-color: rgba(180, 83, 9, 0.1); /* 金色微光 */
+    --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    --transition-smooth: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* 100% 全域銳角化 (Bauhaus 銳角重設) */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    border-radius: 0 !important; /* 一鍵將全站、Plyr 播放器、卡片、按鈕、輸入框強制為銳角 */
+}
+
+/* 全域隱藏類別 */
+.hidden {
+    display: none !important;
+}
+
+body {
+    font-family: var(--font-sans);
+    background-color: var(--bg-sec);
+    color: var(--text-primary);
+    min-height: 100vh;
+    overflow-x: hidden;
+    line-height: 1.5;
+}
+
+/* 捲軸美化 (Webkit) */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-sec);
+}
+::-webkit-scrollbar-thumb {
+    background: #e2e8f0;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: var(--accent);
+}
+
+/* ==========================================
+   1. 密碼驗證遮罩層 (Password Overlay)
+   ========================================== */
+.password-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at center, #ffffff 0%, #f1f5f9 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    padding: 20px;
+}
+
+/* 驗證卡片 */
+.password-card {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    padding: 40px;
+    width: 100%;
+    max-width: 440px;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+    text-align: center;
+}
+
+.password-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.brand-logo {
+    margin-bottom: 30px;
+}
+
+.owl-icon {
+    width: 64px;
+    height: 64px;
+    color: var(--accent);
+    margin-bottom: 16px;
+}
+
+.brand-logo h2 {
+    font-size: 24px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.brand-logo p {
+    font-size: 14px;
+    color: var(--text-secondary);
+}
+
+/* 密碼輸入框 */
+.input-group {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.input-group input {
+    width: 100%;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 16px;
+    outline: none;
+    transition: var(--transition-smooth);
+    text-align: center;
+    letter-spacing: 4px;
+}
+
+.input-group input:focus {
+    border-color: var(--accent);
+}
+
+.btn-submit {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent);
+    border: none;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.btn-submit:hover {
+    background: var(--accent-hover);
+}
+
+.error-msg {
+    color: #ef4444;
+    font-size: 13px;
+    margin-top: 12px;
+    min-height: 20px;
+    font-weight: 500;
+}
+
+/* ==========================================
+   2. 主介面 (Main Content)
+   ========================================== */
+.main-content {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: var(--bg-main);
+}
+
+.main-content.hidden {
+    display: none;
+}
+
+/* 頂部導覽列 */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 40px;
+    background-color: #ffffff;
+    border-bottom: 1px solid var(--border-color);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-logo {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+}
+
+.logo-accent {
+    color: var(--accent);
+}
+
+.nav-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #f1f5f9;
+    border: 1px solid var(--border-color);
+    padding: 6px 14px;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+
+.badge-dot {
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent);
+}
+
+/* ==========================================
+   3. 響應式佈局 (Layout)
+   ========================================== */
+.app-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 32px;
+    max-width: 1720px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 24px;
+}
+
+@media (min-width: 1024px) {
+    .app-container {
+        grid-template-columns: 7fr 3fr;
+        padding: 40px;
+    }
+}
+
+/* 3-1. 播放器區塊 */
+.player-section {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.player-wrapper {
+    background-color: #000;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05);
+    /* 移除固定 16/9 限制，讓高度完全隨影片真實高寬比自適應，100% 消除黑邊 */
+    height: fit-content;
+}
+
+/* Plyr 客製化樣式調整 */
+.plyr {
+    --plyr-color-main: var(--accent);
+    --plyr-video-background: #000;
+    height: 100%;
+    width: 100%;
+}
+
+/* 針對普通 HTML5 影片 (MP4/HLS)，解除 Plyr 預設 16:9 的限制，使其跟隨影片實體比例自適應 */
+.player-wrapper:not(.youtube-active) .plyr {
+    --plyr-video-aspect-ratio: auto !important;
+    height: auto !important;
+}
+
+.player-wrapper:not(.youtube-active) .plyr__video-wrapper {
+    aspect-ratio: auto !important;
+    height: auto !important;
+}
+
+.player-wrapper:not(.youtube-active) .plyr video {
+    position: relative !important;
+    height: auto !important;
+    width: 100% !important;
+}
+
+/* 強制將 Plyr 控制條的元件皆重置為銳角 */
+.plyr__control, 
+.plyr__controls, 
+.plyr__tooltip, 
+.plyr__progress, 
+.plyr__progress__container, 
+.plyr__slider, 
+.plyr__menu {
+    border-radius: 0 !important;
+}
+
+.video-info {
+    padding: 10px 4px;
+}
+
+.video-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+    letter-spacing: 0.5px;
+}
+
+.video-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.meta-tag {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    letter-spacing: 0.5px;
+}
+
+.meta-tag.resolution {
+    background-color: rgba(180, 83, 9, 0.06);
+    color: var(--accent);
+    border: 1px solid rgba(180, 83, 9, 0.15);
+}
+
+.meta-tag.codec {
+    background-color: #f1f5f9;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+}
+
+.meta-tag.access {
+    background-color: rgba(239, 68, 68, 0.06);
+    color: #ef4444;
+    border: 1px solid rgba(239, 68, 68, 0.15);
+}
+
+.playback-notice {
+    background: #f8fafc;
+    border-left: 3px solid var(--accent);
+    padding: 12px 16px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* 3-2. 右側影片清單區區塊 */
+.playlist-section {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+    max-height: 780px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.03);
+}
+
+.playlist-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-sec);
+}
+
+.playlist-header h3 {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.playlist-count {
+    font-size: 13px;
+    color: var(--text-secondary);
+    background: #e2e8f0;
+    padding: 2px 10px;
+}
+
+.playlist-items {
+    padding: 16px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* 影片卡片 */
+.playlist-card {
+    display: flex;
+    gap: 14px;
+    padding: 10px;
+    background-color: #f8fafc;
+    border: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.playlist-card:hover {
+    background-color: var(--bg-card-hover);
+    border-color: var(--accent);
+    transform: translateX(4px);
+}
+
+/* 高亮目前播放的卡片 */
+.playlist-card.active {
+    background-color: rgba(180, 83, 9, 0.05);
+    border-color: var(--accent);
+}
+
+.playlist-card.active .card-title {
+    color: var(--accent);
+}
+
+.card-thumb-wrapper {
+    position: relative;
+    width: 120px;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    background-color: #000;
+    flex-shrink: 0;
+    border: 1px solid var(--border-color);
+}
+
+.card-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition-smooth);
+}
+
+.playlist-card:hover .card-thumb {
+    transform: scale(1.05);
+}
+
+.card-play-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    transition: var(--transition-smooth);
+}
+
+.playlist-card:hover .card-play-overlay,
+.playlist-card.active .card-play-overlay {
+    opacity: 1;
+}
+
+.play-icon-mini {
+    width: 24px;
+    height: 24px;
+    color: #fff;
+}
+
+.playlist-card.active .play-icon-mini {
+    color: var(--accent);
+}
+
+.card-duration {
+    position: absolute;
+    bottom: 6px;
+    right: 6px;
+    background: rgba(15, 23, 42, 0.85);
+    color: #fff;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 2px 6px;
+    letter-spacing: 0.5px;
+}
+
+.card-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 2px 0;
+}
+
+.card-title {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.card-tag {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   4. 管理控制台 (Admin Portal Modal)
+   ========================================== */
+.btn-admin-portal {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.btn-admin-portal:hover {
+    background: var(--accent);
+    color: #ffffff;
+    border-color: var(--accent);
+}
+
+.btn-admin-portal.hidden {
+    display: none;
+}
+
+/* Modal 容器 */
+.admin-portal-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(15, 23, 42, 0.5); /* 明亮高質感遮罩 */
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.admin-portal-modal.hidden {
+    display: none;
+}
+
+.admin-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    width: 100%;
+    max-width: 1100px;
+    height: 90vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.1);
+}
+
+.admin-header {
+    padding: 20px 30px;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--bg-sec);
+}
+
+.admin-header h2 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.btn-close {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    transition: var(--transition-smooth);
+}
+
+.btn-close:hover {
+    color: var(--accent);
+}
+
+.admin-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--bg-main);
+}
+
+/* 頁籤 */
+.admin-tabs {
+    display: flex;
+    background: var(--bg-sec);
+    border-bottom: 1px solid var(--border-color);
+    padding: 0 20px;
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    color: var(--text-secondary);
+    padding: 16px 20px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: var(--transition-smooth);
+}
+
+.tab-btn:hover {
+    color: var(--text-primary);
+}
+
+.tab-btn.active {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+    font-weight: 600;
+}
+
+.tab-content {
+    display: none;
+    flex: 1;
+    overflow: hidden;
+    padding: 16px 20px;
+}
+
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+}
+
+/* 左右分欄 */
+.admin-split {
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    gap: 20px;
+    height: 100%;
+    overflow: hidden;
+}
+
+.form-section {
+    background: var(--bg-sec);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.list-section {
+    background: var(--bg-sec);
+    border: 1px solid var(--border-color);
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+}
+
+.form-section h4, .list-section h4, .export-section h4 {
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-primary);
+    border-left: 3px solid var(--accent);
+    padding-left: 10px;
+}
+
+/* 表單控制項 */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    padding: 10px 12px;
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    font-size: 14px;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--accent);
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    font-weight: 600;
+    cursor: pointer;
+    width: 100%;
+    transition: var(--transition-smooth);
+}
+
+.btn-primary:hover {
+    background: var(--accent-hover);
+}
+
+/* 表格樣式 */
+.table-wrapper {
+    border: 1px solid var(--border-color);
+    overflow: visible;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 13px;
+}
+
+.admin-table th, .admin-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-primary);
+}
+
+.admin-table th {
+    background: var(--bg-sec);
+    color: var(--text-secondary);
+    font-weight: 600;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+.admin-table tbody tr:hover {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.btn-danger {
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    cursor: pointer;
+    font-size: 12px;
+    transition: var(--transition-smooth);
+}
+
+.btn-danger:hover {
+    background: #dc2626;
+}
+
+.btn-danger-outline {
+    background: none;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    padding: 8px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: var(--transition-smooth);
+}
+
+.btn-danger-outline:hover {
+    background: #ef4444;
+    color: #fff;
+}
+
+/* 複選框授權列表 */
+.auth-checkbox-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-height: 120px;
+    overflow-y: auto;
+    background: #ffffff;
+    padding: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.auth-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+.auth-item input {
+    cursor: pointer;
+    accent-color: var(--accent);
+}
+
+/* 匯出頁籤 */
+.export-section {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    overflow: hidden;
+}
+
+.export-notice {
+    font-size: 13px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    background: rgba(180, 83, 9, 0.05);
+    border-left: 3px solid var(--accent);
+    padding: 16px;
+    border-top: 1px solid var(--border-color);
+    border-right: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.btn-copy {
+    width: auto;
+    align-self: flex-start;
+}
+
+.code-output {
+    flex: 1;
+    background: var(--bg-sec);
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    overflow: auto;
+    font-family: monospace;
+    font-size: 12px;
+    color: #4f46e5;
+    white-space: pre;
+}
+
+/* 頁尾 */
+.admin-footer {
+    padding: 20px 30px;
+    border-top: 1px solid var(--border-color);
+    background: var(--bg-sec);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ==========================================
+   5. 自動連播開關樣式 (Autoplay Switch CSS)
+   ========================================== */
+.autoplay-toggle-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.autoplay-text {
+    font-size: 12px;
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+/* Toggle Switch 經典方形 Bauhaus 樣式 */
+.switch-label {
+    position: relative;
+    display: inline-block;
+    width: 38px;
+    height: 22px;
+}
+
+.switch-label input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.switch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e2e8f0;
+    transition: .2s ease;
+    border: 1px solid var(--border-color);
+}
+
+.switch-slider:before {
+    position: absolute;
+    content: "";
+    height: 14px;
+    width: 14px;
+    left: 3px;
+    bottom: 3px;
+    background-color: var(--text-secondary);
+    transition: .2s ease;
+}
+
+.switch-label input:checked + .switch-slider {
+    background-color: rgba(180, 83, 9, 0.15);
+    border-color: var(--accent);
+}
+
+.switch-label input:checked + .switch-slider:before {
+    transform: translateX(16px);
+    background-color: var(--accent);
+}
+
+/* ==========================================
+   6. 手機雙擊快進快退 (Double Tap Seek)
+   ========================================== */
+.player-wrapper {
+    position: relative;
+}
+
+.seek-feedback-overlay {
+    position: absolute;
+    top: 0;
+    width: 35%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.seek-feedback-overlay.left {
+    left: 0;
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.seek-feedback-overlay.right {
+    right: 0;
+    background: linear-gradient(to left, rgba(0, 0, 0, 0.45) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.seek-feedback-text {
+    background: rgba(15, 23, 42, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 8px 16px;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+/* 雙擊 seek 閃爍動畫 */
+@keyframes seekFlash {
+    0% { opacity: 0; }
+    20% { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+
+.seek-feedback-overlay.animate {
+    animation: seekFlash 0.5s ease forwards;
+}
+
+/* ==========================================
+   7. 雙工鏡像播放器隱藏樣式
+   ========================================== */
+.plyr.hidden {
+    display: none !important;
+}
+
+/* 全螢幕下的自適應鋪滿與白框消除 */
+.player-wrapper:fullscreen {
+    background: #000 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none !important;      /* 消除實體邊框 */
+    outline: none !important;     /* 消除外圍焦點線 */
+    box-shadow: none !important;  /* 消除投射陰影 */
+    padding: 0 !important;
+    margin: 0 !important;
+}
+.player-wrapper:fullscreen .plyr {
+    width: 100% !important;
+    height: 100% !important;
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}

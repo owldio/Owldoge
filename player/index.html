@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owldio Player - 私密影音播放專區</title>
+    
+    <!-- 1. 隱蔽性與安全性：防止搜尋引擎索引 (SEO noindex, nofollow) -->
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="googlebot" content="noindex, nofollow">
+
+    <!-- 載入官方網站 Icon，增添品牌統一性 (同域載入以防止 CORS 或快取延遲) -->
+    <link rel="shortcut icon" href="Owldio.svg"/>
+    <link rel="icon" href="Owldio.svg"/>
+    <link rel="apple-touch-icon" href="Owldio.svg"/>
+
+    <!-- 載入 Google Fonts - Outfit，增添現代高級質感 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- 載入 Plyr 播放器的 CSS CDN -->
+    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+
+    <!-- 載入自訂樣式表 -->
+    <link rel="stylesheet" href="style.css?v=20260703d">
+</head>
+<body>
+
+    <!-- 歡迎首頁遮罩層 (Welcome Overlay) - 無 Hash 時顯示 -->
+    <div id="welcome-overlay" class="password-overlay hidden">
+        <div class="password-card" style="max-width: 500px;">
+            <div class="brand-logo">
+                <svg class="owl-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 10.13 4.64 8.41 5.72 7.03C6.31 8.23 7.54 9 9 9C10.1 9 11.08 8.41 11.62 7.53C11.87 7.83 12.24 8 12.67 8C13.1 8 13.47 7.83 13.72 7.53C14.26 8.41 15.24 9 16.34 9C17.8 9 19.03 8.23 19.62 7.03C20.7 8.41 21.34 10.13 21.34 12C21.34 16.41 17.75 20 12.34 20H12ZM9.5 11.5C9.5 12.33 8.83 13 8 13C7.17 13 6.5 12.33 6.5 11.5C6.5 10.67 7.17 10 8 10C8.83 10 9.5 10.67 9.5 11.5ZM16.5 11.5C16.5 12.33 15.83 13 15 13C14.17 13 13.5 12.33 13.5 11.5C13.5 10.67 14.17 10 15 10C15.83 10 16.5 10.67 16.5 11.5Z" fill="currentColor"/>
+                </svg>
+                <h2>OWLDIO PORTAL</h2>
+                <p>專屬影音存取中心</p>
+            </div>
+            
+            <div id="visited-history-section" style="margin-top: 10px; border-top: 1px solid var(--border-color); padding-top: 20px;">
+                <h4 style="font-size: 13px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; text-align: left;">📋 最近造訪的播放清單：</h4>
+                <div id="visited-playlists-list" style="display: flex; flex-direction: column; gap: 8px;">
+                    <!-- JS 動態生成歷史紀錄 -->
+                </div>
+            </div>
+            
+            <div style="margin-top: 30px; display: flex; justify-content: flex-end;">
+                <a href="#login" onclick="navigateToAdmin(event)" style="font-size: 12px; color: var(--text-secondary); text-decoration: none; border-bottom: 1px solid var(--border-color); padding-bottom: 2px; transition: var(--transition-smooth);" onmouseover="this.style.color='var(--accent)'" onmouseout="this.style.color='var(--text-secondary)'">🛠️ 管理員登入</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 管理員密碼驗證遮罩層 (Password Overlay) - 網址為 #login 時顯示 -->
+    <div id="password-overlay" class="password-overlay hidden">
+        <div class="password-card">
+            <div class="brand-logo">
+                <svg class="owl-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C6.48 2 2 6.48 2 12C2 17.52 6.48 22 12 22C17.52 22 22 17.52 22 12C22 6.48 17.52 2 12 2ZM12 20C7.59 20 4 16.41 4 12C4 10.13 4.64 8.41 5.72 7.03C6.31 8.23 7.54 9 9 9C10.1 9 11.08 8.41 11.62 7.53C11.87 7.83 12.24 8 12.67 8C13.1 8 13.47 7.83 13.72 7.53C14.26 8.41 15.24 9 16.34 9C17.8 9 19.03 8.23 19.62 7.03C20.7 8.41 21.34 10.13 21.34 12C21.34 16.41 17.75 20 12.34 20H12ZM9.5 11.5C9.5 12.33 8.83 13 8 13C7.17 13 6.5 12.33 6.5 11.5C6.5 10.67 7.17 10 8 10C8.83 10 9.5 10.67 9.5 11.5ZM16.5 11.5C16.5 12.33 15.83 13 15 13C14.17 13 13.5 12.33 13.5 11.5C13.5 10.67 14.17 10 15 10C15.83 10 16.5 10.67 16.5 11.5Z" fill="currentColor"/>
+                </svg>
+                <h2>OWLDIO PLAYER</h2>
+                <p>管理控制台，請輸入管理密碼</p>
+            </div>
+            <form id="password-form" onsubmit="verifyPassword(event)">
+                <div class="input-group">
+                    <input type="password" id="access-password" placeholder="輸入存取密碼..." autocomplete="current-password" required>
+                    <span class="focus-border"></span>
+                </div>
+                <button type="submit" class="btn-submit">驗證並進入</button>
+                <p id="error-msg" class="error-msg"></p>
+            </form>
+            <div style="margin-top: 20px; text-align: left;">
+                <a href="#" onclick="window.location.hash=''; window.location.reload(); return false;" style="font-size: 12px; color: var(--text-secondary); text-decoration: none;">⬅ 回到入口首頁</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主網頁內容 (Main Content) - 驗證成功後顯示 -->
+    <div id="main-content" class="main-content hidden">
+        <!-- 頂部導覽列 -->
+        <header class="navbar">
+            <div class="nav-logo">
+                <span class="logo-accent">Owldio</span> Player
+            </div>
+            <div class="nav-actions">
+                <button id="btn-admin-portal" class="btn-admin-portal hidden" onclick="toggleAdminPortal(true)">🛠️ 管理後台</button>
+                <div class="nav-badge">
+                    <span class="badge-dot"></span>
+                    <span id="role-badge-text">Private Area</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 主佈局容器 -->
+        <main class="app-container">
+            <!-- 左側：大型影音播放器 (70% 寬度) -->
+            <section class="player-section">
+                <div class="player-wrapper">
+                    <!-- 雙擊快進快退回饋 Overlay -->
+                    <div id="seek-feedback-left" class="seek-feedback-overlay left">
+                        <div class="seek-feedback-text">◀◀ 10 秒</div>
+                    </div>
+                    <div id="seek-feedback-right" class="seek-feedback-overlay right">
+                        <div class="seek-feedback-text">10 秒 ▶▶</div>
+                    </div>
+                    <!-- HTML5 影音播放器 (ABR HLS / MP4) -->
+                    <video id="player-html5" playsinline controls></video>
+                    <!-- YouTube 影音播放器 -->
+                    <video id="player-youtube" playsinline controls></video>
+                </div>
+                <!-- 影片詳細資訊 -->
+                <div class="video-info">
+                    <h1 id="current-video-title" class="video-title">正在載入影片...</h1>
+                    <div class="video-meta">
+                        <span class="meta-tag resolution">4K Ultra HD</span>
+                        <span class="meta-tag codec">H.265 / HEVC</span>
+                        <span class="meta-tag access" id="video-access-badge">VIP ACCESS</span>
+                    </div>
+                    <div class="playback-notice">
+                        <strong>播放提示：</strong> 4K H.265 (HEVC) 影片需要硬體解碼支援。若播放遇到黑屏或卡頓，建議使用 Safari 瀏覽器，或確認您的瀏覽器已啟用硬體加速。
+                    </div>
+                </div>
+            </section>
+
+            <!-- 右側：影片清單卡片 (30% 寬度) -->
+            <section class="playlist-section">
+                <div class="playlist-header">
+                    <div>
+                        <h3>播放清單</h3>
+                        <span id="playlist-count" class="playlist-count" style="font-size: 11px; color: var(--text-secondary); background: rgba(255, 255, 255, 0.05); padding: 2px 8px; border-radius: 10px; margin-top: 4px; display: inline-block;">0 部影片</span>
+                    </div>
+                    <!-- 自動連播開關 -->
+                    <div class="autoplay-toggle-wrapper">
+                        <label class="switch-label">
+                            <input type="checkbox" id="autoplay-next-toggle" checked>
+                            <span class="switch-slider"></span>
+                        </label>
+                        <span class="autoplay-text">自動連播</span>
+                    </div>
+                </div>
+                <!-- 影片卡片容器 -->
+                <div id="playlist-items" class="playlist-items">
+                    <!-- JS 動態產生影片清單卡片 -->
+                </div>
+            </section>
+        </main>
+
+        <!-- 底部頁尾 -->
+        <footer class="footer">
+            <p>&copy; 2026 Owldio.art. All Rights Reserved. Private & Confidential.</p>
+        </footer>
+    </div>
+
+    <!-- 管理後台 Modal (Admin Portal) -->
+    <div id="admin-portal-modal" class="admin-portal-modal hidden">
+        <div class="admin-card">
+            <header class="admin-header">
+                <h2>🛠️ Owldio Player 控制中心</h2>
+                <button class="btn-close" onclick="toggleAdminPortal(false)">&times;</button>
+            </header>
+            
+            <div class="admin-body">
+                <!-- 頁籤導覽 -->
+                <div class="admin-tabs">
+                    <button class="tab-btn active" onclick="switchTab('tab-playlists')">📋 播放清單管理</button>
+                    <button class="tab-btn" onclick="switchTab('tab-export')">🚀 同步 GitHub 設定</button>
+                </div>
+
+                <!-- 內容區 1：播放清單管理 -->
+                <div id="tab-playlists" class="tab-content active">
+                    <div class="admin-split" style="grid-template-columns: 4.5fr 5.5fr;">
+                        <!-- 左側：播放清單建立與列表 -->
+                        <div class="form-section">
+                            <h4>建立新播放清單</h4>
+                            <form id="add-playlist-form" onsubmit="addPlaylist(event)" style="margin-bottom: 24px;">
+                                <div class="form-group">
+                                    <label>播放清單 ID (英文唯一值，如 clientC)</label>
+                                    <input type="text" id="new-playlist-id" placeholder="e.g. clientC" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>清單展示名稱 (如 客戶 C 的專屬影音)</label>
+                                    <input type="text" id="new-playlist-name" placeholder="e.g. 客戶 C 專屬專區" required>
+                                </div>
+                                <button type="submit" class="btn-primary">建立清單</button>
+                            </form>
+
+                            <!-- 目前播放清單列表 (已移除新增影片表單) -->
+                            <h4>目前播放清單列表</h4>
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>清單名稱 / ID</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-playlist-list">
+                                        <!-- 動態生成 -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 右側：當前選中播放清單的影片管理與排序 -->
+                        <div class="list-section">
+                            <div class="playlist-edit-header" style="margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h4 style="margin-bottom: 0; border-left: none; padding-left: 0; font-size: 15px;">正在管理：<span id="editing-playlist-title" style="color: var(--accent); font-weight: 600;">請選擇左側清單</span></h4>
+                                </div>
+                                <button id="btn-delete-current-playlist" class="btn-danger hidden" style="padding: 6px 12px; font-size: 12px;" onclick="deleteCurrentPlaylist()">❌ 刪除此清單</button>
+                            </div>
+
+                            <!-- 新增影片表單 (已移回右側頂部，常駐展露) -->
+                            <div id="playlist-add-video-container" class="hidden" style="margin-bottom: 20px; background: rgba(0,0,0,0.02); padding: 14px; border: 1px solid var(--border-color);">
+                                <h5 style="color: var(--text-primary); margin-bottom: 10px; font-size: 13px; font-weight: 600;">➕ 新增影片至此清單</h5>
+                                <form id="add-video-form" onsubmit="addVideoToPlaylist(event)">
+                                    <!-- 來源類型與影片 ID/網址置頂 -->
+                                    <div style="display: grid; grid-template-columns: 1fr 1.5fr; gap: 10px; margin-bottom: 10px;">
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <select id="new-video-provider" onchange="toggleProviderInput()">
+                                                <option value="youtube">YouTube 影片</option>
+                                                <option value="mp4">MP4 / R2 直連</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group" style="margin-bottom: 0;">
+                                            <input type="text" id="new-video-src" placeholder="YouTube ID 或影片網址..." required onblur="handleVideoSrcBlur()">
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- 標題與封面圖改在下方 -->
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <input type="text" id="new-video-title" placeholder="影片標題 (自動抓取或手動輸入)..." required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <input type="url" id="new-video-thumb" placeholder="封面圖網址 (自動抓取或手動輸入)..." required>
+                                    </div>
+                                    <div class="form-group" style="margin-bottom: 10px;">
+                                        <select id="new-video-ratio" style="font-size: 12px; padding: 6px;">
+                                            <option value="16:9">畫面比例：預設 16:9</option>
+                                            <option value="1.85:1">畫面比例：寬銀幕 1.85:1 (如 4K 影片)</option>
+                                            <option value="2.35:1">畫面比例：超寬 2.35:1</option>
+                                            <option value="4:3">畫面比例：復古 4:3</option>
+                                        </select>
+                                    </div>
+                                    <button type="submit" class="btn-primary" style="padding: 8px; font-size: 12px; width: 100%;">確定新增影片</button>
+                                </form>
+                            </div>
+
+                            <div class="table-wrapper">
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>影片名稱</th>
+                                            <th>類型</th>
+                                            <th>排序</th>
+                                            <th>移除</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="admin-playlist-videos">
+                                        <tr>
+                                            <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 30px;">請點選左側清單的「編輯影片」按鈕開始管理</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 內容區 3：同步 GitHub 設定 -->
+                <div id="tab-export" class="tab-content">
+                    <div class="export-section" style="overflow-y: auto;">
+                        <h4>🚀 一鍵同步設定到 GitHub</h4>
+                        <p class="export-notice">
+                            💡 <strong>自動部署機制：</strong> 填寫您的 GitHub 個人存取權杖 (PAT) 後，系統將自動提交最新的 <code>config.json</code> 到您的 GitHub 儲存庫中。這會自動觸發 Cloudflare Pages 重新部署更新！<br>
+                            *(您的 Token 僅會安全儲存在本機瀏覽器 LocalStorage，絕不上傳到第三方伺服器)*
+                        </p>
+                        
+                        <div class="admin-split" style="grid-template-columns: 5fr 5fr; gap: 20px; height: auto; overflow: visible;">
+                            <div class="form-section" style="height: auto;">
+                                <div class="form-group">
+                                    <label>GitHub 個人存取權杖 (PAT - Fine-grained / Classic with repo scope)</label>
+                                    <input type="password" id="github-pat" placeholder="github_pat_..." style="-webkit-text-security: disc;">
+                                    <small style="color: var(--text-muted); font-size: 11px; display: block; margin-top: 4px;">可在 GitHub「Settings -> Developer settings -> Personal access tokens」中建立。</small>
+                                </div>
+                                <div class="form-group">
+                                    <label>GitHub 儲存庫路徑 (格式: 擁有者/專案名)</label>
+                                    <input type="text" id="github-repo" value="owldio/Owldoge">
+                                </div>
+                                <div class="form-group">
+                                    <label>分支 (Branch)</label>
+                                    <input type="text" id="github-branch" value="main">
+                                </div>
+                                <div class="form-group">
+                                    <label>JSON 儲存路徑</label>
+                                    <input type="text" id="github-path" value="player/config.json" readonly style="opacity: 0.7;">
+                                </div>
+                                <button class="btn-primary" onclick="syncToGitHub()">🚀 一鍵更新 GitHub 設定</button>
+                                <p id="sync-status" style="margin-top: 12px; font-size: 13px; font-weight: 500; min-height: 20px;"></p>
+                            </div>
+
+                            <div class="list-section" style="height: auto;">
+                                <h4>設定檔預覽 (config.json)</h4>
+                                <pre class="code-output" style="max-height: 320px; overflow-y: auto;"><code id="code-export-output"></code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="admin-footer">
+                <button class="btn-danger-outline" onclick="resetToDefault()">⚠️ 重設為初始預設值</button>
+                <p>設定將即時儲存於您的瀏覽器 LocalStorage</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- 載入 hls.js 自適應串流解碼器 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@1.4.12/dist/hls.min.js"></script>
+    <!-- 載入 Plyr 播放器 JS CDN -->
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    <!-- 載入 CryptoJS 加密 CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- 載入自訂邏輯 -->
+    <script src="app.js"></script>
+</body>
+</html>
