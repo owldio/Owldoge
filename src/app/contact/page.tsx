@@ -12,12 +12,12 @@ import DatePicker from "@/components/DatePicker";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
 
 const fieldClass =
-  "w-full border border-hairline bg-night-raised/40 px-4 py-3 text-sm font-light text-parchment transition-colors duration-300 placeholder:text-parchment-faint focus:border-copper focus:outline-none";
+  "w-full border border-hairline bg-night-raised/40 px-4 py-3 text-base font-light text-parchment transition-colors duration-300 placeholder:text-parchment-faint focus:border-copper focus:outline-none";
 
-const labelClass = "mb-2 block font-mono text-[10px] tracking-[0.25em] text-parchment-faint";
+const labelClass = "mb-2 block font-mono text-[11px] tracking-[0.25em] text-parchment-faint";
 
 const optionClass =
-  "flex cursor-pointer items-center gap-3 border border-hairline bg-night-raised/40 px-4 py-3.5 text-sm font-light text-parchment transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10";
+  "flex cursor-pointer items-center gap-3 border border-hairline bg-night-raised/40 px-4 py-3.5 text-base font-light text-parchment transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10";
 
 const lineOfficialAccountUrl = "https://line.me/R/ti/p/@447nguoe";
 
