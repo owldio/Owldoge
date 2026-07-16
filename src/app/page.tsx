@@ -10,6 +10,7 @@ import InkBackground from "@/components/InkBackground";
 import SectionMark from "@/components/SectionMark";
 import SiteFooter from "@/components/SiteFooter";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import { blurPlaceholders } from "@/lib/blurPlaceholders";
 import StageInterlude from "@/components/StageInterlude";
 import EventMarquee from "@/components/EventMarquee";
 import StepBeam from "@/components/StepBeam";
@@ -107,6 +108,8 @@ export default function OwldioSite() {
                 priority
                 quality={80}
                 sizes="(max-width: 1024px) 100vw, 70vw"
+                placeholder={blurPlaceholders[studioMoments.main.src] ? "blur" : "empty"}
+                blurDataURL={blurPlaceholders[studioMoments.main.src]}
                 className="object-cover object-[60%_42%]"
               />
             </div>

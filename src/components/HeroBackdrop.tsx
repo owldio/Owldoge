@@ -3,6 +3,7 @@
 import React, { useRef } from "react";
 import Image from "next/image";
 import { motion, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { blurPlaceholders } from "@/lib/blurPlaceholders";
 
 interface HeroBackdropProps {
   /** Path under /public of the photograph to lay behind the hero. */
@@ -44,6 +45,8 @@ export default function HeroBackdrop({ src, position = "object-center" }: HeroBa
           priority
           quality={70}
           sizes="100vw"
+          placeholder={blurPlaceholders[src] ? "blur" : "empty"}
+          blurDataURL={blurPlaceholders[src]}
           className={`object-cover ${position}`}
         />
       </motion.div>
