@@ -57,9 +57,9 @@ const Navigation = ({ currentPage }: NavigationProps) => {
           <Image
             src="/Owldio.svg"
             alt="Owldio"
-            width={34}
-            height={34}
-            className="h-8 w-8 brightness-0 invert opacity-90 transition-opacity duration-300 group-hover:opacity-100"
+            width={44}
+            height={44}
+            className="h-11 w-11 brightness-0 invert transition-opacity duration-300"
           />
           <span className="flex flex-col leading-none">
             <span className="font-display text-xl font-medium tracking-[0.28em] text-parchment">

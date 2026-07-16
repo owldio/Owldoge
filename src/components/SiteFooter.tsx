@@ -30,9 +30,9 @@ export default function SiteFooter() {
               <Image
                 src="/Owldio.svg"
                 alt="Owldio"
-                width={30}
-                height={30}
-                className="h-7 w-7 brightness-0 invert opacity-90"
+                width={38}
+                height={38}
+                className="h-9 w-9 brightness-0 invert"
               />
               <span className="font-display text-lg font-medium tracking-[0.28em] text-parchment">
                 OWLDIO

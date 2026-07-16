@@ -280,7 +280,7 @@ const ContactPage = () => {
       <main>
         {/* ============ Hero ============ */}
         <section className="grain relative overflow-hidden border-b border-hairline">
-          <HeroBackdrop src="/pic/IMG_9114.JPG" />
+          <HeroBackdrop src="/pic/IMG_8903.JPG" />
           <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-8 lg:pb-20 lg:pt-48">
             <motion.p
               initial={{ opacity: 0, y: 16 }}

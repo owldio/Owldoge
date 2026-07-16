@@ -70,7 +70,7 @@ export default function StudentProjectsPage() {
       <main>
         {/* ============ Hero ============ */}
         <section className="grain relative overflow-hidden border-b border-hairline">
-          <HeroBackdrop src="/pic/IMG_9120.JPG" />
+          <HeroBackdrop src="/pic/IMG_9074.JPG" />
           <div className="writing-vertical absolute right-5 top-28 hidden font-light tracking-[0.5em] text-parchment-faint lg:block">
             為學生而生的紀錄
           </div>

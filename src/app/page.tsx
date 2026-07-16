@@ -17,12 +17,12 @@ import StepBeam from "@/components/StepBeam";
 
 const studioMoments = {
   main: {
-    src: "/pic/edited/owldio-performance-main.jpg",
-    alt: "鋼琴演奏者與攝影機同步錄製的音樂會現場",
+    src: "/pic/IMG_9069.JPG",
+    alt: "琴房裡的平台鋼琴與環形燈，等待演出開始的錄製現場",
   },
   performer: {
-    src: "/pic/edited/owldio-performance-performer.jpg",
-    alt: "鋼琴演奏者在舞台燈光下演出",
+    src: "/pic/IMG_8904.JPG",
+    alt: "架設於平台鋼琴上方的 Neumann 收音麥克風特寫",
   },
   detail: {
     src: "/pic/edited/owldio-piano-strings-detail.jpg",
@@ -245,7 +245,7 @@ export default function OwldioSite() {
                   quality={78}
                   sizes="(max-width: 1024px) 80vw, 34vw"
                   loading="lazy"
-                  className="object-cover object-[28%_42%]"
+                  className="object-cover object-[52%_38%]"
                 />
               </div>
               <div className="grain absolute -bottom-12 right-0 aspect-[4/3] w-3/5 overflow-hidden border-[6px] border-night">
@@ -300,8 +300,8 @@ export default function OwldioSite() {
 
         {/* ============ Interlude — a quiet look at the stage ============ */}
         <StageInterlude
-          src="/pic/IMG_9130.JPG"
-          alt="攝影機螢幕中的琴鍵特寫，演奏者在環形燈前彈奏"
+          src="/pic/IMG_9086.JPG"
+          alt="舞台燈光下的平台鋼琴琴鍵特寫"
           kicker="ON STAGE — 錄製現場"
           line1="每一場演出，"
           line2="都值得被完整留下"

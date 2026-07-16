@@ -174,13 +174,13 @@ export default function AboutPage() {
             >
               <div className="grain relative aspect-[3/4] w-4/5 overflow-hidden">
                 <Image
-                  src="/pic/edited/owldio-performance-main.jpg"
-                  alt="Owldio 在音樂廳錄製鋼琴演奏的現場"
+                  src="/pic/IMG_9056.JPG"
+                  alt="Owldio 工作室的數位混音台特寫"
                   fill
                   quality={78}
                   sizes="(max-width: 1024px) 80vw, 34vw"
                   loading="lazy"
-                  className="object-cover object-[44%_38%]"
+                  className="object-cover object-[40%_45%]"
                 />
               </div>
             </motion.div>
