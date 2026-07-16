@@ -21,8 +21,8 @@ const studioMoments = {
     alt: "琴房裡的平台鋼琴與環形燈，等待演出開始的錄製現場",
   },
   performer: {
-    src: "/pic/IMG_8904.JPG",
-    alt: "架設於平台鋼琴上方的 Neumann 收音麥克風特寫",
+    src: "/pic/IMG_9078.JPG",
+    alt: "一對收音麥克風架設在敞開的平台鋼琴上方",
   },
   detail: {
     src: "/pic/edited/owldio-piano-strings-detail.jpg",
@@ -245,7 +245,7 @@ export default function OwldioSite() {
                   quality={78}
                   sizes="(max-width: 1024px) 80vw, 34vw"
                   loading="lazy"
-                  className="object-cover object-[52%_38%]"
+                  className="object-cover object-[40%_center]"
                 />
               </div>
               <div className="grain absolute -bottom-12 right-0 aspect-[4/3] w-3/5 overflow-hidden border-[6px] border-night">
