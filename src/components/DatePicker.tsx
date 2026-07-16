@@ -117,7 +117,7 @@ export default function DatePicker({ value, onChange, name, required }: DatePick
         onClick={togglePicker}
         aria-haspopup="dialog"
         aria-expanded={isOpen}
-        className="flex w-full items-center justify-between gap-3 border border-hairline bg-night-raised/40 px-4 py-3 text-left text-base font-light transition-colors duration-300 hover:border-hairline-strong focus:border-copper focus:outline-none"
+        className="flex w-full items-center justify-between gap-3 border border-hairline-strong bg-night-raised/40 px-4 py-3 text-left text-base font-light transition-colors duration-300 hover:border-copper/60 focus:border-copper focus:outline-none"
       >
         <span className={value ? "text-parchment" : "text-parchment-faint"}>
           {value ? formatDisplay(value) : "選擇日期"}

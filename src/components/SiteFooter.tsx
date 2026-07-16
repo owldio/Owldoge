@@ -23,7 +23,7 @@ const socialLinks = [
 export default function SiteFooter() {
   return (
     <footer className="border-t border-hairline bg-night-deep">
-      <div className="mx-auto max-w-7xl px-5 py-16 md:px-8">
+      <div className="mx-auto max-w-7xl px-5 pb-36 pt-16 md:px-8 lg:pb-16">
         <div className="flex flex-col gap-12 md:flex-row md:items-start md:justify-between">
           <div>
             <div className="mb-5 flex items-center gap-3">

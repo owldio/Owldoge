@@ -162,7 +162,7 @@ export default function OwldioSite() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.7 }}
-              className="mb-12 text-lg font-extralight tracking-[0.16em] text-parchment-dim md:text-xl"
+              className="mb-12 text-lg font-light tracking-[0.16em] text-parchment-dim md:text-xl"
             >
               台上交給你，台下交給 Owldio。
             </motion.p>
@@ -221,7 +221,7 @@ export default function OwldioSite() {
         <section id="about-studio" className="relative border-t border-hairline">
           <div className="mx-auto grid max-w-7xl gap-16 px-5 py-24 md:px-8 lg:grid-cols-12 lg:py-36">
             {/* Vertical margin note */}
-            <div className="writing-vertical absolute right-5 top-24 hidden font-extralight tracking-[0.5em] text-parchment-faint lg:top-36 xl:block">
+            <div className="writing-vertical absolute right-5 top-24 hidden font-light tracking-[0.5em] text-parchment-faint lg:top-36 xl:block">
               被音樂留下的瞬間
             </div>
 

@@ -48,7 +48,7 @@ export default function PortfolioPage() {
         <section className="grain relative flex min-h-svh flex-col justify-end overflow-hidden">
           <HeroBackdrop src="/pic/edited/owldio-piano-strings-detail.jpg" />
 
-          <div className="writing-vertical absolute right-5 top-28 hidden font-extralight tracking-[0.5em] text-parchment-faint lg:block">
+          <div className="writing-vertical absolute right-5 top-28 hidden font-light tracking-[0.5em] text-parchment-faint lg:block">
             正在編寫的篇章
           </div>
 
