@@ -46,7 +46,7 @@ export default function StageInterlude({ src, alt, kicker, line1, line2 }: Stage
         transition={{ duration: 0.8, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className="relative z-10 mx-auto max-w-3xl px-5 py-36 text-center md:px-8 lg:py-52"
       >
-        <p className="mb-6 font-mono text-[11px] tracking-[0.4em] text-copper">{kicker}</p>
+        <p className="mb-6 font-mono text-[12px] tracking-[0.4em] text-copper-bright">{kicker}</p>
         <h2 className="text-3xl font-extralight leading-snug tracking-[0.05em] text-parchment md:text-5xl md:leading-[1.35]">
           {line1}
           {line2 && (

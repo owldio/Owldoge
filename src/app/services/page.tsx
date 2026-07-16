@@ -74,7 +74,7 @@ export default function ServicesPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper"
+              className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright"
             >
               SERVICES — 服務項目
             </motion.p>
@@ -235,7 +235,7 @@ export default function ServicesPage() {
             transition={{ duration: 0.8 }}
             className="mx-auto max-w-3xl px-5 py-28 text-center md:px-8 lg:py-40"
           >
-            <p className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper">
+            <p className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
               START YOUR PROJECT — 開始你的錄製
             </p>
             <h2 className="mb-8 text-3xl font-extralight leading-snug tracking-[0.05em] text-parchment md:text-5xl md:leading-[1.35]">

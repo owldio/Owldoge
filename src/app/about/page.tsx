@@ -134,7 +134,7 @@ export default function AboutPage() {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper"
+              className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright"
             >
               ABOUT — 關於我們
             </motion.p>
@@ -193,7 +193,7 @@ export default function AboutPage() {
               transition={{ duration: 0.7, delay: 0.15 }}
               className="mt-8 lg:col-span-6 lg:col-start-7 lg:mt-0"
             >
-              <p className="mb-6 font-mono text-[11px] tracking-[0.4em] text-copper">
+              <p className="mb-6 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
                 01 — OUR STORY
               </p>
               <h2 className="mb-8 text-3xl font-extralight leading-snug tracking-[0.04em] text-parchment md:text-[2.6rem] md:leading-[1.3]">
@@ -309,7 +309,7 @@ export default function AboutPage() {
             transition={{ duration: 0.8 }}
             className="relative z-10 mx-auto max-w-3xl px-5 py-28 text-center md:px-8 lg:py-40"
           >
-            <p className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper">
+            <p className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
               LET&apos;S WORK TOGETHER — 開始合作
             </p>
             <h2 className="mb-8 text-3xl font-extralight leading-snug tracking-[0.05em] text-parchment md:text-5xl md:leading-[1.35]">

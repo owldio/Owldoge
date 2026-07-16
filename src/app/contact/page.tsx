@@ -12,9 +12,9 @@ import DatePicker from "@/components/DatePicker";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
 
 const fieldClass =
-  "w-full border border-hairline-strong bg-night-raised/40 px-4 py-3 text-base font-light text-parchment transition-colors duration-300 placeholder:text-parchment-faint focus:border-copper focus:outline-none";
+  "w-full border border-hairline-strong bg-night-raised/40 px-4 py-3 text-base font-light text-parchment transition-colors duration-300 placeholder:italic placeholder:text-parchment-faint focus:border-copper focus:outline-none";
 
-const labelClass = "mb-2 block font-mono text-[12px] tracking-[0.25em] text-parchment-dim";
+const labelClass = "mb-2 block font-mono text-[13px] tracking-[0.25em] text-parchment";
 
 const optionClass =
   "flex cursor-pointer items-center gap-3 border border-hairline-strong bg-night-raised/40 px-4 py-3.5 text-base font-light text-parchment transition-colors duration-300 hover:border-copper/60 has-[:checked]:border-copper has-[:checked]:bg-copper/10";
@@ -221,7 +221,7 @@ const ContactPage = () => {
           transition={{ duration: 0.6 }}
           className="w-full max-w-lg text-center"
         >
-          <p className="mb-6 font-mono text-[11px] tracking-[0.4em] text-copper">
+          <p className="mb-6 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
             REQUEST RECEIVED — 預約已送出
           </p>
           <h1 className="mb-5 font-display text-4xl font-light italic text-copper-bright">
@@ -286,7 +286,7 @@ const ContactPage = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-7 font-mono text-[11px] tracking-[0.4em] text-copper"
+              className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright"
             >
               CONTACT — 聯絡預約
             </motion.p>
@@ -318,7 +318,7 @@ const ContactPage = () => {
               className="lg:col-span-2"
             >
               <div className="border border-hairline bg-night-raised/30 p-7 md:p-10">
-                <h2 className="mb-8 font-mono text-[11px] tracking-[0.35em] text-copper">
+                <h2 className="mb-8 font-mono text-[12px] tracking-[0.35em] text-copper-bright">
                   預約表單 — BOOKING FORM
                 </h2>
 
@@ -671,7 +671,7 @@ const ContactPage = () => {
               className="space-y-6"
             >
               <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
-                <h3 className="mb-6 font-mono text-[11px] tracking-[0.35em] text-copper">
+                <h3 className="mb-6 font-mono text-[12px] tracking-[0.35em] text-copper-bright">
                   聯絡資訊 — CONTACT
                 </h3>
                 <div className="divide-y divide-hairline">
@@ -702,7 +702,7 @@ const ContactPage = () => {
               </div>
 
               <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
-                <h3 className="mb-6 font-mono text-[11px] tracking-[0.35em] text-copper">
+                <h3 className="mb-6 font-mono text-[12px] tracking-[0.35em] text-copper-bright">
                   服務承諾 — PROMISE
                 </h3>
                 <ul className="space-y-3.5">
@@ -719,7 +719,7 @@ const ContactPage = () => {
               </div>
 
               <div className="border border-hairline bg-night-raised/30 p-7 md:p-8">
-                <h3 className="mb-3 font-mono text-[11px] tracking-[0.35em] text-copper">
+                <h3 className="mb-3 font-mono text-[12px] tracking-[0.35em] text-copper-bright">
                   急件諮詢 — URGENT
                 </h3>
                 <p className="mb-6 text-sm font-light leading-loose text-parchment-dim">
