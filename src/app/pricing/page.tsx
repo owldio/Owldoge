@@ -9,6 +9,14 @@ import SiteFooter from "@/components/SiteFooter";
 import SectionMark from "@/components/SectionMark";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import {
+  addOns,
+  baseDurationNote,
+  formatTwd,
+  standardPlans,
+  studentAuthorizationNote,
+  studentCollaborationPlan,
+} from "@/lib/pricing";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,58 +25,11 @@ const fadeUp = {
 
 const viewportOnce = { once: true, margin: "-80px" } as const;
 
-const pricingPlans = [
-  {
-    id: "single",
-    no: "01",
-    name: "單機方案",
-    en: "SINGLE CAM",
-    price: "NT$ 7,800",
-    originalPrice: "NT$ 10,500",
-    discount: "省 NT$ 2,700",
-    bestFor: "個人演出",
-    features: ["單機錄影", "立體聲錄音", "基礎剪輯", "雲端 / YouTube 交付"],
-    popular: false,
-  },
-  {
-    id: "duo",
-    no: "02",
-    name: "雙機套餐",
-    en: "DUAL CAM",
-    price: "NT$ 14,800",
-    originalPrice: "NT$ 18,800",
-    discount: "省 NT$ 4,000",
-    bestFor: "小型室內樂",
-    features: ["雙機位拍攝", "4K Ultra HD", "專業剪輯", "雲端 / YouTube 交付"],
-    popular: true,
-  },
-  {
-    id: "pro",
-    no: "03",
-    name: "三機旗艦",
-    en: "PROFESSIONAL",
-    price: "NT$ 21,200",
-    originalPrice: "NT$ 27,200",
-    discount: "省 NT$ 6,000",
-    bestFor: "大型演出",
-    features: ["三機位拍攝", "4K Ultra HD", "多視角剪輯", "多軌錄音", "色彩校正", "雲端及 YouTube 連結交付"],
-    popular: false,
-  },
-];
-
-const addOns = [
-  { name: "延長錄製", price: "+NT$ 1,200", unit: "/ 30 分鐘" },
-  { name: "快速交付", price: "+NT$ 2,000", unit: "起" },
-  { name: "精華剪輯", price: "+NT$ 1,800", unit: "" },
-  { name: "多軌錄音", price: "+NT$ 2,500", unit: "" },
-  { name: "實體隨身碟", price: "+NT$ 300", unit: "/ 個" },
-  { name: "特殊需求", price: "可詳談", unit: "" },
-];
-
 const comparisonRows = [
   ["錄影品質", "4K", "4K", "4K"],
   ["機位數量", "1", "2", "3"],
   ["錄音方式", "基礎立體聲", "進階立體聲", "多軌錄音"],
+  ["錄製時長", "2 小時內", "2 小時內", "2 小時內"],
   ["音頻後製", "✓", "✓", "✓"],
   ["色彩校正", "基本", "基本", "進階"],
   ["特殊需求處理（加值）", "✓", "✓", "✓"],
@@ -76,7 +37,7 @@ const comparisonRows = [
 ];
 
 const faqs = [
-  { q: "學生優惠方案有哪些內容？", a: "憑有效學生證可享特別價格等專屬優惠，詳情可於學生專案頁查看或來訊洽詢。" },
+  { q: "學生合作方案有哪些內容？", a: `持有效學生證並參與作品展示授權合作，可申請 ${formatTwd(studentCollaborationPlan.price)} 起的單機錄音錄影方案；授權範圍將於預約確認時另行以書面約定。` },
   { q: "錄製當天需要準備什麼？", a: "我們會提供所有專業設備，您只需準備好演出內容即可。" },
   { q: "後製交付需要多長時間？", a: "一般作業時間為 7–10 個工作天，急件可選擇 72 小時快交服務。" },
 ];
@@ -114,7 +75,7 @@ export default function PricingPage() {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="max-w-xl text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
             >
-              所有價格皆含稅，學生另享專屬折扣。24 小時內回覆，免費諮詢。
+              所有價格皆含稅，另有學生作品授權合作方案。24 小時內回覆，免費諮詢。
             </motion.p>
           </div>
         </section>
@@ -133,7 +94,7 @@ export default function PricingPage() {
             </motion.div>
 
             <div className="grid gap-px overflow-hidden border border-hairline bg-hairline md:grid-cols-3">
-              {pricingPlans.map((plan, index) => (
+              {standardPlans.map((plan, index) => (
                 <motion.div
                   key={plan.id}
                   variants={fadeUp}
@@ -166,17 +127,9 @@ export default function PricingPage() {
                   <div className="mt-7">
                     <div className="flex items-baseline gap-2">
                       <span className="text-4xl font-extralight text-copper-bright">
-                        {plan.price}
+                        {formatTwd(plan.price)}
                       </span>
                       <span className="text-sm font-light text-parchment-dim">起</span>
-                    </div>
-                    <div className="mt-2 flex items-baseline gap-3">
-                      <span className="text-sm font-light text-parchment-faint line-through">
-                        {plan.originalPrice}
-                      </span>
-                      <span className="font-mono text-[11px] tracking-[0.1em] text-copper">
-                        {plan.discount}
-                      </span>
                     </div>
                   </div>
 
@@ -222,14 +175,13 @@ export default function PricingPage() {
             >
               <div className="max-w-2xl">
                 <p className="mb-3 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
-                  STUDENT FRIENDLY — 學生專屬優惠
+                  STUDENT COLLABORATION — 學生授權合作
                 </p>
                 <p className="text-sm font-light leading-loose text-parchment-dim">
-                  憑學生證享超值價格，音樂系所、社團亦可洽談學期合作專案。
+                  持有效學生證並參與作品展示授權合作，可申請單機錄音錄影合作價；音樂系所、社團亦可洽談學期合作專案。
                 </p>
                 <p className="mt-3 text-sm font-light leading-loose text-parchment-dim">
-                  ※ 選擇學生方案即表示同意授權 Owldio
-                  使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。
+                  {studentAuthorizationNote}
                 </p>
               </div>
               <Link
@@ -255,7 +207,10 @@ export default function PricingPage() {
             >
               <SectionMark no="02" zh="加值服務" en="ADD-ONS" />
               <p className="mb-14 max-w-2xl text-base font-light leading-loose text-parchment-dim">
-                依需求客製錄製內容，批量服務可享額外折扣，歡迎來訊討論組合優惠。
+                依需求客製錄製內容，多場次與學期合作可另行報價，歡迎來訊討論合適配置。
+              </p>
+              <p className="-mt-9 mb-14 max-w-2xl text-sm font-light leading-loose text-parchment-faint">
+                {baseDurationNote}
               </p>
             </motion.div>
 
@@ -269,8 +224,8 @@ export default function PricingPage() {
                     {addon.name}
                   </span>
                   <span className="font-mono text-sm text-copper">
-                    {addon.price}
-                    {addon.unit && (
+                    {addon.amount === null ? addon.unit : `+${formatTwd(addon.amount)}`}
+                    {addon.amount !== null && addon.unit && (
                       <span className="ml-1 text-[10px] text-parchment-faint">{addon.unit}</span>
                     )}
                   </span>

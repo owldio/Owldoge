@@ -10,6 +10,7 @@ import SectionMark from "@/components/SectionMark";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
 import StepBeam from "@/components/StepBeam";
+import { formatTwd, serviceCatalog } from "@/lib/pricing";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -17,41 +18,6 @@ const fadeUp = {
 };
 
 const viewportOnce = { once: true, margin: "-80px" } as const;
-
-const services = [
-  {
-    no: "01",
-    title: "音樂會錄影",
-    en: "CONCERT VIDEO",
-    description: "多機位 4K 錄影，完整捕捉舞台全景、演奏細節與現場氛圍。",
-    features: ["4K Ultra HD 畫質", "多機位拍攝", "專業調色", "如期交付"],
-    pricing: "NT$ 7,800",
-  },
-  {
-    no: "02",
-    title: "專業錄音",
-    en: "AUDIO RECORDING",
-    description: "依編制與空間配置收音，呈現最純淨自然的聲音質感。",
-    features: ["24bit / 48kHz", "多軌錄音", "特殊需求處理", "母帶處理"],
-    pricing: "NT$ 3,300",
-  },
-  {
-    no: "03",
-    title: "現場直播",
-    en: "LIVE STREAMING",
-    description: "多平台同步直播，讓無法到場的觀眾也能即時分享音樂感動。",
-    features: ["多平台同步", "即時導播", "互動功能", "錄影存檔"],
-    pricing: "NT$ 18,800",
-  },
-  {
-    no: "04",
-    title: "後製服務",
-    en: "POST PRODUCTION",
-    description: "專業剪輯、混音與調色，打造適合上傳、投件與留存的成品。",
-    features: ["影片剪輯", "音頻混音", "字幕製作", "特效合成"],
-    pricing: "NT$ 10,800",
-  },
-];
 
 const processSteps = [
   { numeral: "I", title: "諮詢討論", description: "了解演出需求，提供合適的錄製配置與專業建議。" },
@@ -115,7 +81,7 @@ export default function ServicesPage() {
             </motion.div>
 
             <div>
-              {services.map((service, index) => (
+              {serviceCatalog.map((service, index) => (
                 <motion.div
                   key={service.no}
                   variants={fadeUp}
@@ -159,7 +125,7 @@ export default function ServicesPage() {
                       FROM
                     </span>
                     <span className="mt-1 text-2xl font-extralight text-copper-bright">
-                      {service.pricing}
+                      {formatTwd(service.price)}
                       <span className="ml-2 text-sm font-light text-parchment-dim">起</span>
                     </span>
                     <Link
@@ -244,7 +210,7 @@ export default function ServicesPage() {
               專業錄製
             </h2>
             <p className="mx-auto mb-14 max-w-xl text-base font-light leading-loose text-parchment-dim">
-              首次合作享專屬優惠折扣，歡迎來訊洽談，為您量身打造最合適的方案。
+              歡迎來訊洽談，我們會依機位、收音、時長、後製與交付需求提供清楚報價。
             </p>
             <div className="flex flex-col items-center gap-4 sm:flex-row sm:justify-center">
               <Link

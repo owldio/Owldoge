@@ -34,7 +34,7 @@ const proofPoints = [
   { code: "4K", label: "舞台完整紀錄" },
   { code: "MULTI", label: "多軌收音穩定清楚" },
   { code: "7–10D", label: "整理後完整交付" },
-  { code: "STUDENT", label: "學生方案可調整" },
+  { code: "STUDENT", label: "學生合作方案可申請" },
 ];
 
 const promiseLines = [

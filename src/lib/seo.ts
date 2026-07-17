@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 export const siteUrl = "https://www.owldio.art";
 export const siteName = "Owldio Studio";
 export const siteDescription =
-  "專業音樂會錄影、錄音、直播與後製服務。Owldio Studio 提供 4K 錄影、多軌錄音、現場直播、影片剪輯與學生音樂會優惠方案，讓每一場演出都留下完整作品。";
+  "專業音樂會錄影、錄音、直播與後製服務。Owldio Studio 提供 4K 錄影、多軌錄音、現場直播、影片剪輯與學生作品授權合作方案，讓每一場演出都留下完整作品。";
 
 const ogImage = "/seo/owldio-music-production.png";
 export const defaultOgImage = ogImage;

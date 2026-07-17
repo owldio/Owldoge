@@ -7,6 +7,11 @@
 const SPREADSHEET_ID = '1ANPpJ3tP1szF_9A1LBlck571xwXC_TiS-DR9yzt4zDI';
 const SHEET_NAME = 'Form_Responses';
 const NOTIFICATION_EMAIL = 'owldio.art@gmail.com';
+const FORM_HEADERS = [
+  '提交時間', '姓名', 'Email', '電話', '學校/機構',
+  '演出類型', '樂器/編制', '演出日期時間', '演出場地', '演出時長', '參與人數',
+  '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求', '加購需求'
+];
 
 /**
  * 處理 POST 請求的主函數
@@ -171,20 +176,9 @@ function recordToSheet(data) {
     // 如果工作表不存在，則創建它
     if (!sheet) {
       sheet = spreadsheet.insertSheet(SHEET_NAME);
-      
-      // 設定標題行
-      const headers = [
-        '提交時間', '姓名', 'Email', '電話', '學校/機構',
-        '演出類型', '樂器/編制', '演出日期時間', '演出場地', '演出時長', '參與人數',
-        '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求'
-      ];
-      sheet.getRange(1, 1, 1, headers.length).setValues([headers]);
-      
-      // 格式化標題行
-      const headerRange = sheet.getRange(1, 1, 1, headers.length);
-      headerRange.setFontWeight('bold');
-      headerRange.setBackground('#f0f0f0');
     }
+
+    ensureSheetSchema(sheet);
     
     // 準備資料行
     const timestamp = new Date();
@@ -204,7 +198,8 @@ function recordToSheet(data) {
       data.useStudentPlan || '',
       data.pricingPlan || '',
       data.deliveryTime || '',
-      data.additionalInfo || ''
+      data.additionalInfo || '',
+      Array.isArray(data.addOns) ? data.addOns.join(', ') : ''
     ];
     
     // 添加新行
@@ -216,6 +211,38 @@ function recordToSheet(data) {
     console.error('記錄到 Google Sheets 時發生錯誤:', error);
     throw error;
   }
+}
+
+/**
+ * 保留既有 16 欄資料順序，將加購需求追加為第 17 欄。
+ */
+function ensureSheetSchema(sheet) {
+  if (sheet.getMaxColumns() < FORM_HEADERS.length) {
+    sheet.insertColumnsAfter(
+      sheet.getMaxColumns(),
+      FORM_HEADERS.length - sheet.getMaxColumns()
+    );
+  }
+
+  if (sheet.getLastColumn() === 0) {
+    sheet.getRange(1, 1, 1, FORM_HEADERS.length).setValues([FORM_HEADERS]);
+  } else {
+    const addOnColumn = FORM_HEADERS.length;
+    const addOnHeaderCell = sheet.getRange(1, addOnColumn);
+    const currentAddOnHeader = addOnHeaderCell.getValue();
+
+    if (currentAddOnHeader && currentAddOnHeader !== FORM_HEADERS[addOnColumn - 1]) {
+      throw new Error(`第 ${addOnColumn} 欄已有其他標題，無法安全新增加購需求欄位`);
+    }
+
+    if (!currentAddOnHeader) {
+      addOnHeaderCell.setValue(FORM_HEADERS[addOnColumn - 1]);
+    }
+  }
+
+  const headerRange = sheet.getRange(1, 1, 1, FORM_HEADERS.length);
+  headerRange.setFontWeight('bold');
+  headerRange.setBackground('#f0f0f0');
 }
 
 /**
@@ -345,6 +372,10 @@ function createEmailBody(data) {
               <span class="value highlight">${data.pricingPlan || '未選擇'}</span>
             </div>
             <div class="info-row">
+              <span class="label">加購需求:</span>
+              <span class="value">${formatHtmlList(data.addOns, '未加購')}</span>
+            </div>
+            <div class="info-row">
               <span class="label">交件時程:</span>
               <span class="value">${data.deliveryTime || '未選擇'}</span>
             </div>
@@ -390,6 +421,20 @@ function createEmailBody(data) {
     </body>
     </html>
   `;
+}
+
+function formatHtmlList(value, fallback) {
+  if (!Array.isArray(value) || value.length === 0) return fallback;
+  return value.map(escapeHtml).join(', ');
+}
+
+function escapeHtml(value) {
+  return String(value)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
 }
 
 /**
@@ -449,7 +494,8 @@ function testFormSubmission() {
     participants: "1人",
     services: ["專業錄音", "錄影服務"],
     useStudentPlan: "是",
-    pricingPlan: "單機方案",
+    pricingPlan: "學生作品授權合作方案",
+    addOns: ["多機位升級", "72 小時快速交付"],
     deliveryTime: "一般交件（7~10 個工作天）",
     additionalInfo: "這是一個測試提交"
   };

@@ -9,6 +9,12 @@ import SiteFooter from "@/components/SiteFooter";
 import SectionMark from "@/components/SectionMark";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import {
+  formatTwd,
+  standardPlans,
+  studentAuthorizationNote,
+  studentCollaborationPlan,
+} from "@/lib/pricing";
 
 const fadeUp = {
   hidden: { opacity: 0, y: 24 },
@@ -18,49 +24,21 @@ const fadeUp = {
 const viewportOnce = { once: true, margin: "-80px" } as const;
 
 const benefits = [
-  { no: "I", title: "學生證優惠", description: "出示學生證即享專屬折扣，把預算留給最重要的演出。" },
+  { no: "I", title: "學生合作價", description: "持有效學生證並參與作品展示授權合作，以合作價完成重要演出紀錄。" },
   { no: "II", title: "72 小時快交", description: "趕畢業製作？可加購快交服務，我們懂你的急迫。" },
   { no: "III", title: "專業品質", description: "不因價格犧牲錄製品質，設備與標準與一般方案一致。" },
   { no: "IV", title: "免費諮詢", description: "前期規劃與配置建議完全免費，先談清楚再開始。" },
 ];
 
-const mainPackage = {
-  price: "NT$ 3,300",
-  originalPrice: "NT$ 5,990",
-  discount: "省 NT$ 2,690",
-  included: ["立體聲錄音", "4K 錄影服務", "基礎剪輯後製", "雲端交付（30 天）", "一次免費修改"],
-  addons: ["延長錄製", "多機位拍攝", "72 小時快交", "實體隨身碟", "特殊需求（可詳談）"],
-};
+const referencePlan = standardPlans.find(
+  (plan) => plan.id === studentCollaborationPlan.referencePlanId
+);
 
-const otherPackages = [
-  {
-    title: "單機錄影",
-    en: "SINGLE CAM",
-    price: "NT$ 7,800",
-    originalPrice: "NT$ 10,500",
-    features: ["單機錄影", "2 小時拍攝", "基礎剪輯"],
-    popular: false,
-  },
-  {
-    title: "雙機套餐",
-    en: "DUAL CAM",
-    price: "NT$ 14,800",
-    originalPrice: "NT$ 18,800",
-    features: ["雙機位拍攝", "4K Ultra HD", "專業剪輯"],
-    popular: true,
-  },
-  {
-    title: "三機旗艦",
-    en: "PROFESSIONAL",
-    price: "NT$ 21,200",
-    originalPrice: "NT$ 27,200",
-    features: ["三機位拍攝", "多軌錄音", "色彩校正"],
-    popular: false,
-  },
-];
+if (!referencePlan) {
+  throw new Error("Student collaboration reference plan is missing from the pricing catalog.");
+}
 
-const authorizationNote =
-  "※ 選擇學生方案即表示同意授權 Owldio 使用您的演出影片作為作品集展示、網站宣傳素材或社群媒體推廣等用途。我們將以專業方式呈現您的精彩演出，共同推廣音樂藝術之美。";
+const referencePlanPrice = referencePlan.price;
 
 export default function StudentProjectsPage() {
   return (
@@ -99,7 +77,7 @@ export default function StudentProjectsPage() {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="mb-12 max-w-xl text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
             >
-              專屬優惠、快速交付、用心服務。最高省 45%，把每一分預算用在最需要的地方。
+              專業規格、學生合作價、清楚的授權條件，把預算用在最需要的演出紀錄。
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -111,11 +89,11 @@ export default function StudentProjectsPage() {
                 href="#pricing"
                 className="group inline-flex items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
               >
-                查看學生價格
+                查看合作方案
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <span className="font-mono text-[11px] tracking-[0.25em] text-parchment-faint">
-                STUDENT EXCLUSIVE · 最高省 45%
+                STUDENT COLLABORATION · {formatTwd(studentCollaborationPlan.price)} 起
               </span>
             </motion.div>
           </div>
@@ -170,9 +148,9 @@ export default function StudentProjectsPage() {
               viewport={viewportOnce}
               transition={{ duration: 0.7 }}
             >
-              <SectionMark no="02" zh="學生方案" en="STUDENT PRICING" />
+              <SectionMark no="02" zh="學生合作方案" en="COLLABORATION PRICING" />
               <p className="mb-14 max-w-2xl text-base font-light leading-loose text-parchment-dim">
-                所有價格皆含稅，無隱藏費用。最受歡迎的學生錄音錄影套餐，一次到位。
+                所有價格皆含稅，無隱藏費用。合作價適用於有效學生身分與作品展示授權合作。
               </p>
             </motion.div>
 
@@ -191,24 +169,19 @@ export default function StudentProjectsPage() {
                     MOST CHOSEN — 最受歡迎
                   </p>
                   <h3 className="text-2xl font-extralight tracking-[0.08em] text-parchment md:text-3xl">
-                    學生錄音錄影套餐
+                    {studentCollaborationPlan.name}
                   </h3>
                 </div>
                 <div className="md:text-right">
                   <div className="flex items-baseline gap-2 md:justify-end">
                     <span className="text-4xl font-extralight text-copper-bright md:text-5xl">
-                      {mainPackage.price}
+                      {formatTwd(studentCollaborationPlan.price)}
                     </span>
                     <span className="text-sm font-light text-parchment-dim">起</span>
                   </div>
-                  <div className="mt-2 flex items-baseline gap-3 md:justify-end">
-                    <span className="text-sm font-light text-parchment-faint line-through">
-                      {mainPackage.originalPrice}
-                    </span>
-                    <span className="font-mono text-[11px] tracking-[0.1em] text-copper">
-                      {mainPackage.discount}
-                    </span>
-                  </div>
+                  <p className="mt-2 font-mono text-[11px] tracking-[0.08em] text-parchment-faint">
+                    同規格一般單機方案 {formatTwd(referencePlanPrice)} 起
+                  </p>
                 </div>
               </div>
 
@@ -218,7 +191,7 @@ export default function StudentProjectsPage() {
                     包含服務
                   </p>
                   <ul className="space-y-3.5">
-                    {mainPackage.included.map((item) => (
+                    {studentCollaborationPlan.included.map((item) => (
                       <li
                         key={item}
                         className="flex items-baseline gap-3 text-sm font-light text-parchment"
@@ -234,13 +207,14 @@ export default function StudentProjectsPage() {
                     加購選項
                   </p>
                   <ul className="space-y-3.5">
-                    {mainPackage.addons.map((item) => (
+                    {studentCollaborationPlan.addons.map((addon) => (
                       <li
-                        key={item}
+                        key={addon.id}
                         className="flex items-baseline gap-3 text-sm font-light text-parchment-dim"
                       >
                         <span className="font-mono text-[10px] text-parchment-faint">·</span>
-                        {item}
+                        {addon.name}
+                        {addon.amount === null && addon.unit ? `（${addon.unit}）` : ""}
                       </li>
                     ))}
                   </ul>
@@ -249,7 +223,7 @@ export default function StudentProjectsPage() {
 
               <div className="border-t border-hairline p-8 md:p-12">
                 <p className="mb-8 text-xs font-light leading-loose tracking-[0.04em] text-parchment-faint">
-                  {authorizationNote}
+                  {studentAuthorizationNote}
                 </p>
                 <Link
                   href="/contact"
@@ -261,11 +235,19 @@ export default function StudentProjectsPage() {
               </div>
             </motion.div>
 
-            {/* Other packages */}
-            <div className="mt-16 grid gap-px border border-hairline bg-hairline md:grid-cols-3">
-              {otherPackages.map((pkg, index) => (
+            {/* Other standard packages */}
+            <div className="mb-6 mt-16 flex flex-wrap items-baseline justify-between gap-3">
+              <h3 className="text-xl font-extralight tracking-[0.08em] text-parchment">
+                其他拍攝配置
+              </h3>
+              <span className="font-mono text-[10px] tracking-[0.25em] text-parchment-faint">
+                STANDARD PRICING — 一般方案價格
+              </span>
+            </div>
+            <div className="grid gap-px border border-hairline bg-hairline md:grid-cols-3">
+              {standardPlans.map((pkg, index) => (
                 <motion.div
-                  key={pkg.title}
+                  key={pkg.id}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
@@ -275,7 +257,7 @@ export default function StudentProjectsPage() {
                 >
                   <div className="mb-5 flex items-baseline justify-between">
                     <h4 className="text-xl font-extralight tracking-[0.08em] text-parchment">
-                      {pkg.title}
+                      {pkg.name}
                     </h4>
                     {pkg.popular && (
                       <span className="font-mono text-[10px] tracking-[0.3em] text-copper">
@@ -289,13 +271,10 @@ export default function StudentProjectsPage() {
                   <div className="mt-6">
                     <div className="flex items-baseline gap-2">
                       <span className="text-2xl font-extralight text-copper-bright">
-                        {pkg.price}
+                        {formatTwd(pkg.price)}
                       </span>
                       <span className="text-sm font-light text-parchment-dim">起</span>
                     </div>
-                    <span className="text-sm font-light text-parchment-faint line-through">
-                      {pkg.originalPrice}
-                    </span>
                   </div>
                   <ul className="mt-6 flex-1 space-y-3">
                     {pkg.features.map((feature) => (
@@ -340,7 +319,7 @@ export default function StudentProjectsPage() {
               音樂旅程
             </h2>
             <p className="mx-auto mb-14 max-w-xl text-base font-light leading-loose text-parchment-dim">
-              立即預約，享受學生專屬優惠。24 小時內回覆，免費諮詢。
+              立即申請學生合作方案。24 小時內回覆，免費諮詢並確認適用條件。
             </p>
             <Link
               href="/contact"

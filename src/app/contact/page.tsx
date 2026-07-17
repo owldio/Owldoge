@@ -1,15 +1,31 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight, X } from "lucide-react";
 import Navigation from "@/components/Navigation";
 import SiteFooter from "@/components/SiteFooter";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import DatePicker from "@/components/DatePicker";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import {
+  addOns,
+  formatTwd,
+  standardPlans,
+  studentAuthorizationNote,
+  studentCollaborationPlan,
+} from "@/lib/pricing";
+import {
+  getStudentConsentMode,
+  STUDENT_AUTHORIZATION_EFFECTIVE_DATE,
+  STUDENT_AUTHORIZATION_VERSION,
+  studentAuthorizationScopeSummary,
+  studentAuthorizationTerms,
+  type StudentAgeStatus,
+  type StudentPerformerScope,
+} from "@/lib/student-authorization";
 
 const fieldClass =
   "w-full border border-hairline-strong bg-night-raised/40 px-4 py-3 text-base font-light text-parchment transition-colors duration-300 placeholder:italic placeholder:text-parchment-faint focus:border-copper focus:outline-none";
@@ -40,25 +56,21 @@ const timeOptions = [
   "21:00", "21:30", "22:00",
 ];
 
-const pricingPlans = [
-  {
-    value: "single",
-    label: "單機方案",
-    price: "NT$ 7,800 起",
-    description: "內容：單機 4K 錄影、2 小時拍攝、基礎剪輯、雲端交付、一次小改",
-  },
-  {
-    value: "double",
-    label: "雙機套餐",
-    price: "NT$ 14,800 起",
-    description: "內容：雙機位拍攝、4K Ultra HD、60 秒精華版、專業剪輯、多角度切換、雲端＋USB 交付",
-  },
-  {
-    value: "triple",
-    label: "三機旗艦或客製",
-    price: "NT$ 21,200 起",
-    description: "內容：三機位拍攝、多視角剪輯、色彩校正、專業混音、完整後製、實體光碟",
-  },
+type ContactPricingPlan = {
+  value: string;
+  label: string;
+  price?: string;
+  description?: string;
+};
+
+const standardContactPlans: ContactPricingPlan[] = standardPlans.map((plan) => ({
+  value: plan.contactValue,
+  label: plan.name,
+  price: `${formatTwd(plan.price)} 起`,
+  description: `內容：${plan.features.join("、")}`,
+}));
+
+const flexibleContactPlans: ContactPricingPlan[] = [
   {
     value: "recommend",
     label: "請為我推薦最適合的方案",
@@ -69,6 +81,15 @@ const pricingPlans = [
     label: "其他需求",
   },
 ];
+
+const generalContactPlans = [...standardContactPlans, ...flexibleContactPlans];
+
+const studentContactPlan: ContactPricingPlan = {
+  value: studentCollaborationPlan.contactValue,
+  label: studentCollaborationPlan.name,
+  price: `${formatTwd(studentCollaborationPlan.price)} 起`,
+  description: `內容：${studentCollaborationPlan.included.join("、")}；須符合學生身分與作品展示授權合作條件`,
+};
 
 const serviceOptions = [
   { id: "recording", label: "專業錄音" },
@@ -94,7 +115,15 @@ const contactChannels = [
   },
 ];
 
-const promises = ["24 小時內回覆報價", "免費檔期查詢", "學生優惠價格", "專業品質保證"];
+const promises = ["24 小時內回覆報價", "免費檔期查詢", "學生合作方案", "專業品質保證"];
+
+const emptyStudentAuthorization = {
+  studentAgeStatus: "" as StudentAgeStatus,
+  studentPerformerScope: "" as StudentPerformerScope,
+  studentGuardianName: "",
+  studentGuardianEmail: "",
+  studentAgreementAccepted: false,
+};
 
 const ContactPage = () => {
   const [formData, setFormData] = useState({
@@ -111,7 +140,9 @@ const ContactPage = () => {
     participants: "",
     services: [] as string[],
     useStudentPlan: "",
+    ...emptyStudentAuthorization,
     pricingPlan: "",
+    selectedAddOns: [] as string[],
     deliveryTime: "",
     additionalInfo: "",
   });
@@ -119,6 +150,28 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const studentAuthorizationDialogRef = useRef<HTMLDialogElement>(null);
+
+  const availableAddOns =
+    formData.useStudentPlan === "yes" ? studentCollaborationPlan.addons : addOns;
+  const selectableAddOns = availableAddOns.filter((addon) => addon.id !== "rush");
+
+  const studentConsentMode = getStudentConsentMode(
+    formData.studentAgeStatus,
+    formData.studentPerformerScope,
+  );
+  const studentContractingParty =
+    formData.studentAgeStatus === "minor" ? formData.studentGuardianName : formData.name;
+  const studentConsentRequiresEnhancedSignature =
+    studentConsentMode === "enhanced-signature-required";
+
+  const openStudentAuthorizationDialog = () => {
+    studentAuthorizationDialogRef.current?.showModal();
+  };
+
+  const closeStudentAuthorizationDialog = () => {
+    studentAuthorizationDialogRef.current?.close();
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -127,6 +180,9 @@ const ContactPage = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
+      ...(name === "name" && prev.studentAgreementAccepted
+        ? { studentAgreementAccepted: false }
+        : {}),
     }));
   };
 
@@ -136,6 +192,38 @@ const ContactPage = () => {
       services: prev.services.includes(service)
         ? prev.services.filter((s) => s !== service)
         : [...prev.services, service],
+    }));
+  };
+
+  const handleStudentPlanChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setFormData((prev) => ({
+      ...prev,
+      useStudentPlan: value,
+      pricingPlan: value === "yes" ? studentCollaborationPlan.contactValue : "",
+      selectedAddOns: [],
+      ...(value === "no" ? emptyStudentAuthorization : {}),
+    }));
+  };
+
+  const handleAddOnChange = (addOnId: string) => {
+    setFormData((prev) => ({
+      ...prev,
+      selectedAddOns: prev.selectedAddOns.includes(addOnId)
+        ? prev.selectedAddOns.filter((id) => id !== addOnId)
+        : [...prev.selectedAddOns, addOnId],
+    }));
+  };
+
+  const handleStudentAuthorizationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+      studentAgreementAccepted: false,
+      ...(name === "studentAgeStatus" && value === "adult"
+        ? { studentGuardianName: "", studentGuardianEmail: "" }
+        : {}),
     }));
   };
 
@@ -150,9 +238,15 @@ const ContactPage = () => {
         const service = serviceOptions.find((s) => s.id === serviceId);
         return service ? service.label : serviceId;
       });
+      const selectedAddOnLabels = formData.selectedAddOns.map((addOnId) => {
+        const addOn = addOns.find((option) => option.id === addOnId);
+        return addOn ? addOn.name : addOnId;
+      });
+      const rushAddOn = addOns.find((addOn) => addOn.id === "rush");
 
       // 準備要發送到 Google Sheets 的數據
       const submitData = {
+        requestType: "booking",
         name: formData.name,
         email: formData.email,
         phone: formData.phone,
@@ -179,8 +273,58 @@ const ContactPage = () => {
         services: serviceLabels,
         useStudentPlan:
           formData.useStudentPlan === "yes" ? "是" : formData.useStudentPlan === "no" ? "否" : "",
+        studentPlanRequested: formData.useStudentPlan === "yes",
+        studentTermsAcknowledged:
+          formData.useStudentPlan === "yes" && formData.studentAgreementAccepted,
+        studentAuthorizationCompleted:
+          formData.useStudentPlan === "yes" &&
+          formData.studentAgreementAccepted &&
+          studentConsentMode === "online-checkbox",
+        studentAuthorizationVersion:
+          formData.useStudentPlan === "yes" ? STUDENT_AUTHORIZATION_VERSION : "",
+        studentAuthorizationEffectiveDate:
+          formData.useStudentPlan === "yes" ? STUDENT_AUTHORIZATION_EFFECTIVE_DATE : "",
+        studentTermsClientAcknowledgedAt:
+          formData.useStudentPlan === "yes" && formData.studentAgreementAccepted
+            ? new Date().toISOString()
+            : "",
+        studentApplicantName: formData.useStudentPlan === "yes" ? formData.name : "",
+        studentContractingParty:
+          formData.useStudentPlan === "yes" ? studentContractingParty : "",
+        studentAgeStatus: formData.studentAgeStatus,
+        studentAgeStatusLabel:
+          formData.studentAgeStatus === "adult"
+            ? "已滿 18 歲"
+            : formData.studentAgeStatus === "minor"
+              ? "未滿 18 歲"
+              : "",
+        studentPerformerScope: formData.studentPerformerScope,
+        studentPerformerScopeLabel:
+          formData.studentPerformerScope === "solo"
+            ? "單人演出"
+            : formData.studentPerformerScope === "group"
+              ? "多人演出"
+              : "",
+        studentConsentMode,
+        studentConsentStatus:
+          studentConsentMode === "online-checkbox"
+            ? "成年單人：已以表單勾選完成授權"
+            : studentConsentMode === "enhanced-signature-required"
+              ? "待補個別同意或正式電子簽署"
+              : "",
+        studentGuardianName: formData.studentGuardianName,
+        studentGuardianEmail: formData.studentGuardianEmail,
+        studentAuthorizationScope:
+          formData.useStudentPlan === "yes" ? studentAuthorizationScopeSummary : "",
         pricingPlan:
-          pricingPlans.find((p) => p.value === formData.pricingPlan)?.label || formData.pricingPlan,
+          formData.useStudentPlan === "yes"
+            ? studentContactPlan.label
+            : generalContactPlans.find((plan) => plan.value === formData.pricingPlan)?.label ||
+              formData.pricingPlan,
+        addOns: [
+          ...selectedAddOnLabels,
+          ...(formData.deliveryTime === "rush72" && rushAddOn ? [rushAddOn.name] : []),
+        ],
         deliveryTime:
           formData.deliveryTime === "standard"
             ? "一般交件（7~10 個工作天）"
@@ -326,7 +470,7 @@ const ContactPage = () => {
                   {/* Contact basics */}
                   <div className="grid gap-6 md:grid-cols-2">
                     <div>
-                      <label className={labelClass}>姓名（聯絡人）*</label>
+                      <label className={labelClass}>姓名（填表者／聯絡人）*</label>
                       <input
                         type="text"
                         name="name"
@@ -509,9 +653,9 @@ const ContactPage = () => {
                   {/* Student plan */}
                   <fieldset className="border-t border-hairline pt-9">
                     <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                      學生方案 · STUDENT PLAN
+                      學生合作方案 · STUDENT COLLABORATION
                     </legend>
-                    <label className={labelClass}>是否使用學生方案 *</label>
+                    <label className={labelClass}>是否申請學生合作方案 *</label>
                     <div className="grid gap-3 md:grid-cols-2">
                       {[
                         { value: "yes", label: "是" },
@@ -523,7 +667,8 @@ const ContactPage = () => {
                             name="useStudentPlan"
                             value={opt.value}
                             checked={formData.useStudentPlan === opt.value}
-                            onChange={handleInputChange}
+                            onChange={handleStudentPlanChange}
+                            required
                             className="h-4 w-4 accent-copper"
                           />
                           {opt.label}
@@ -532,67 +677,352 @@ const ContactPage = () => {
                     </div>
 
                     {formData.useStudentPlan === "yes" && (
-                      <div className="mt-4 border border-copper/40 bg-copper/5 p-5">
-                        <p className="mb-4 text-xs font-light leading-loose text-parchment-dim">
-                          <span className="text-copper">學生方案授權說明</span>
+                      <div className="mt-4 space-y-6 border border-copper/40 bg-copper/5 p-5 md:p-6">
+                        <p className="text-xs font-light leading-loose text-parchment-dim">
+                          <span className="text-copper">學生作品授權合作方案</span>
                           <br />
-                          選擇學生方案即表示同意授權 Owldio 使用您的演出錄音錄影作為作品集展示。經您同意後或於社群發佈，誠摯邀請您成為推薦藝術家，共同推廣音樂藝術之美。
+                          {studentAuthorizationNote}
                         </p>
+
+                        <div className="border border-copper/40 bg-copper/10 p-4">
+                          <p className="font-mono text-[10px] tracking-[0.2em] text-copper-bright">
+                            已套用主方案 · SELECTED PLAN
+                          </p>
+                          <div className="mt-2 flex flex-wrap items-baseline justify-between gap-2">
+                            <p className="text-sm font-light text-parchment">
+                              {studentContactPlan.label}
+                            </p>
+                            <p className="font-mono text-[11px] text-copper">
+                              {studentContactPlan.price}
+                            </p>
+                          </div>
+                          <p className="mt-2 text-xs font-light leading-relaxed text-parchment-dim">
+                            學生方案已固定為單機規格，不需再選單機、雙機或三機方案；若需多機位或其他服務，請於下方選擇加購。
+                          </p>
+                        </div>
+
+                        <div className="border border-hairline bg-night-raised/40 p-4">
+                          <p className="font-mono text-[10px] tracking-[0.2em] text-parchment-faint">
+                            表單填寫者 · APPLICANT
+                          </p>
+                          <p className="mt-2 text-sm font-light leading-relaxed text-parchment">
+                            {formData.name || "請先在表單上方填寫真實姓名"}
+                          </p>
+                          <p className="mt-2 text-xs font-light leading-relaxed text-parchment-faint">
+                            成年單人演出時，上述姓名即作為本授權的授權人及簽約人；多人或未成年人將依下列判斷補充簽署。
+                          </p>
+                        </div>
+
+                        <div className="grid gap-5 md:grid-cols-2">
+                          <div>
+                            <p className={labelClass}>表演者年齡 *</p>
+                            <div className="space-y-3">
+                              {[
+                                { value: "adult", label: "已滿 18 歲" },
+                                { value: "minor", label: "未滿 18 歲" },
+                              ].map((option) => (
+                                <label key={option.value} className={optionClass}>
+                                  <input
+                                    type="radio"
+                                    name="studentAgeStatus"
+                                    value={option.value}
+                                    checked={formData.studentAgeStatus === option.value}
+                                    onChange={handleStudentAuthorizationChange}
+                                    required
+                                    className="h-4 w-4 accent-copper"
+                                  />
+                                  {option.label}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div>
+                            <p className={labelClass}>可辨識的表演者 *</p>
+                            <div className="space-y-3">
+                              {[
+                                { value: "solo", label: "只有本人 1 人" },
+                                { value: "group", label: "共有 2 人以上" },
+                              ].map((option) => (
+                                <label key={option.value} className={optionClass}>
+                                  <input
+                                    type="radio"
+                                    name="studentPerformerScope"
+                                    value={option.value}
+                                    checked={formData.studentPerformerScope === option.value}
+                                    onChange={handleStudentAuthorizationChange}
+                                    required
+                                    className="h-4 w-4 accent-copper"
+                                  />
+                                  {option.label}
+                                </label>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {formData.studentAgeStatus === "minor" && (
+                          <div className="grid gap-5 border-t border-hairline pt-5 md:grid-cols-2">
+                            <div>
+                              <label className={labelClass}>法定代理人姓名 *</label>
+                              <input
+                                type="text"
+                                name="studentGuardianName"
+                                value={formData.studentGuardianName}
+                                onChange={handleStudentAuthorizationChange}
+                                required
+                                className={fieldClass}
+                                placeholder="請由法定代理人填寫"
+                              />
+                            </div>
+                            <div>
+                              <label className={labelClass}>法定代理人 Email *</label>
+                              <input
+                                type="email"
+                                name="studentGuardianEmail"
+                                value={formData.studentGuardianEmail}
+                                onChange={handleStudentAuthorizationChange}
+                                required
+                                className={fieldClass}
+                                placeholder="guardian@example.com"
+                              />
+                            </div>
+                          </div>
+                        )}
+
+                        <div
+                          id="student-authorization-decision"
+                          role="status"
+                          className={`border p-4 ${
+                            studentConsentMode === "online-checkbox"
+                              ? "border-emerald-500/40 bg-emerald-500/10"
+                              : studentConsentMode === "enhanced-signature-required"
+                                ? "border-amber-400/40 bg-amber-400/10"
+                                : "border-hairline bg-night-raised/40"
+                          }`}
+                        >
+                          <p className="font-mono text-[10px] tracking-[0.2em] text-copper-bright">
+                            授權方式判斷 · CONSENT METHOD
+                          </p>
+                          <p className="mt-2 text-sm font-light leading-relaxed text-parchment">
+                            {studentConsentMode === "online-checkbox"
+                              ? `成年單人演出：${formData.name || "表單填寫者"} 可直接以表單姓名作為授權人及簽約人，勾選同意後完成本次限定授權。`
+                              : studentConsentMode === "enhanced-signature-required"
+                                ? formData.studentAgeStatus === "minor"
+                                  ? `未成年人：由法定代理人 ${formData.studentGuardianName || "（請填寫姓名）"} 作為簽約人，送出申請後須補正式電子簽署${formData.studentPerformerScope === "group" ? "，其他表演者亦須個別同意" : ""}。`
+                                  : `多人演出：${formData.name || "表單填寫者"} 為申請人及主要聯絡人；每位可辨識表演者仍須個別同意或完成正式電子簽署。`
+                                : "請先選擇表演者年齡與人數，系統才會判斷適用的授權方式。"}
+                          </p>
+                          <p className="mt-2 text-xs font-light leading-relaxed text-parchment-faint">
+                            付費廣告或本契約範圍外的長期商業使用不包含在本表單授權內，均須另行取得正式電子簽署。
+                          </p>
+                        </div>
+
+                        <button
+                          type="button"
+                          onClick={openStudentAuthorizationDialog}
+                          aria-haspopup="dialog"
+                          aria-controls="student-authorization-dialog"
+                          className="flex w-full items-center justify-between gap-4 border border-hairline bg-night-raised/40 px-4 py-3 text-left font-mono text-[11px] tracking-[0.16em] text-copper transition-colors hover:border-copper/60 hover:bg-copper/10"
+                        >
+                          <span>
+                            閱讀完整學生作品展示授權契約 v{STUDENT_AUTHORIZATION_VERSION}
+                          </span>
+                          <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden="true" />
+                        </button>
+
+                        <dialog
+                          ref={studentAuthorizationDialogRef}
+                          id="student-authorization-dialog"
+                          aria-labelledby="student-authorization-dialog-title"
+                          aria-describedby="student-authorization-dialog-summary"
+                          onCancel={(event) => {
+                            event.preventDefault();
+                            closeStudentAuthorizationDialog();
+                          }}
+                          onClick={(event) => {
+                            if (event.target === event.currentTarget) {
+                              closeStudentAuthorizationDialog();
+                            }
+                          }}
+                          className="fixed inset-0 z-[70] m-auto max-h-[88vh] w-[calc(100%-2rem)] max-w-3xl overflow-hidden border border-copper/40 bg-night-raised p-0 text-parchment shadow-2xl backdrop:bg-black/85 backdrop:backdrop-blur-sm"
+                        >
+                          <div className="max-h-[88vh] overflow-y-auto">
+                            <header className="sticky top-0 z-10 flex items-start justify-between gap-5 border-b border-hairline bg-night-raised/95 px-5 py-5 backdrop-blur md:px-7">
+                              <div>
+                                <p className="font-mono text-[10px] tracking-[0.25em] text-copper">
+                                  AUTHORIZATION AGREEMENT · v{STUDENT_AUTHORIZATION_VERSION}
+                                </p>
+                                <h2
+                                  id="student-authorization-dialog-title"
+                                  className="mt-2 text-xl font-extralight tracking-[0.06em] text-parchment md:text-2xl"
+                                >
+                                  學生作品展示授權契約
+                                </h2>
+                              </div>
+                              <button
+                                type="button"
+                                onClick={closeStudentAuthorizationDialog}
+                                aria-label="關閉授權契約"
+                                className="shrink-0 border border-hairline p-2 text-parchment-dim transition-colors hover:border-copper hover:text-copper"
+                              >
+                                <X className="h-5 w-5" aria-hidden="true" />
+                              </button>
+                            </header>
+
+                            <div className="space-y-6 px-5 py-6 md:px-7 md:py-8">
+                              <p
+                                id="student-authorization-dialog-summary"
+                                className="border border-copper/30 bg-copper/5 p-4 text-xs font-light leading-loose text-parchment-dim"
+                              >
+                                生效日：{STUDENT_AUTHORIZATION_EFFECTIVE_DATE}
+                                <br />
+                                授權範圍：{studentAuthorizationScopeSummary}
+                              </p>
+
+                              {studentAuthorizationTerms.map((section) => (
+                                <section key={section.title}>
+                                  <h3 className="text-sm font-light tracking-[0.04em] text-parchment">
+                                    {section.title}
+                                  </h3>
+                                  <div className="mt-2 space-y-2">
+                                    {section.paragraphs.map((paragraph) => (
+                                      <p
+                                        key={paragraph}
+                                        className="text-xs font-light leading-loose text-parchment-dim"
+                                      >
+                                        {paragraph}
+                                      </p>
+                                    ))}
+                                  </div>
+                                </section>
+                              ))}
+
+                              <button
+                                type="button"
+                                onClick={closeStudentAuthorizationDialog}
+                                className="w-full border border-copper/50 px-5 py-3 text-sm font-light tracking-[0.12em] text-copper transition-colors hover:bg-copper hover:text-night"
+                              >
+                                閱讀完畢，關閉契約
+                              </button>
+                            </div>
+                          </div>
+                        </dialog>
+
                         <label className="flex items-start gap-3 text-sm font-light text-parchment-dim">
                           <input
                             type="checkbox"
                             id="studentPlanAgreement"
+                            name="studentAgreementAccepted"
+                            checked={formData.studentAgreementAccepted}
+                            onChange={(event) =>
+                              setFormData((prev) => ({
+                                ...prev,
+                                studentAgreementAccepted: event.target.checked,
+                              }))
+                            }
+                            disabled={studentConsentMode === "incomplete"}
                             required={formData.useStudentPlan === "yes"}
+                            aria-describedby="student-authorization-decision"
                             className="mt-1 h-4 w-4 accent-copper"
                           />
-                          我已閱讀並同意上述授權內容
+                          <span>
+                            {studentConsentMode === "online-checkbox" ? (
+                              <>
+                                我確認「{formData.name || "表單填寫者姓名"}」為本人真實姓名，並以該姓名作為本授權的授權人及簽約人；我已閱讀並同意《學生作品展示授權契約 v{STUDENT_AUTHORIZATION_VERSION}》。
+                              </>
+                            ) : studentConsentRequiresEnhancedSignature ? (
+                              <>
+                                我確認上述資料正確，了解本次送出僅完成申請，仍須依系統判斷補充個別同意或正式電子簽署後，學生合作方案才正式成立。
+                              </>
+                            ) : (
+                              <>請先完成上方授權資格選項。</>
+                            )}
+                          </span>
                         </label>
                       </div>
                     )}
                   </fieldset>
 
-                  {/* Pricing plan */}
-                  <fieldset className="border-t border-hairline pt-9">
-                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                      方案選擇 · PLAN
-                    </legend>
-                    <div className="space-y-3">
-                      {pricingPlans.map((plan) => (
-                        <label
-                          key={plan.value}
-                          className="block cursor-pointer border border-hairline bg-night-raised/40 p-4 transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10"
-                        >
-                          <div className="flex items-start gap-3">
-                            <input
-                              type="radio"
-                              name="pricingPlan"
-                              value={plan.value}
-                              checked={formData.pricingPlan === plan.value}
-                              onChange={handleInputChange}
-                              className="mt-1 h-4 w-4 accent-copper"
-                            />
-                            <div className="flex-1">
-                              <div className="flex flex-wrap items-baseline justify-between gap-2">
-                                <span className="text-sm font-light tracking-[0.04em] text-parchment">
-                                  {plan.label}
-                                </span>
-                                {plan.price && (
-                                  <span className="font-mono text-[11px] text-copper">
-                                    {plan.price}
+                  {/* Pricing plan — the student collaboration plan is fixed above */}
+                  {formData.useStudentPlan === "no" && (
+                    <fieldset className="border-t border-hairline pt-9">
+                      <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        一般方案選擇 · PLAN
+                      </legend>
+                      <div className="space-y-3">
+                        {generalContactPlans.map((plan) => (
+                          <label
+                            key={plan.value}
+                            className="block cursor-pointer border border-hairline bg-night-raised/40 p-4 transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10"
+                          >
+                            <div className="flex items-start gap-3">
+                              <input
+                                type="radio"
+                                name="pricingPlan"
+                                value={plan.value}
+                                checked={formData.pricingPlan === plan.value}
+                                onChange={handleInputChange}
+                                required
+                                className="mt-1 h-4 w-4 accent-copper"
+                              />
+                              <div className="flex-1">
+                                <div className="flex flex-wrap items-baseline justify-between gap-2">
+                                  <span className="text-sm font-light tracking-[0.04em] text-parchment">
+                                    {plan.label}
                                   </span>
+                                  {plan.price && (
+                                    <span className="font-mono text-[11px] text-copper">
+                                      {plan.price}
+                                    </span>
+                                  )}
+                                </div>
+                                {plan.description && (
+                                  <p className="mt-1.5 text-xs font-light leading-relaxed text-parchment-faint">
+                                    {plan.description}
+                                  </p>
                                 )}
                               </div>
-                              {plan.description && (
-                                <p className="mt-1.5 text-xs font-light leading-relaxed text-parchment-faint">
-                                  {plan.description}
-                                </p>
-                              )}
                             </div>
-                          </div>
-                        </label>
-                      ))}
-                    </div>
-                  </fieldset>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  )}
+
+                  {/* Add-ons */}
+                  {formData.useStudentPlan !== "" && (
+                    <fieldset className="border-t border-hairline pt-9">
+                      <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        {formData.useStudentPlan === "yes" ? "學生方案加購" : "加值服務"} · ADD-ONS
+                      </legend>
+                      <p className="mb-4 text-xs font-light leading-relaxed text-parchment-faint">
+                        可複選，未勾選則依主方案內容製作。72 小時快速交付請於下一欄的交件時程選擇。
+                      </p>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {selectableAddOns.map((addOn) => (
+                          <label key={addOn.id} className={optionClass}>
+                            <input
+                              type="checkbox"
+                              name="selectedAddOns"
+                              value={addOn.id}
+                              checked={formData.selectedAddOns.includes(addOn.id)}
+                              onChange={() => handleAddOnChange(addOn.id)}
+                              className="h-4 w-4 shrink-0 accent-copper"
+                            />
+                            <span className="flex min-w-0 flex-1 flex-wrap items-baseline justify-between gap-x-3 gap-y-1">
+                              <span>{addOn.name}</span>
+                              <span className="font-mono text-[10px] text-copper">
+                                {addOn.amount === null
+                                  ? addOn.unit
+                                  : `+${formatTwd(addOn.amount)}${addOn.unit ? ` ${addOn.unit}` : ""}`}
+                              </span>
+                            </span>
+                          </label>
+                        ))}
+                      </div>
+                    </fieldset>
+                  )}
 
                   {/* Delivery time */}
                   <fieldset className="border-t border-hairline pt-9">
@@ -612,6 +1042,7 @@ const ContactPage = () => {
                             value={opt.value}
                             checked={formData.deliveryTime === opt.value}
                             onChange={handleInputChange}
+                            required
                             className="h-4 w-4 accent-copper"
                           />
                           {opt.label}
