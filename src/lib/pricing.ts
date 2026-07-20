@@ -64,7 +64,7 @@ export const standardPlans = [
 ] as const;
 
 export const addOns = [
-  { id: "overtime", name: "延長錄製", amount: 1200, unit: "/ 30 分鐘" },
+  { id: "overtime", name: "延長錄製", amount: 1200, unit: "起 / 30 分鐘" },
   { id: "camera-upgrade", name: "多機位升級", amount: null, unit: "依需求報價" },
   { id: "rush", name: "72 小時快速交付", amount: 2000, unit: "起" },
   { id: "highlight", name: "精華剪輯", amount: 1800, unit: "" },

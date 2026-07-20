@@ -21,6 +21,7 @@ test("public prices have one canonical source", () => {
   assert.match(pricingData, /price: 21200/);
   assert.match(pricingData, /price: 3300/);
   assert.match(pricingData, /name: "多機位升級"/);
+  assert.match(pricingData, /name: "延長錄製", amount: 1200, unit: "起 \/ 30 分鐘"/);
 
   for (const page of [pricingPage, studentPage, servicesPage, contactPage]) {
     assert.doesNotMatch(
