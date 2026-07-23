@@ -7,7 +7,7 @@ const footerLinks = [
   { name: "關於我們", href: "/about" },
   { name: "服務項目", href: "/services" },
   { name: "價目方案", href: "/pricing" },
-  { name: "聯絡預約", href: "/contact" },
+  { name: "聯絡我們", href: "/contact" },
 ];
 
 const socialLinks = [

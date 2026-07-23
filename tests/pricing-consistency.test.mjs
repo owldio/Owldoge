@@ -52,7 +52,7 @@ test("retired discount claims and mismatched deliverables stay removed", () => {
 test("student offer is described as a conditional collaboration price", () => {
   assert.match(pricingData, /學生作品授權合作方案/);
   assert.match(pricingData, /studentAuthorizationSummary/);
-  assert.match(studentAuthorization, /成年且為單人演出者/);
+  assert.match(studentAuthorization, /成年單人演出者/);
   assert.match(studentAuthorization, /多人演出或未成年人/);
   assert.match(studentPage, /同規格一般單機方案/);
   assert.match(contactPage, /學生作品授權合作方案/);
@@ -69,4 +69,7 @@ test("contact pricing decisions are required before submission", () => {
   assert.match(googleAppsScript, /Array\.isArray\(data\.addOns\)/);
   assert.match(contactPage, /addOns: \[/);
   assert.match(contactPage, /name="deliveryTime"[\s\S]*?required/);
+  assert.match(contactPage, /name="applicationNoticeAccepted"[\s\S]*?required/);
+  assert.match(googleAppsScript, /'申請性質確認', '申請說明版本'/);
+  assert.match(googleAppsScript, /不代表契約或授權已成立/);
 });

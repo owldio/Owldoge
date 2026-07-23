@@ -10,7 +10,8 @@ const NOTIFICATION_EMAIL = 'owldio.art@gmail.com';
 const FORM_HEADERS = [
   '提交時間', '姓名', 'Email', '電話', '學校/機構',
   '演出類型', '樂器/編制', '演出日期時間', '演出場地', '演出時長', '參與人數',
-  '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求', '加購需求'
+  '服務內容', '使用學生方案', '方案選擇', '交件時程', '其他需求', '加購需求',
+  '申請性質確認', '申請說明版本'
 ];
 
 /**
@@ -199,7 +200,9 @@ function recordToSheet(data) {
       data.pricingPlan || '',
       data.deliveryTime || '',
       data.additionalInfo || '',
-      Array.isArray(data.addOns) ? data.addOns.join(', ') : ''
+      Array.isArray(data.addOns) ? data.addOns.join(', ') : '',
+      data.applicationNoticeAccepted === true ? '已確認為預約／報價申請' : '',
+      data.applicationNoticeVersion || ''
     ];
     
     // 添加新行
@@ -214,7 +217,7 @@ function recordToSheet(data) {
 }
 
 /**
- * 保留既有 16 欄資料順序，將加購需求追加為第 17 欄。
+ * 保留既有 17 欄資料順序，將申請確認紀錄安全追加於後方。
  */
 function ensureSheetSchema(sheet) {
   if (sheet.getMaxColumns() < FORM_HEADERS.length) {
@@ -227,16 +230,18 @@ function ensureSheetSchema(sheet) {
   if (sheet.getLastColumn() === 0) {
     sheet.getRange(1, 1, 1, FORM_HEADERS.length).setValues([FORM_HEADERS]);
   } else {
-    const addOnColumn = FORM_HEADERS.length;
-    const addOnHeaderCell = sheet.getRange(1, addOnColumn);
-    const currentAddOnHeader = addOnHeaderCell.getValue();
+    for (let column = 18; column <= FORM_HEADERS.length; column += 1) {
+      const headerCell = sheet.getRange(1, column);
+      const currentHeader = headerCell.getValue();
+      const expectedHeader = FORM_HEADERS[column - 1];
 
-    if (currentAddOnHeader && currentAddOnHeader !== FORM_HEADERS[addOnColumn - 1]) {
-      throw new Error(`第 ${addOnColumn} 欄已有其他標題，無法安全新增加購需求欄位`);
-    }
+      if (currentHeader && currentHeader !== expectedHeader) {
+        throw new Error(`第 ${column} 欄已有其他標題，無法安全新增「${expectedHeader}」欄位`);
+      }
 
-    if (!currentAddOnHeader) {
-      addOnHeaderCell.setValue(FORM_HEADERS[addOnColumn - 1]);
+      if (!currentHeader) {
+        headerCell.setValue(expectedHeader);
+      }
     }
   }
 
@@ -250,7 +255,7 @@ function ensureSheetSchema(sheet) {
  */
 function sendEmailNotification(data) {
   try {
-    const subject = `🎵 新的預約申請 - ${data.name || '未提供姓名'}`;
+    const subject = `🎵 新的預約／報價申請 - ${data.name || '未提供姓名'}`;
     
     // 建立郵件內容
     const emailBody = createEmailBody(data);
@@ -304,7 +309,7 @@ function createEmailBody(data) {
       <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
         
         <div class="header">
-          <h1 style="margin: 0; font-size: 24px;">🎵 新的預約申請</h1>
+          <h1 style="margin: 0; font-size: 24px;">🎵 新的預約／報價申請</h1>
           <p style="margin: 5px 0 0 0; opacity: 0.9;">提交時間: ${timestamp}</p>
         </div>
         
@@ -379,6 +384,14 @@ function createEmailBody(data) {
               <span class="label">交件時程:</span>
               <span class="value">${data.deliveryTime || '未選擇'}</span>
             </div>
+            <div class="info-row">
+              <span class="label">申請性質:</span>
+              <span class="value">預約／報價申請（不代表契約或授權已成立）</span>
+            </div>
+            <div class="info-row">
+              <span class="label">說明版本:</span>
+              <span class="value">${data.applicationNoticeVersion || '未提供'}</span>
+            </div>
           </div>
           
           <!-- 學生方案 -->
@@ -386,9 +399,9 @@ function createEmailBody(data) {
           <div class="section">
             <h3>🎓 學生方案</h3>
             <div class="student-plan">
-              <strong>✅ 客戶選擇使用學生方案</strong>
+              <strong>✅ 客戶申請學生合作方案</strong>
               <p style="margin: 8px 0 0 0; font-size: 14px; color: #065f46;">
-                客戶已同意授權 Owldio 使用演出錄音錄影作為作品集展示
+                本次僅為申請；書面報價與完整授權內容尚待後續雙方確認。
               </p>
             </div>
           </div>
@@ -494,6 +507,8 @@ function testFormSubmission() {
     participants: "1人",
     services: ["專業錄音", "錄影服務"],
     useStudentPlan: "是",
+    applicationNoticeAccepted: true,
+    applicationNoticeVersion: "1.0",
     pricingPlan: "學生作品授權合作方案",
     addOns: ["多機位升級", "72 小時快速交付"],
     deliveryTime: "一般交件（7~10 個工作天）",

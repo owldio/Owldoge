@@ -26,6 +26,12 @@ import {
   type StudentAgeStatus,
   type StudentPerformerScope,
 } from "@/lib/student-authorization";
+import {
+  APPLICATION_NOTICE_TEXT,
+  APPLICATION_NOTICE_VERSION,
+  GENERAL_APPLICATION_ACKNOWLEDGMENT,
+  STUDENT_APPLICATION_ACKNOWLEDGMENT,
+} from "@/lib/application-notice";
 
 const fieldClass =
   "w-full border border-hairline-strong bg-night-raised/40 px-4 py-3 text-base font-light text-parchment transition-colors duration-300 placeholder:italic placeholder:text-parchment-faint focus:border-copper focus:outline-none";
@@ -122,7 +128,6 @@ const emptyStudentAuthorization = {
   studentPerformerScope: "" as StudentPerformerScope,
   studentGuardianName: "",
   studentGuardianEmail: "",
-  studentAgreementAccepted: false,
 };
 
 const ContactPage = () => {
@@ -141,6 +146,7 @@ const ContactPage = () => {
     services: [] as string[],
     useStudentPlan: "",
     ...emptyStudentAuthorization,
+    applicationNoticeAccepted: false,
     pricingPlan: "",
     selectedAddOns: [] as string[],
     deliveryTime: "",
@@ -160,10 +166,8 @@ const ContactPage = () => {
     formData.studentAgeStatus,
     formData.studentPerformerScope,
   );
-  const studentContractingParty =
+  const studentFutureContractingParty =
     formData.studentAgeStatus === "minor" ? formData.studentGuardianName : formData.name;
-  const studentConsentRequiresEnhancedSignature =
-    studentConsentMode === "enhanced-signature-required";
 
   const openStudentAuthorizationDialog = () => {
     studentAuthorizationDialogRef.current?.showModal();
@@ -180,9 +184,6 @@ const ContactPage = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      ...(name === "name" && prev.studentAgreementAccepted
-        ? { studentAgreementAccepted: false }
-        : {}),
     }));
   };
 
@@ -202,6 +203,7 @@ const ContactPage = () => {
       useStudentPlan: value,
       pricingPlan: value === "yes" ? studentCollaborationPlan.contactValue : "",
       selectedAddOns: [],
+      applicationNoticeAccepted: false,
       ...(value === "no" ? emptyStudentAuthorization : {}),
     }));
   };
@@ -220,7 +222,6 @@ const ContactPage = () => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
-      studentAgreementAccepted: false,
       ...(name === "studentAgeStatus" && value === "adult"
         ? { studentGuardianName: "", studentGuardianEmail: "" }
         : {}),
@@ -274,23 +275,22 @@ const ContactPage = () => {
         useStudentPlan:
           formData.useStudentPlan === "yes" ? "是" : formData.useStudentPlan === "no" ? "否" : "",
         studentPlanRequested: formData.useStudentPlan === "yes",
-        studentTermsAcknowledged:
-          formData.useStudentPlan === "yes" && formData.studentAgreementAccepted,
-        studentAuthorizationCompleted:
-          formData.useStudentPlan === "yes" &&
-          formData.studentAgreementAccepted &&
-          studentConsentMode === "online-checkbox",
+        applicationNoticeAccepted: formData.applicationNoticeAccepted,
+        applicationNoticeVersion: APPLICATION_NOTICE_VERSION,
+        studentApplicationNoticeAcknowledged:
+          formData.useStudentPlan === "yes" && formData.applicationNoticeAccepted,
+        studentAuthorizationCompleted: false,
         studentAuthorizationVersion:
           formData.useStudentPlan === "yes" ? STUDENT_AUTHORIZATION_VERSION : "",
         studentAuthorizationEffectiveDate:
           formData.useStudentPlan === "yes" ? STUDENT_AUTHORIZATION_EFFECTIVE_DATE : "",
-        studentTermsClientAcknowledgedAt:
-          formData.useStudentPlan === "yes" && formData.studentAgreementAccepted
+        studentApplicationNoticeClientAcknowledgedAt:
+          formData.useStudentPlan === "yes" && formData.applicationNoticeAccepted
             ? new Date().toISOString()
             : "",
         studentApplicantName: formData.useStudentPlan === "yes" ? formData.name : "",
-        studentContractingParty:
-          formData.useStudentPlan === "yes" ? studentContractingParty : "",
+        studentFutureContractingParty:
+          formData.useStudentPlan === "yes" ? studentFutureContractingParty : "",
         studentAgeStatus: formData.studentAgeStatus,
         studentAgeStatusLabel:
           formData.studentAgeStatus === "adult"
@@ -308,9 +308,9 @@ const ContactPage = () => {
         studentConsentMode,
         studentConsentStatus:
           studentConsentMode === "online-checkbox"
-            ? "成年單人：已以表單勾選完成授權"
+            ? "成年單人：待後續書面報價與授權確認"
             : studentConsentMode === "enhanced-signature-required"
-              ? "待補個別同意或正式電子簽署"
+              ? "待後續個別同意或正式電子簽署"
               : "",
         studentGuardianName: formData.studentGuardianName,
         studentGuardianEmail: formData.studentGuardianEmail,
@@ -366,13 +366,13 @@ const ContactPage = () => {
           className="w-full max-w-lg text-center"
         >
           <p className="mb-6 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
-            REQUEST RECEIVED — 預約已送出
+            REQUEST RECEIVED — 申請已送出
           </p>
           <h1 className="mb-5 font-display text-4xl font-light italic text-copper-bright">
-            預約申請已送出
+            預約／報價申請已送出
           </h1>
           <p className="mb-10 text-sm font-light leading-loose text-parchment-dim">
-            感謝您的預約申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
+            感謝您的申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
           </p>
 
           <div className="mb-10 border-y border-hairline py-10">
@@ -432,12 +432,12 @@ const ContactPage = () => {
               transition={{ duration: 0.6, delay: 0.1 }}
               className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright"
             >
-              CONTACT — 聯絡預約
+              CONTACT — 聯絡我們
             </motion.p>
             <HeroRule />
             <h1 className="mb-8 font-serif font-extralight leading-[1.1] text-parchment">
               <RevealLine delay={0.2} className="text-[clamp(2.6rem,7vw,6rem)] text-copper-bright">
-                聯絡預約
+                聯絡我們
               </RevealLine>
             </h1>
             <motion.p
@@ -709,7 +709,7 @@ const ContactPage = () => {
                             {formData.name || "請先在表單上方填寫真實姓名"}
                           </p>
                           <p className="mt-2 text-xs font-light leading-relaxed text-parchment-faint">
-                            成年單人演出時，上述姓名即作為本授權的授權人及簽約人；多人或未成年人將依下列判斷補充簽署。
+                            此姓名僅作為本次申請人與主要聯絡人；實際簽約人及授權方式將於後續書面報價與契約中確認。
                           </p>
                         </div>
 
@@ -802,19 +802,19 @@ const ContactPage = () => {
                           }`}
                         >
                           <p className="font-mono text-[10px] tracking-[0.2em] text-copper-bright">
-                            授權方式判斷 · CONSENT METHOD
+                            後續確認方式 · NEXT STEP
                           </p>
                           <p className="mt-2 text-sm font-light leading-relaxed text-parchment">
                             {studentConsentMode === "online-checkbox"
-                              ? `成年單人演出：${formData.name || "表單填寫者"} 可直接以表單姓名作為授權人及簽約人，勾選同意後完成本次限定授權。`
+                              ? `成年單人演出：後續可由 ${formData.name || "表單填寫者"} 以本人真實姓名，確認完整書面報價與授權內容。`
                               : studentConsentMode === "enhanced-signature-required"
                                 ? formData.studentAgeStatus === "minor"
-                                  ? `未成年人：由法定代理人 ${formData.studentGuardianName || "（請填寫姓名）"} 作為簽約人，送出申請後須補正式電子簽署${formData.studentPerformerScope === "group" ? "，其他表演者亦須個別同意" : ""}。`
-                                  : `多人演出：${formData.name || "表單填寫者"} 為申請人及主要聯絡人；每位可辨識表演者仍須個別同意或完成正式電子簽署。`
-                                : "請先選擇表演者年齡與人數，系統才會判斷適用的授權方式。"}
+                                  ? `未成年人：後續須由法定代理人 ${formData.studentGuardianName || "（請填寫姓名）"} 完成正式電子簽署${formData.studentPerformerScope === "group" ? "，其他表演者亦須個別同意" : ""}。`
+                                  : `多人演出：${formData.name || "表單填寫者"} 僅為申請人及主要聯絡人；後續每位可辨識表演者仍須個別同意或完成正式電子簽署。`
+                                : "請先選擇表演者年齡與人數，系統才會顯示後續適用的確認方式。"}
                           </p>
                           <p className="mt-2 text-xs font-light leading-relaxed text-parchment-faint">
-                            付費廣告或本契約範圍外的長期商業使用不包含在本表單授權內，均須另行取得正式電子簽署。
+                            付費廣告或標準授權範圍外的長期商業使用，後續仍須另行取得正式電子簽署。
                           </p>
                         </div>
 
@@ -826,7 +826,7 @@ const ContactPage = () => {
                           className="flex w-full items-center justify-between gap-4 border border-hairline bg-night-raised/40 px-4 py-3 text-left font-mono text-[11px] tracking-[0.16em] text-copper transition-colors hover:border-copper/60 hover:bg-copper/10"
                         >
                           <span>
-                            閱讀完整學生作品展示授權契約 v{STUDENT_AUTHORIZATION_VERSION}
+                            查看學生作品展示授權說明 v{STUDENT_AUTHORIZATION_VERSION}
                           </span>
                           <ArrowUpRight className="h-4 w-4 shrink-0" aria-hidden="true" />
                         </button>
@@ -851,19 +851,19 @@ const ContactPage = () => {
                             <header className="sticky top-0 z-10 flex items-start justify-between gap-5 border-b border-hairline bg-night-raised/95 px-5 py-5 backdrop-blur md:px-7">
                               <div>
                                 <p className="font-mono text-[10px] tracking-[0.25em] text-copper">
-                                  AUTHORIZATION AGREEMENT · v{STUDENT_AUTHORIZATION_VERSION}
+                                  AUTHORIZATION NOTICE · v{STUDENT_AUTHORIZATION_VERSION}
                                 </p>
                                 <h2
                                   id="student-authorization-dialog-title"
                                   className="mt-2 text-xl font-extralight tracking-[0.06em] text-parchment md:text-2xl"
                                 >
-                                  學生作品展示授權契約
+                                  學生作品展示授權說明
                                 </h2>
                               </div>
                               <button
                                 type="button"
                                 onClick={closeStudentAuthorizationDialog}
-                                aria-label="關閉授權契約"
+                                aria-label="關閉授權說明"
                                 className="shrink-0 border border-hairline p-2 text-parchment-dim transition-colors hover:border-copper hover:text-copper"
                               >
                                 <X className="h-5 w-5" aria-hidden="true" />
@@ -875,9 +875,9 @@ const ContactPage = () => {
                                 id="student-authorization-dialog-summary"
                                 className="border border-copper/30 bg-copper/5 p-4 text-xs font-light leading-loose text-parchment-dim"
                               >
-                                生效日：{STUDENT_AUTHORIZATION_EFFECTIVE_DATE}
+                                說明更新日：{STUDENT_AUTHORIZATION_EFFECTIVE_DATE}
                                 <br />
-                                授權範圍：{studentAuthorizationScopeSummary}
+                                預計授權範圍：{studentAuthorizationScopeSummary}
                               </p>
 
                               {studentAuthorizationTerms.map((section) => (
@@ -903,43 +903,12 @@ const ContactPage = () => {
                                 onClick={closeStudentAuthorizationDialog}
                                 className="w-full border border-copper/50 px-5 py-3 text-sm font-light tracking-[0.12em] text-copper transition-colors hover:bg-copper hover:text-night"
                               >
-                                閱讀完畢，關閉契約
+                                閱讀完畢，關閉說明
                               </button>
                             </div>
                           </div>
                         </dialog>
 
-                        <label className="flex items-start gap-3 text-sm font-light text-parchment-dim">
-                          <input
-                            type="checkbox"
-                            id="studentPlanAgreement"
-                            name="studentAgreementAccepted"
-                            checked={formData.studentAgreementAccepted}
-                            onChange={(event) =>
-                              setFormData((prev) => ({
-                                ...prev,
-                                studentAgreementAccepted: event.target.checked,
-                              }))
-                            }
-                            disabled={studentConsentMode === "incomplete"}
-                            required={formData.useStudentPlan === "yes"}
-                            aria-describedby="student-authorization-decision"
-                            className="mt-1 h-4 w-4 accent-copper"
-                          />
-                          <span>
-                            {studentConsentMode === "online-checkbox" ? (
-                              <>
-                                我確認「{formData.name || "表單填寫者姓名"}」為本人真實姓名，並以該姓名作為本授權的授權人及簽約人；我已閱讀並同意《學生作品展示授權契約 v{STUDENT_AUTHORIZATION_VERSION}》。
-                              </>
-                            ) : studentConsentRequiresEnhancedSignature ? (
-                              <>
-                                我確認上述資料正確，了解本次送出僅完成申請，仍須依系統判斷補充個別同意或正式電子簽署後，學生合作方案才正式成立。
-                              </>
-                            ) : (
-                              <>請先完成上方授權資格選項。</>
-                            )}
-                          </span>
-                        </label>
                       </div>
                     )}
                   </fieldset>
@@ -1064,6 +1033,36 @@ const ContactPage = () => {
                     />
                   </div>
 
+                  <div className="space-y-3 border-t border-hairline pt-6">
+                    <p
+                      id="application-notice"
+                      className="text-[11px] font-light leading-relaxed text-parchment-faint"
+                    >
+                      {APPLICATION_NOTICE_TEXT}
+                    </p>
+                    <label className="flex items-start gap-3 text-xs font-light leading-relaxed text-parchment-dim">
+                      <input
+                        type="checkbox"
+                        name="applicationNoticeAccepted"
+                        checked={formData.applicationNoticeAccepted}
+                        onChange={(event) =>
+                          setFormData((prev) => ({
+                            ...prev,
+                            applicationNoticeAccepted: event.target.checked,
+                          }))
+                        }
+                        required
+                        aria-describedby="application-notice"
+                        className="mt-0.5 h-4 w-4 shrink-0 accent-copper"
+                      />
+                      <span>
+                        {formData.useStudentPlan === "yes"
+                          ? STUDENT_APPLICATION_ACKNOWLEDGMENT
+                          : GENERAL_APPLICATION_ACKNOWLEDGMENT}
+                      </span>
+                    </label>
+                  </div>
+
                   {submitError && (
                     <div
                       role="alert"
@@ -1085,7 +1084,7 @@ const ContactPage = () => {
                       </>
                     ) : (
                       <>
-                        送出預約申請
+                        送出預約／報價申請
                         <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                       </>
                     )}

@@ -15,7 +15,7 @@ const navItems = [
   { label: "服務項目", href: "/services", id: "services" },
   { label: "價目方案", href: "/pricing", id: "pricing" },
   { label: "作品展示", href: "/portfolio", id: "portfolio" },
-  { label: "聯絡預約", href: "/contact", id: "contact" },
+  { label: "聯絡我們", href: "/contact", id: "contact" },
 ];
 
 const Navigation = ({ currentPage }: NavigationProps) => {

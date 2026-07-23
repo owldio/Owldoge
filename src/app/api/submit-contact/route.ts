@@ -5,6 +5,7 @@ import {
   type StudentAgeStatus,
   type StudentPerformerScope,
 } from '@/lib/student-authorization';
+import { APPLICATION_NOTICE_VERSION } from '@/lib/application-notice';
 import { addOns, studentCollaborationPlan } from '@/lib/pricing';
 
 type JsonRecord = Record<string, unknown>;
@@ -44,6 +45,9 @@ export async function POST(req: NextRequest) {
   }
 
   const isBooking = body.requestType === 'booking';
+  const hasValidApplicationNotice =
+    body.applicationNoticeAccepted === true &&
+    body.applicationNoticeVersion === APPLICATION_NOTICE_VERSION;
   const submittedAddOns = Array.isArray(body.addOns) ? body.addOns : [];
   const hasValidAddOnShape = body.addOns === undefined || Array.isArray(body.addOns);
   const hasValidAddOns =
@@ -52,9 +56,9 @@ export async function POST(req: NextRequest) {
       (addOn) => typeof addOn === 'string' && allowedAddOnNames.has(addOn),
     );
 
-  if (isBooking && !hasValidAddOns) {
+  if (isBooking && (!hasValidAddOns || !hasValidApplicationNotice)) {
     return NextResponse.json(
-      { status: 'error', message: 'Invalid add-on selection' },
+      { status: 'error', message: 'Booking application information is incomplete' },
       { status: 400 },
     );
   }
@@ -71,20 +75,18 @@ export async function POST(req: NextRequest) {
           body.studentPerformerScope as StudentPerformerScope,
         )
       : 'incomplete';
-    const expectedContractingParty =
+    const expectedFutureContractingParty =
       body.studentAgeStatus === 'minor'
         ? body.studentGuardianName
         : body.studentApplicantName;
-    const hasValidAuthorizationRecord =
-      body.studentTermsAcknowledged === true &&
+    const hasValidApplicationRecord =
+      body.studentApplicationNoticeAcknowledged === true &&
       body.studentAuthorizationVersion === STUDENT_AUTHORIZATION_VERSION &&
-      isNonEmptyString(body.studentContractingParty) &&
+      isNonEmptyString(body.studentFutureContractingParty) &&
       isNonEmptyString(body.studentApplicantName) &&
-      body.studentContractingParty === expectedContractingParty &&
+      body.studentFutureContractingParty === expectedFutureContractingParty &&
       body.studentConsentMode === expectedConsentMode &&
-      (expectedConsentMode === 'online-checkbox'
-        ? body.studentAuthorizationCompleted === true
-        : body.studentAuthorizationCompleted === false);
+      body.studentAuthorizationCompleted === false;
 
     const minorHasGuardian =
       body.studentAgeStatus !== 'minor' ||
@@ -98,30 +100,38 @@ export async function POST(req: NextRequest) {
 
     if (
       !hasValidEligibility ||
-      !hasValidAuthorizationRecord ||
+      !hasValidApplicationRecord ||
       !minorHasGuardian ||
       !hasFixedStudentPlan ||
       !hasValidStudentAddOns
     ) {
       return NextResponse.json(
-        { status: 'error', message: 'Student authorization information is incomplete' },
+        { status: 'error', message: 'Student application information is incomplete' },
         { status: 400 },
       );
     }
   }
 
   const forwardedFor = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim();
-  const authorizationRecordedAt = new Date().toISOString();
-  const enrichedBody = isStudentBooking
+  const applicationRecordedAt = new Date().toISOString();
+  const requestIp = forwardedFor || req.headers.get('x-real-ip') || '';
+  const requestUserAgent = req.headers.get('user-agent') || '';
+  const bookingBody = isBooking
     ? {
         ...body,
-        studentTermsServerAcknowledgedAt: authorizationRecordedAt,
-        studentAuthorizationServerAcceptedAt:
-          body.studentConsentMode === 'online-checkbox' ? authorizationRecordedAt : '',
-        studentAuthorizationIp: forwardedFor || req.headers.get('x-real-ip') || '',
-        studentAuthorizationUserAgent: req.headers.get('user-agent') || '',
+        applicationNoticeServerAcknowledgedAt: applicationRecordedAt,
+        applicationNoticeIp: requestIp,
+        applicationNoticeUserAgent: requestUserAgent,
       }
     : body;
+  const enrichedBody = isStudentBooking
+    ? {
+        ...bookingBody,
+        studentApplicationNoticeServerAcknowledgedAt: applicationRecordedAt,
+        studentApplicationNoticeIp: requestIp,
+        studentApplicationNoticeUserAgent: requestUserAgent,
+      }
+    : bookingBody;
 
   if (!GOOGLE_SCRIPT_URL) {
     console.error(
