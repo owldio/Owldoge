@@ -16,7 +16,7 @@ test("contact notice clearly defers contract formation", () => {
   assert.match(applicationNotice, /不構成服務契約、檔期保留、付款承諾或作品展示授權/);
   assert.match(applicationNotice, /經雙方確認後始成立/);
   assert.match(applicationNotice, /本次送出僅為預約／報價申請/);
-  assert.match(applicationNotice, /本次送出僅為申請，不代表服務契約或作品展示授權已成立/);
+  assert.match(applicationNotice, /本次送出僅為申請與聯絡作用，並非服務契約或作品展示授權已成立/);
 });
 
 test("student explanation stays non-binding and narrow", () => {

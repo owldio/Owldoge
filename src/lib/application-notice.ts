@@ -7,4 +7,4 @@ export const GENERAL_APPLICATION_ACKNOWLEDGMENT =
   "我已閱讀並了解上述說明，確認本次送出僅為預約／報價申請。";
 
 export const STUDENT_APPLICATION_ACKNOWLEDGMENT =
-  "我了解學生合作方案須於後續書面報價與授權內容經雙方確認後成立；本次送出僅為申請，不代表服務契約或作品展示授權已成立。";
+  "我了解學生合作方案須於後續書面報價與授權內容經雙方確認後成立；本次送出僅為申請與聯絡作用，並非服務契約或作品展示授權已成立。";
