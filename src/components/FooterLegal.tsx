@@ -9,11 +9,14 @@ export default function FooterLegal({ className }: FooterLegalProps) {
     <div
       aria-label="公司登記資訊"
       className={cn(
-        "flex flex-col gap-1 font-sans text-xs font-normal leading-relaxed tracking-normal not-italic",
+        "flex w-fit flex-col items-end gap-1 text-right text-[9px] font-normal leading-relaxed not-italic",
         className,
       )}
     >
-      <span>鴞賦創造工作室｜61265436</span>
+      <span>
+        <span className="font-serif tracking-[0.08em]">鴞賦創造工作室</span>
+        <span className="font-mono tracking-[0.04em]">｜61265436</span>
+      </span>
     </div>
   );
 }
