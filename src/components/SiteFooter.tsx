@@ -82,7 +82,7 @@ export default function SiteFooter() {
 
         <div className="mt-14 border-t border-hairline pt-7 text-parchment-faint">
           <div className="flex flex-col gap-2 font-mono text-[10px] tracking-[0.25em] sm:flex-row sm:items-center sm:justify-between">
-            <span>© {new Date().getFullYear()} OWLDIO. ALL RIGHTS RESERVED.</span>
+            <span>© {new Date().getFullYear()} OWLDIO</span>
             <span>BE THE MOMENT — WE MAKE IT STAY</span>
           </div>
           <FooterLegal className="mt-5" />

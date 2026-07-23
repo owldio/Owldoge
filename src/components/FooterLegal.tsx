@@ -13,10 +13,7 @@ export default function FooterLegal({ className }: FooterLegalProps) {
         className,
       )}
     >
-      <span>公司名稱：鴞賦創造工作室</span>
-      <span>
-        統編：<span className="font-sans not-italic tracking-normal [font-family:Arial,Helvetica,sans-serif] [font-variant-numeric:normal]">61265436</span>
-      </span>
+      <span>鴞賦創造工作室｜61265436</span>
     </div>
   );
 }
