@@ -7,7 +7,7 @@
  */
 
 @theme inline {
-  --font-serif: var(--font-serif-tc), "Noto Serif TC", "Yu Mincho", "PMingLiU", serif;
+  --font-serif: "Noto Serif TC", "Source Han Serif TC", "Songti TC", "Yu Mincho", "PMingLiU", serif;
   --font-display: var(--font-display-latin), "Cormorant Garamond", Georgia, serif;
   --font-mono: var(--font-mono-latin), "IBM Plex Mono", ui-monospace, monospace;
 

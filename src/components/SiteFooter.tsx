@@ -85,7 +85,7 @@ export default function SiteFooter() {
             <span>© {new Date().getFullYear()} OWLDIO</span>
             <span>BE THE MOMENT — WE MAKE IT STAY</span>
           </div>
-          <FooterLegal className="ml-auto mt-5 opacity-60" />
+          <FooterLegal className="ml-auto mt-5" />
         </div>
       </div>
     </footer>

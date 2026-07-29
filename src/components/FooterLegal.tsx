@@ -9,7 +9,7 @@ export default function FooterLegal({ className }: FooterLegalProps) {
     <div
       aria-label="公司登記資訊"
       className={cn(
-        "flex w-fit flex-col items-end gap-1 text-right text-[9px] font-normal leading-relaxed not-italic",
+        "flex w-fit flex-col items-end gap-1 text-right text-[11px] font-normal leading-relaxed text-parchment-dim not-italic",
         className,
       )}
     >

@@ -2,6 +2,7 @@
 module.exports = {
   siteUrl: 'https://www.owldio.art',
   generateRobotsTxt: true,
+  autoLastmod: false,
   exclude: ['/contact/success'],
   changefreq: 'weekly',
   priority: 0.8,
@@ -28,7 +29,6 @@ module.exports = {
       loc: path,
       changefreq,
       priority,
-      lastmod: new Date().toISOString(),
     };
   },
   robotsTxtOptions: {

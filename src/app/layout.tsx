@@ -1,26 +1,19 @@
 import type { Metadata } from 'next';
-import { Cormorant_Garamond, IBM_Plex_Mono, Noto_Serif_TC } from 'next/font/google';
+import { Cormorant_Garamond, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
 import { defaultOgImage, siteDescription, siteName, siteUrl } from '@/lib/seo';
 
 const displayLatin = Cormorant_Garamond({
   subsets: ['latin'],
-  weight: ['300', '400', '500', '600'],
+  weight: ['300', '400', '500'],
   style: ['normal', 'italic'],
   variable: '--font-display-latin',
   display: 'swap',
 });
 
-const serifTC = Noto_Serif_TC({
-  subsets: ['latin'],
-  weight: ['200', '300', '400', '500', '600'],
-  variable: '--font-serif-tc',
-  display: 'swap',
-});
-
 const monoLatin = IBM_Plex_Mono({
   subsets: ['latin'],
-  weight: ['400', '500'],
+  weight: ['400'],
   variable: '--font-mono-latin',
   display: 'swap',
 });
@@ -160,7 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="zh-Hant"
       suppressHydrationWarning
-      className={`${displayLatin.variable} ${serifTC.variable} ${monoLatin.variable}`}
+      className={`${displayLatin.variable} ${monoLatin.variable}`}
     >
       <body>
         <script

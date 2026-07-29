@@ -226,7 +226,7 @@ export default function StudentProjectsPage() {
                   {studentAuthorizationNote}
                 </p>
                 <Link
-                  href="/contact"
+                  href={`/contact?plan=${studentCollaborationPlan.contactValue}`}
                   className="group inline-flex items-center gap-3 bg-copper px-10 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
                 >
                   立即預約
@@ -288,7 +288,7 @@ export default function StudentProjectsPage() {
                     ))}
                   </ul>
                   <Link
-                    href="/contact"
+                    href={`/contact?plan=${pkg.contactValue}`}
                     className="group mt-8 inline-flex items-center gap-2 border-b border-hairline-strong pb-1 text-sm tracking-[0.12em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
                   >
                     詢問此方案
@@ -322,7 +322,7 @@ export default function StudentProjectsPage() {
               立即申請學生合作方案。24 小時內回覆，免費諮詢並確認適用條件。
             </p>
             <Link
-              href="/contact"
+              href={`/contact?plan=${studentCollaborationPlan.contactValue}`}
               className="group inline-flex items-center gap-3 bg-copper px-12 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
             >
               立即預約諮詢

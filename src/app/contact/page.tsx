@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -123,6 +123,8 @@ const contactChannels = [
 
 const promises = ["24 小時內回覆報價", "免費檔期查詢", "學生合作方案", "專業品質保證"];
 
+type FormStep = 1 | 2;
+
 const emptyStudentAuthorization = {
   studentAgeStatus: "" as StudentAgeStatus,
   studentPerformerScope: "" as StudentPerformerScope,
@@ -131,6 +133,7 @@ const emptyStudentAuthorization = {
 };
 
 const ContactPage = () => {
+  const [formStep, setFormStep] = useState<FormStep>(1);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -156,6 +159,8 @@ const ContactPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const stepHeadingRef = useRef<HTMLLegendElement>(null);
   const studentAuthorizationDialogRef = useRef<HTMLDialogElement>(null);
 
   const availableAddOns =
@@ -168,6 +173,33 @@ const ContactPage = () => {
   );
   const studentFutureContractingParty =
     formData.studentAgeStatus === "minor" ? formData.studentGuardianName : formData.name;
+
+  useEffect(() => {
+    const requestedPlan = new URLSearchParams(window.location.search).get("plan");
+
+    if (requestedPlan === studentCollaborationPlan.contactValue) {
+      setFormData((prev) => ({
+        ...prev,
+        useStudentPlan: "yes",
+        pricingPlan: studentCollaborationPlan.contactValue,
+      }));
+      return;
+    }
+
+    if (generalContactPlans.some((plan) => plan.value === requestedPlan)) {
+      setFormData((prev) => ({
+        ...prev,
+        useStudentPlan: "no",
+        pricingPlan: requestedPlan ?? "",
+      }));
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formStep === 2) {
+      stepHeadingRef.current?.focus();
+    }
+  }, [formStep]);
 
   const openStudentAuthorizationDialog = () => {
     studentAuthorizationDialogRef.current?.showModal();
@@ -226,6 +258,25 @@ const ContactPage = () => {
         ? { studentGuardianName: "", studentGuardianEmail: "" }
         : {}),
     }));
+  };
+
+  const continueToDetails = () => {
+    if (!formRef.current?.reportValidity()) {
+      return;
+    }
+
+    setSubmitError(null);
+    setFormStep(2);
+  };
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    if (formStep === 1) {
+      e.preventDefault();
+      continueToDetails();
+      return;
+    }
+
+    void handleSubmit(e);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -466,169 +517,378 @@ const ContactPage = () => {
                   預約表單 — BOOKING FORM
                 </h2>
 
-                <form onSubmit={handleSubmit} className="space-y-10">
-                  {/* Contact basics */}
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <div>
-                      <label className={labelClass}>姓名（填表者／聯絡人）*</label>
-                      <input
-                        type="text"
-                        name="name"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        required
-                        className={fieldClass}
-                        placeholder="您的姓名"
+                <form
+                  ref={formRef}
+                  onSubmit={handleFormSubmit}
+                  className="space-y-10"
+                  aria-label="預約與報價申請"
+                >
+                  <div className="border-b border-hairline pb-7">
+                    <div className="mb-3 flex items-center justify-between gap-4 font-mono text-[10px] tracking-[0.24em]">
+                      <span className="text-copper-bright">STEP {formStep} / 2</span>
+                      <span className="text-parchment-faint">
+                        {formStep === 1 ? "檔期與方案" : "製作細節"}
+                      </span>
+                    </div>
+                    <div
+                      role="progressbar"
+                      aria-label="表單填寫進度"
+                      aria-valuemin={1}
+                      aria-valuemax={2}
+                      aria-valuenow={formStep}
+                      className="h-1 overflow-hidden bg-hairline"
+                    >
+                      <div
+                        className="h-full bg-copper transition-[width] duration-300"
+                        style={{ width: formStep === 1 ? "50%" : "100%" }}
                       />
                     </div>
-                    <div>
-                      <label className={labelClass}>EMAIL（用於寄送估價與繳費連結）*</label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={formData.email}
-                        onChange={handleInputChange}
-                        required
-                        className={fieldClass}
-                        placeholder="you@example.com"
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>聯絡電話 *</label>
-                      <input
-                        type="tel"
-                        name="phone"
-                        value={formData.phone}
-                        onChange={handleInputChange}
-                        required
-                        className={fieldClass}
-                        placeholder="0900 000 000"
-                      />
-                    </div>
-                    <div>
-                      <label className={labelClass}>學校 / 機構</label>
-                      <input
-                        type="text"
-                        name="school"
-                        value={formData.school}
-                        onChange={handleInputChange}
-                        className={fieldClass}
-                        placeholder="選填"
-                      />
-                    </div>
+                    <p className="mt-4 text-sm font-light leading-relaxed text-parchment-dim">
+                      {formStep === 1
+                        ? "先留下聯絡方式、演出檔期與想詢問的方案；下一步再補製作細節。"
+                        : "補充收音、機位與交付需求後送出，我們會在 24 小時內回覆檔期與書面報價。"}
+                    </p>
                   </div>
 
-                  {/* Event info */}
-                  <fieldset className="space-y-6 border-t border-hairline pt-9">
-                    <legend className="mb-2 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                      演出資訊 · EVENT
-                    </legend>
+                  <fieldset
+                    disabled={formStep !== 1}
+                    hidden={formStep !== 1}
+                    className="space-y-10"
+                  >
+                    <legend className="sr-only">步驟一：檔期、聯絡方式與方案</legend>
 
-                    <div>
-                      <label className={labelClass}>演出類型 *</label>
-                      <select
-                        name="eventType"
-                        value={formData.eventType}
-                        onChange={handleInputChange}
-                        required
-                        className={fieldClass}
-                      >
-                        <option value="">請選擇演出類型</option>
-                        {eventTypes.map((type) => (
-                          <option key={type} value={type} className="bg-night text-parchment">
-                            {type}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className={labelClass}>樂器 / 編制</label>
-                      <input
-                        type="text"
-                        name="instrument"
-                        value={formData.instrument}
-                        onChange={handleInputChange}
-                        className={fieldClass}
-                        placeholder="例：鋼琴、小提琴、聲樂、弦樂四重奏"
-                      />
-                    </div>
-
-                    <div className="grid gap-6 md:grid-cols-3">
-                      <div>
-                        <label className={labelClass}>演出日期 *</label>
-                        <DatePicker
-                          name="eventDate"
-                          value={formData.eventDate}
-                          required
-                          onChange={(iso) =>
-                            setFormData((prev) => ({ ...prev, eventDate: iso }))
-                          }
-                        />
-                      </div>
-                      <div>
-                        <label className={labelClass}>演出時間 *</label>
-                        <select
-                          name="eventTime"
-                          value={formData.eventTime}
-                          onChange={handleInputChange}
-                          required
-                          className={fieldClass}
-                        >
-                          <option value="">請選擇時間</option>
-                          {timeOptions.map((time) => (
-                            <option key={time} value={time} className="bg-night text-parchment">
-                              {time}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-                      <div>
-                        <label className={labelClass}>演出場地 *</label>
-                        <input
-                          type="text"
-                          name="venue"
-                          value={formData.venue}
-                          onChange={handleInputChange}
-                          required
-                          className={fieldClass}
-                          placeholder="場地名稱"
-                        />
-                      </div>
-                    </div>
-
+                    {/* Contact basics */}
                     <div className="grid gap-6 md:grid-cols-2">
                       <div>
-                        <label className={labelClass}>演出時長 *</label>
+                        <label htmlFor="contact-name" className={labelClass}>
+                          姓名（填表者／聯絡人）*
+                        </label>
+                        <input
+                          id="contact-name"
+                          type="text"
+                          name="name"
+                          autoComplete="name"
+                          value={formData.name}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClass}
+                          placeholder="您的姓名"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="contact-email" className={labelClass}>
+                          EMAIL（用於寄送估價與繳費連結）*
+                        </label>
+                        <input
+                          id="contact-email"
+                          type="email"
+                          name="email"
+                          autoComplete="email"
+                          inputMode="email"
+                          value={formData.email}
+                          onChange={handleInputChange}
+                          required
+                          className={fieldClass}
+                          placeholder="you@example.com"
+                        />
+                      </div>
+                      <div>
+                        <label htmlFor="contact-phone" className={labelClass}>
+                          聯絡電話
+                        </label>
+                        <input
+                          id="contact-phone"
+                          type="tel"
+                          name="phone"
+                          autoComplete="tel"
+                          inputMode="tel"
+                          value={formData.phone}
+                          onChange={handleInputChange}
+                          className={fieldClass}
+                          placeholder="選填；急件建議留下電話"
+                        />
+                      </div>
+                    </div>
+
+                    {/* Event basics */}
+                    <fieldset className="space-y-6 border-t border-hairline pt-9">
+                      <legend className="mb-2 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        演出資訊 · EVENT
+                      </legend>
+
+                      <div>
+                        <label htmlFor="event-type" className={labelClass}>
+                          演出類型 *
+                        </label>
                         <select
-                          name="duration"
-                          value={formData.duration}
+                          id="event-type"
+                          name="eventType"
+                          value={formData.eventType}
                           onChange={handleInputChange}
                           required
                           className={fieldClass}
                         >
-                          <option value="">請選擇演出時長</option>
-                          {durationOptions.map((option) => (
-                            <option key={option} value={option} className="bg-night text-parchment">
-                              {option}
+                          <option value="">請選擇演出類型</option>
+                          {eventTypes.map((type) => (
+                            <option key={type} value={type} className="bg-night text-parchment">
+                              {type}
                             </option>
                           ))}
                         </select>
                       </div>
-                      <div>
-                        <label className={labelClass}>參與人數 *</label>
-                        <input
-                          type="text"
-                          name="participants"
-                          value={formData.participants}
-                          onChange={handleInputChange}
-                          required
-                          className={fieldClass}
-                          placeholder="例：1 人、四重奏 4 人"
-                        />
+
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div>
+                          <label className={labelClass}>演出日期 *</label>
+                          <DatePicker
+                            name="eventDate"
+                            value={formData.eventDate}
+                            required
+                            onChange={(iso) =>
+                              setFormData((prev) => ({ ...prev, eventDate: iso }))
+                            }
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="event-venue" className={labelClass}>
+                            演出場地 *
+                          </label>
+                          <input
+                            id="event-venue"
+                            type="text"
+                            name="venue"
+                            value={formData.venue}
+                            onChange={handleInputChange}
+                            required
+                            className={fieldClass}
+                            placeholder="場地名稱；未定可填預計城市"
+                          />
+                        </div>
                       </div>
-                    </div>
+                    </fieldset>
+
+                    {/* Plan path */}
+                    <fieldset className="border-t border-hairline pt-9">
+                      <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        詢價類型 · REQUEST TYPE
+                      </legend>
+                      <label className={labelClass}>是否申請學生合作方案 *</label>
+                      <div className="grid gap-3 md:grid-cols-2">
+                        {[
+                          { value: "yes", label: "是，申請學生作品授權合作" },
+                          { value: "no", label: "否，詢問一般錄製方案" },
+                        ].map((opt) => (
+                          <label key={opt.value} className={optionClass}>
+                            <input
+                              type="radio"
+                              name="useStudentPlan"
+                              value={opt.value}
+                              checked={formData.useStudentPlan === opt.value}
+                              onChange={handleStudentPlanChange}
+                              required
+                              className="h-4 w-4 accent-copper"
+                            />
+                            {opt.label}
+                          </label>
+                        ))}
+                      </div>
+
+                      {formData.useStudentPlan === "yes" && (
+                        <div className="mt-4 border border-copper/40 bg-copper/5 p-5">
+                          <div className="flex flex-wrap items-baseline justify-between gap-2">
+                            <span className="text-sm font-light text-parchment">
+                              {studentContactPlan.label}
+                            </span>
+                            <span className="font-mono text-[11px] text-copper">
+                              {studentContactPlan.price}
+                            </span>
+                          </div>
+                          <p className="mt-2 text-xs font-light leading-relaxed text-parchment-dim">
+                            先套用單機學生合作規格；資格、表演者範圍與後續書面授權方式會在下一步確認。
+                          </p>
+                        </div>
+                      )}
+                    </fieldset>
+
+                    {/* Pricing plan — the student collaboration plan is fixed above */}
+                    {formData.useStudentPlan === "no" && (
+                      <fieldset className="border-t border-hairline pt-9">
+                        <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                          一般方案選擇 · PLAN
+                        </legend>
+                        <div className="space-y-3">
+                          {generalContactPlans.map((plan) => (
+                            <label
+                              key={plan.value}
+                              className="block cursor-pointer border border-hairline bg-night-raised/40 p-4 transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10"
+                            >
+                              <div className="flex items-start gap-3">
+                                <input
+                                  type="radio"
+                                  name="pricingPlan"
+                                  value={plan.value}
+                                  checked={formData.pricingPlan === plan.value}
+                                  onChange={handleInputChange}
+                                  required
+                                  className="mt-1 h-4 w-4 accent-copper"
+                                />
+                                <div className="flex-1">
+                                  <div className="flex flex-wrap items-baseline justify-between gap-2">
+                                    <span className="text-sm font-light tracking-[0.04em] text-parchment">
+                                      {plan.label}
+                                    </span>
+                                    {plan.price && (
+                                      <span className="font-mono text-[11px] text-copper">
+                                        {plan.price}
+                                      </span>
+                                    )}
+                                  </div>
+                                  {plan.description && (
+                                    <p className="mt-1.5 text-xs font-light leading-relaxed text-parchment-faint">
+                                      {plan.description}
+                                    </p>
+                                  )}
+                                </div>
+                              </div>
+                            </label>
+                          ))}
+                        </div>
+                      </fieldset>
+                    )}
+
+                    <button
+                      type="button"
+                      onClick={continueToDetails}
+                      className="group inline-flex w-full items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
+                    >
+                      下一步：補充製作細節
+                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </button>
                   </fieldset>
+
+                  <fieldset
+                    disabled={formStep !== 2}
+                    hidden={formStep !== 2}
+                    className="space-y-10"
+                  >
+                    <legend
+                      ref={stepHeadingRef}
+                      tabIndex={-1}
+                      className="w-full font-mono text-[12px] tracking-[0.3em] text-copper-bright outline-none"
+                    >
+                      製作細節 · PRODUCTION DETAILS
+                    </legend>
+
+                    <div className="border border-hairline bg-night-raised/40 p-5">
+                      <p className="font-mono text-[10px] tracking-[0.24em] text-parchment-faint">
+                        已保留的詢價資訊
+                      </p>
+                      <p className="mt-2 text-sm font-light leading-relaxed text-parchment">
+                        {formData.eventDate} · {formData.venue}
+                        <br />
+                        {formData.useStudentPlan === "yes"
+                          ? studentContactPlan.label
+                          : generalContactPlans.find((plan) => plan.value === formData.pricingPlan)
+                              ?.label}
+                      </p>
+                    </div>
+
+                    {/* Event details */}
+                    <fieldset className="space-y-6 border-t border-hairline pt-9">
+                      <legend className="mb-2 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        補充演出資訊 · EVENT DETAILS
+                      </legend>
+
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <div>
+                          <label htmlFor="contact-school" className={labelClass}>
+                            學校 / 機構
+                          </label>
+                          <input
+                            id="contact-school"
+                            type="text"
+                            name="school"
+                            autoComplete="organization"
+                            value={formData.school}
+                            onChange={handleInputChange}
+                            className={fieldClass}
+                            placeholder="選填"
+                          />
+                        </div>
+                        <div>
+                          <label htmlFor="event-instrument" className={labelClass}>
+                            樂器 / 編制
+                          </label>
+                          <input
+                            id="event-instrument"
+                            type="text"
+                            name="instrument"
+                            value={formData.instrument}
+                            onChange={handleInputChange}
+                            className={fieldClass}
+                            placeholder="例：鋼琴、小提琴、弦樂四重奏"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-3">
+                        <div>
+                          <label htmlFor="event-time" className={labelClass}>
+                            演出時間 *
+                          </label>
+                          <select
+                            id="event-time"
+                            name="eventTime"
+                            value={formData.eventTime}
+                            onChange={handleInputChange}
+                            required
+                            className={fieldClass}
+                          >
+                            <option value="">請選擇時間</option>
+                            {timeOptions.map((time) => (
+                              <option key={time} value={time} className="bg-night text-parchment">
+                                {time}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor="event-duration" className={labelClass}>
+                            演出時長 *
+                          </label>
+                          <select
+                            id="event-duration"
+                            name="duration"
+                            value={formData.duration}
+                            onChange={handleInputChange}
+                            required
+                            className={fieldClass}
+                          >
+                            <option value="">請選擇演出時長</option>
+                            {durationOptions.map((option) => (
+                              <option key={option} value={option} className="bg-night text-parchment">
+                                {option}
+                              </option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label htmlFor="event-participants" className={labelClass}>
+                            參與人數 *
+                          </label>
+                          <input
+                            id="event-participants"
+                            type="text"
+                            name="participants"
+                            value={formData.participants}
+                            onChange={handleInputChange}
+                            required
+                            className={fieldClass}
+                            placeholder="例：1 人、四重奏 4 人"
+                          />
+                        </div>
+                      </div>
+                    </fieldset>
 
                   {/* Services */}
                   <fieldset className="border-t border-hairline pt-9">
@@ -651,32 +911,11 @@ const ContactPage = () => {
                   </fieldset>
 
                   {/* Student plan */}
-                  <fieldset className="border-t border-hairline pt-9">
-                    <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                      學生合作方案 · STUDENT COLLABORATION
-                    </legend>
-                    <label className={labelClass}>是否申請學生合作方案 *</label>
-                    <div className="grid gap-3 md:grid-cols-2">
-                      {[
-                        { value: "yes", label: "是" },
-                        { value: "no", label: "否" },
-                      ].map((opt) => (
-                        <label key={opt.value} className={optionClass}>
-                          <input
-                            type="radio"
-                            name="useStudentPlan"
-                            value={opt.value}
-                            checked={formData.useStudentPlan === opt.value}
-                            onChange={handleStudentPlanChange}
-                            required
-                            className="h-4 w-4 accent-copper"
-                          />
-                          {opt.label}
-                        </label>
-                      ))}
-                    </div>
-
-                    {formData.useStudentPlan === "yes" && (
+                  {formData.useStudentPlan === "yes" && (
+                    <fieldset className="border-t border-hairline pt-9">
+                      <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
+                        學生合作資格與後續授權 · STUDENT COLLABORATION
+                      </legend>
                       <div className="mt-4 space-y-6 border border-copper/40 bg-copper/5 p-5 md:p-6">
                         <p className="text-xs font-light leading-loose text-parchment-dim">
                           <span className="text-copper">學生作品授權合作方案</span>
@@ -910,52 +1149,6 @@ const ContactPage = () => {
                         </dialog>
 
                       </div>
-                    )}
-                  </fieldset>
-
-                  {/* Pricing plan — the student collaboration plan is fixed above */}
-                  {formData.useStudentPlan === "no" && (
-                    <fieldset className="border-t border-hairline pt-9">
-                      <legend className="mb-5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                        一般方案選擇 · PLAN
-                      </legend>
-                      <div className="space-y-3">
-                        {generalContactPlans.map((plan) => (
-                          <label
-                            key={plan.value}
-                            className="block cursor-pointer border border-hairline bg-night-raised/40 p-4 transition-colors duration-300 hover:border-hairline-strong has-[:checked]:border-copper has-[:checked]:bg-copper/10"
-                          >
-                            <div className="flex items-start gap-3">
-                              <input
-                                type="radio"
-                                name="pricingPlan"
-                                value={plan.value}
-                                checked={formData.pricingPlan === plan.value}
-                                onChange={handleInputChange}
-                                required
-                                className="mt-1 h-4 w-4 accent-copper"
-                              />
-                              <div className="flex-1">
-                                <div className="flex flex-wrap items-baseline justify-between gap-2">
-                                  <span className="text-sm font-light tracking-[0.04em] text-parchment">
-                                    {plan.label}
-                                  </span>
-                                  {plan.price && (
-                                    <span className="font-mono text-[11px] text-copper">
-                                      {plan.price}
-                                    </span>
-                                  )}
-                                </div>
-                                {plan.description && (
-                                  <p className="mt-1.5 text-xs font-light leading-relaxed text-parchment-faint">
-                                    {plan.description}
-                                  </p>
-                                )}
-                              </div>
-                            </div>
-                          </label>
-                        ))}
-                      </div>
                     </fieldset>
                   )}
 
@@ -1072,23 +1265,36 @@ const ContactPage = () => {
                     </div>
                   )}
 
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="group inline-flex w-full items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright disabled:cursor-not-allowed disabled:opacity-60"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <span className="h-4 w-4 animate-spin rounded-full border-2 border-night border-t-transparent" />
-                        送出中…
-                      </>
-                    ) : (
-                      <>
-                        送出預約／報價申請
-                        <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-                      </>
-                    )}
-                  </button>
+                    <div className="grid gap-3 sm:grid-cols-[auto_1fr]">
+                      <button
+                        type="button"
+                        onClick={() => setFormStep(1)}
+                        className="inline-flex min-h-12 items-center justify-center border border-hairline-strong px-7 py-3.5 text-sm tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
+                      >
+                        返回修改檔期與方案
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="group inline-flex min-h-12 w-full items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright disabled:cursor-not-allowed disabled:opacity-60"
+                      >
+                        {isSubmitting ? (
+                          <>
+                            <span
+                              aria-hidden="true"
+                              className="h-4 w-4 animate-spin rounded-full border-2 border-night border-t-transparent"
+                            />
+                            送出中…
+                          </>
+                        ) : (
+                          <>
+                            送出預約／報價申請
+                            <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  </fieldset>
                 </form>
               </div>
             </motion.div>

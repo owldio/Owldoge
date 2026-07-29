@@ -17,24 +17,48 @@ const fadeUp = {
 
 const viewportOnce = { once: true, margin: "-80px" } as const;
 
-const reasons = [
+const portfolioFormats = [
   {
     no: "01",
-    title: "專業品質",
-    en: "QUALITY",
-    description: "4K 多機位錄影搭配多軌收音，舞台全景、演奏細節與現場氛圍都被完整留下。",
+    title: "影音短片",
+    en: "VIDEO EXCERPT",
+    status: "案例素材整理中",
+    description:
+      "未來以 15–45 秒片段呈現構圖、鏡頭切換與現場聲音；只有完成書面公開授權的演出才會上線。",
   },
   {
     no: "02",
-    title: "學生友善",
-    en: "STUDENT FRIENDLY",
-    description: "畢業音樂會、成果發表與作品集需求不同，方案可依機位、收音與後製範圍彈性調整。",
+    title: "靜態案例摘要",
+    en: "CASE NOTES",
+    status: "可先建立",
+    description:
+      "以授權劇照或畫面截圖，搭配演出類型、機位、收音方式與交付內容；靜態案例不會被當成影音品質證明。",
   },
   {
     no: "03",
-    title: "如期交付",
-    en: "ON TIME",
-    description: "演出後整理鏡頭、調色與音訊平衡，一般 7–10 個工作天交付，可上傳、投件與留存。",
+    title: "私人樣片洽詢",
+    en: "PRIVATE SAMPLE",
+    status: "依授權狀況確認",
+    description:
+      "如果你正準備畢業音樂會、獨奏或室內樂演出，可先告訴我們編制與用途；若有合適且可分享的素材，再個別提供參考。",
+  },
+];
+
+const productionStandards = [
+  {
+    no: "I",
+    title: "先確認用途",
+    description: "投件、留存、公開分享或完整演出紀錄，需要的機位、收音與交付格式並不相同。",
+  },
+  {
+    no: "II",
+    title: "再安排機位與收音",
+    description: "單機以穩定完整為主；多機位增加演奏細節與切換空間，多軌則依編制與場地需求評估。",
+  },
+  {
+    no: "III",
+    title: "最後整理成品",
+    description: "依方案完成剪輯、音訊平衡與色彩處理；一般作業時間為 7–10 個工作天。",
   },
 ];
 
@@ -44,12 +68,12 @@ export default function PortfolioPage() {
       <Navigation currentPage="portfolio" />
 
       <main>
-        {/* ============ Hero — coming soon ============ */}
+        {/* ============ Hero ============ */}
         <section className="grain relative flex min-h-svh flex-col justify-end overflow-hidden">
           <HeroBackdrop src="/pic/edited/owldio-piano-strings-detail.jpg" />
 
           <div className="writing-vertical absolute right-5 top-28 hidden font-light tracking-[0.5em] text-parchment-faint lg:block">
-            正在編寫的篇章
+            作品需要被誠實呈現
           </div>
 
           <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-16 pt-40 md:px-8 lg:pb-24">
@@ -66,10 +90,10 @@ export default function PortfolioPage() {
 
             <h1 className="mb-8 font-serif font-extralight leading-[1.1] text-parchment">
               <RevealLine delay={0.25} className="text-[clamp(2.6rem,7vw,6rem)]">
-                精選作品
+                作品與
               </RevealLine>
               <RevealLine delay={0.45} className="text-[clamp(2.6rem,7vw,6rem)] text-copper-bright">
-                即將推出
+                製作方式
               </RevealLine>
             </h1>
 
@@ -79,8 +103,8 @@ export default function PortfolioPage() {
               transition={{ duration: 0.6, delay: 0.7 }}
               className="mb-12 max-w-xl text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
             >
-              我們正在整理近期的音樂會錄製成果。在作品輯上線前，歡迎直接來信或透過 LINE
-              洽詢相關影音樣本。
+              公開案例仍在整理與確認授權中。在完整作品上線前，這裡先說明案例會如何呈現、
+              不同方案如何製作，以及如何洽詢適合你需求的參考素材。
             </motion.p>
 
             <motion.div
@@ -90,23 +114,23 @@ export default function PortfolioPage() {
               className="flex flex-col gap-4 sm:flex-row"
             >
               <Link
-                href="/contact"
+                href="/contact?plan=recommend"
                 className="group inline-flex items-center justify-center gap-3 bg-copper px-9 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
               >
-                洽詢作品樣本
+                洽詢合適參考素材
                 <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </Link>
               <Link
-                href="/services"
+                href="/pricing"
                 className="inline-flex items-center justify-center border border-hairline-strong px-9 py-4 text-base tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
               >
-                瀏覽服務項目
+                比較錄製方案
               </Link>
             </motion.div>
           </div>
         </section>
 
-        {/* ============ 01 — Why Owldio ============ */}
+        {/* ============ 01 — Portfolio formats ============ */}
         <section className="border-t border-hairline">
           <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 lg:py-36">
             <motion.div
@@ -116,16 +140,17 @@ export default function PortfolioPage() {
               viewport={viewportOnce}
               transition={{ duration: 0.7 }}
             >
-              <SectionMark no="01" zh="為什麼選擇 Owldio" en="WHY OWLDIO" />
+              <SectionMark no="01" zh="作品會如何呈現" en="PORTFOLIO FORMAT" />
               <p className="mb-14 max-w-2xl text-base font-light leading-loose text-parchment-dim">
-                作品還在路上，但我們對每一場演出的標準不變。
+                作品集不必只有完整影片。短片、靜態案例與私人樣片各自證明不同事情；
+                Owldio 只公開已取得適當授權的內容，也不會用器材照片代替成品證據。
               </p>
             </motion.div>
 
             <div className="grid gap-12 md:grid-cols-3 md:gap-0">
-              {reasons.map((reason, index) => (
+              {portfolioFormats.map((format, index) => (
                 <motion.article
-                  key={reason.no}
+                  key={format.no}
                   variants={fadeUp}
                   initial="hidden"
                   whileInView="visible"
@@ -134,20 +159,87 @@ export default function PortfolioPage() {
                   className="border-l border-hairline pl-7 md:pr-10"
                 >
                   <div className="mb-7 font-display text-5xl font-light italic text-copper/80">
-                    {reason.no}
+                    {format.no}
                   </div>
                   <h3 className="mb-2 text-xl font-light tracking-[0.06em] text-parchment">
-                    {reason.title}
+                    {format.title}
                   </h3>
                   <p className="mb-4 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-                    {reason.en}
+                    {format.en}
+                  </p>
+                  <p className="mb-4 font-mono text-[10px] tracking-[0.2em] text-copper">
+                    {format.status}
                   </p>
                   <p className="text-sm font-light leading-loose text-parchment-dim">
-                    {reason.description}
+                    {format.description}
                   </p>
                 </motion.article>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* ============ 02 — Production standard ============ */}
+        <section className="border-t border-hairline bg-night-raised/30">
+          <div className="mx-auto max-w-7xl px-5 py-24 md:px-8 lg:py-36">
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              transition={{ duration: 0.7 }}
+            >
+              <SectionMark no="02" zh="案例上線前先了解" en="PRODUCTION STANDARD" />
+              <p className="mb-14 max-w-2xl text-base font-light leading-loose text-parchment-dim">
+                即使案例尚未公開，你仍可先確認服務如何從演出需求走到可交付成品，
+                再決定單機、多機位或收音升級是否適合。
+              </p>
+            </motion.div>
+
+            <div className="grid gap-px border border-hairline bg-hairline md:grid-cols-3">
+              {productionStandards.map((standard, index) => (
+                <motion.article
+                  key={standard.no}
+                  variants={fadeUp}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={viewportOnce}
+                  transition={{ duration: 0.6, delay: index * 0.12 }}
+                  className="bg-night p-7 md:p-9"
+                >
+                  <p className="font-display text-4xl italic text-copper/80">{standard.no}</p>
+                  <h3 className="mt-6 text-xl font-light tracking-[0.06em] text-parchment">
+                    {standard.title}
+                  </h3>
+                  <p className="mt-4 text-sm font-light leading-loose text-parchment-dim">
+                    {standard.description}
+                  </p>
+                </motion.article>
+              ))}
+            </div>
+
+            <motion.div
+              variants={fadeUp}
+              initial="hidden"
+              whileInView="visible"
+              viewport={viewportOnce}
+              transition={{ duration: 0.7 }}
+              className="mt-12 flex flex-col gap-4 border-t border-hairline pt-10 sm:flex-row"
+            >
+              <Link
+                href="/services"
+                className="inline-flex items-center justify-center border border-hairline-strong px-8 py-3.5 text-sm tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
+              >
+                查看服務流程
+              </Link>
+              <Link
+                href="/contact?plan=recommend"
+                className="group inline-flex items-center justify-center gap-3 bg-copper px-8 py-3.5 text-sm tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
+              >
+                告訴我們你的演出
+                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              </Link>
+            </motion.div>
           </div>
         </section>
       </main>

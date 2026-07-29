@@ -42,9 +42,26 @@ const faqs = [
   { q: "後製交付需要多長時間？", a: "一般作業時間為 7–10 個工作天，急件可選擇 72 小時快交服務。" },
 ];
 
+const faqStructuredData = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: faqs.map((faq) => ({
+    "@type": "Question",
+    name: faq.q,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: faq.a,
+    },
+  })),
+};
+
 export default function PricingPage() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-night text-parchment">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqStructuredData) }}
+      />
       <Navigation currentPage="pricing" />
 
       <main>
@@ -150,7 +167,7 @@ export default function PricingPage() {
                   </ul>
 
                   <Link
-                    href="/contact"
+                    href={`/contact?plan=${plan.contactValue}`}
                     className={`group mt-9 inline-flex items-center justify-center gap-3 px-7 py-3.5 text-sm tracking-[0.14em] transition-colors duration-300 ${
                       plan.popular
                         ? "bg-copper text-night hover:bg-copper-bright"
@@ -344,7 +361,7 @@ export default function PricingPage() {
               立即預約，享受透明定價的專業服務。24 小時內回覆，免費諮詢，無隱藏費用。
             </p>
             <Link
-              href="/contact"
+              href="/contact?plan=recommend"
               className="group inline-flex items-center gap-3 bg-copper px-12 py-4 text-base tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
             >
               立即預約諮詢

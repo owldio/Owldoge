@@ -6,10 +6,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Navigation from "@/components/Navigation";
-import InkBackground from "@/components/InkBackground";
+import DeferredInkBackground from "@/components/DeferredInkBackground";
 import SectionMark from "@/components/SectionMark";
 import SiteFooter from "@/components/SiteFooter";
-import { RevealLine, HeroRule } from "@/components/HeroReveal";
+import { HeroRule } from "@/components/HeroReveal";
 import { blurPlaceholders } from "@/lib/blurPlaceholders";
 import StageInterlude from "@/components/StageInterlude";
 import EventMarquee from "@/components/EventMarquee";
@@ -120,7 +120,7 @@ export default function OwldioSite() {
 
           {/* Ambient ink — sumi mist drifting in the dark hall, behind everything */}
           <div className="pointer-events-none absolute inset-0 z-[1] mix-blend-screen">
-            <InkBackground />
+            <DeferredInkBackground />
           </div>
 
           {/* REC indicator */}
@@ -138,27 +138,22 @@ export default function OwldioSite() {
 
           {/* Headline block */}
           <div className="relative z-10 mx-auto w-full max-w-7xl px-5 pb-14 pt-40 md:px-8 lg:pb-20">
-            <motion.p
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright"
-            >
+            <p className="mb-7 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
               OWLDIO STUDIO — 音樂會錄影 · 錄音 · 後製
-            </motion.p>
+            </p>
 
             <HeroRule />
 
-            <h1 className="mb-8 font-display font-light leading-[1.02] text-parchment">
-              <RevealLine delay={0.25} className="text-[clamp(2.9rem,8vw,7rem)]">
+            <h1 className="mb-8 font-light leading-[1.02] text-parchment">
+              <span className="mb-5 block max-w-3xl font-serif text-[clamp(1.5rem,3vw,2.5rem)] font-light leading-snug tracking-[0.08em] text-parchment-dim">
+                音樂會錄影、錄音與後製服務
+              </span>
+              <span className="block font-display text-[clamp(2.9rem,8vw,7rem)]">
                 Be the moment.
-              </RevealLine>
-              <RevealLine
-                delay={0.45}
-                className="text-[clamp(2.9rem,8vw,7rem)] italic text-copper-bright"
-              >
+              </span>
+              <span className="block font-display text-[clamp(2.9rem,8vw,7rem)] italic text-copper-bright">
                 We make it stay.
-              </RevealLine>
+              </span>
             </h1>
 
             <motion.p
