@@ -105,7 +105,7 @@ const serviceOptions = [
 ];
 
 const contactChannels = [
-  { label: "EMAIL", value: "owldio.art@gmail.com", href: "mailto:owldio.art@gmail.com" },
+  { label: "EMAIL", value: "service@owldio.art", href: "mailto:service@owldio.art" },
   { label: "LINE", value: "@447nguoe", href: lineOfficialAccountUrl, external: true },
   {
     label: "FACEBOOK",
@@ -1156,7 +1156,7 @@ const ContactPage = () => {
                   如有急件需求或特殊情況，歡迎直接來信與我們聯絡。
                 </p>
                 <a
-                  href="mailto:owldio.art@gmail.com"
+                  href="mailto:service@owldio.art"
                   className="group inline-flex w-full items-center justify-center gap-3 border border-hairline-strong px-7 py-3.5 text-sm tracking-[0.14em] text-parchment transition-colors duration-300 hover:border-copper hover:text-copper-bright"
                 >
                   立即來信

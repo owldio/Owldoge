@@ -102,7 +102,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       url: siteUrl,
       logo: `${siteUrl}/owldio-logo.png`,
       image: `${siteUrl}/seo/owldio-music-production.png`,
-      email: 'owldio.art@gmail.com',
+      email: 'service@owldio.art',
       areaServed: 'Taiwan',
       serviceType: [
         '音樂會錄影',

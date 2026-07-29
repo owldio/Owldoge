@@ -92,7 +92,7 @@ const termsSections = [
   },
   {
     heading: "聯絡資訊",
-    body: "如對本服務條款有任何疑問，請來信 owldio.art@gmail.com，我們將於 24 小時內回覆您的詢問。",
+    body: "如對本服務條款有任何疑問，請來信 service@owldio.art，我們將於 24 小時內回覆您的詢問。",
   },
 ];
 

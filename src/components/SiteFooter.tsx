@@ -41,7 +41,7 @@ export default function SiteFooter() {
             <p className="text-sm font-light leading-relaxed text-parchment-faint">
               音樂會錄影、錄音與後製服務
               <br />
-              owldio.art@gmail.com
+              service@owldio.art
             </p>
           </div>
 
