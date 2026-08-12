@@ -35,7 +35,6 @@ This change does not perform a global replacement of `校園` or `學生`.
 
 ## Verification
 
-- A focused copy-contract test will verify the selected public wording and guard the student-specific page from accidental broad replacement.
-- The focused test must fail before production copy changes and pass afterward.
+- A one-time exact-copy verification will check the selected public wording and guard the student-specific page from accidental broad replacement. Pure human-facing prose will not add a permanent change-detector test.
 - The full Node test suite, ESLint, TypeScript check, and production build must pass.
-- The final diff must contain only the intended copy, test, and Superpowers documentation changes; generated brand images remain outside the commit unless separately requested.
+- The final diff must contain only the intended copy and Superpowers documentation changes; generated brand images remain outside the commit unless separately requested.

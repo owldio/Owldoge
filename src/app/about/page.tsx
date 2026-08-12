@@ -156,7 +156,7 @@ export default function AboutPage() {
               transition={{ duration: 0.6, delay: 0.55 }}
               className="max-w-xl text-pretty text-base font-light leading-loose tracking-[0.04em] text-parchment-dim md:text-lg"
             >
-              專注校園音樂會錄製的新創團隊，<br className="hidden sm:block" />用心為每一場演出留下最珍貴的瞬間。
+              專注於音樂會專業錄製的團隊，<br className="hidden sm:block" />用心為每一場演出留下最珍貴的瞬間。
             </motion.p>
           </div>
         </section>

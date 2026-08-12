@@ -66,7 +66,7 @@ const Navigation = ({ currentPage }: NavigationProps) => {
               OWLDIO
             </span>
             <span className="mt-1.5 font-mono text-[10px] tracking-[0.3em] text-parchment-faint">
-              CONCERT RECORDING
+              RECORDING
             </span>
           </span>
         </Link>

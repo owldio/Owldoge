@@ -22,7 +22,7 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   applicationName: siteName,
   title: {
-    default: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
+    default: 'Owldio Studio | 專業音樂會錄影、錄音、直播與後製服務',
     template: '%s | Owldio Studio'
   },
   description: siteDescription,
@@ -56,7 +56,7 @@ export const metadata: Metadata = {
     locale: 'zh_TW',
     url: siteUrl,
     siteName,
-    title: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
+    title: 'Owldio Studio | 專業音樂會錄影、錄音、直播與後製服務',
     description: siteDescription,
     images: [
       {
@@ -69,7 +69,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Owldio Studio | 音樂會錄影、錄音、直播與後製服務',
+    title: 'Owldio Studio | 專業音樂會錄影、錄音、直播與後製服務',
     description: siteDescription,
     images: [defaultOgImage],
   },
