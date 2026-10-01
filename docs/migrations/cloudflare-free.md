@@ -1,6 +1,6 @@
 # Cloudflare 免費架構分段遷移
 
-日期：2026-10-01（台灣時間）。目前階段：第二段雲端預覽已部署並登入，等待 Google 登入以完成隔離表單環境與驗收。
+日期：2026-10-01（台灣時間）。目前階段：第二段雲端預覽已部署並登入；Google 隔離腳本與試算表已建立，等待測試端點的存取設定確認。
 
 ## 範圍與基準
 
@@ -105,7 +105,7 @@ pnpm run preview:cloudflare
   學生 query 正確預選，觀察期間瀏覽器 error/warn 為空。截圖在 ignored `.cloudflare-build/evidence/`。
 - `llms.txt`、`pricing.md`、robots/sitemaps 的瀏覽器直接導覽被 client inspector 阻擋，
   尚未完成它們的雲端 HTTP／內容驗收；這是驗證工具限制，不能推論為站台檔案錯誤或宣告通過。
-- Google 尚未登入，真實通知、API 完整錯誤路徑、影片與 CPU 指標仍待驗證。
+- Google 已登入且建立獨立測試腳本與試算表；真實通知、API 完整錯誤路徑、影片與 CPU 指標仍待驗證。
 
 ### 隔離 Apps Script 準備
 
@@ -127,10 +127,29 @@ node --test tests/cloudflare-sandbox.test.mjs
 
 生成器隔離測試 7/7、全體測試 30/30、修改檔案 ESLint 與獨立 Standards／Spec 審查通過。
 包含成功 setup／跨執行重跑、成功 mock 寫入與擁有者通知、錯誤試算表名稱、token／script／owner 拒絕路徑。
-尚未建立 Google 雲端資源、設定上游 secret 或驗證真實表單通知。
+Google 雲端腳本已建立並儲存；`setupSandbox` 執行成功且重跑確認沿用同一份新建試算表。
+腳本／试算表連結存放 ignored `.cloudflare-build/sandbox-resources.json`，不覆寫正式表單專案。
+Google 登入後舊密碼提交分頁未回應，但新 Apps Script 分頁已確認帳戶登入成功。
+測試 Web App 設定已準備：以擁有者執行、「所有人」存取、POST 另驗證 server-only token。
+使用者已完成部署；管理部署介面核對為第 1 版、以 `owldio.art@gmail.com` 執行、「所有人」存取。
+隔離端點已綁定 Pages preview 的 `GOOGLE_SCRIPT_URL` Secret；production 設定未出現此綁定。
+API 設定嘗試被主機政策阻擋且未執行，暫存密鑰檔已清除；改由 Cloudflare preview 設定介面完成。
+重新部署 `migration-preview` 成功，固定 URL `https://b0c786a2.owldio-site.pages.dev`，來源 commit `05761fb`。
 
-下一步：完成 Google 登入；建立隔離 Apps Script／試算表、綁定 preview secret 再重新部署與驗證。
-真實收件、通知與 CPU 指標仍未通過。
+一般方案真實瀏覽器測試已通過：虛構聯絡人「CF遷移隔離測試 20261001」、
+`migration-test@example.com`、測試場地、2026-10-15 14:00、單機方案。
+Pages API HTTP 200，頁面顯示申請已送出；隔離試算表第 2 列於 2026-10-01 23:57:13 寫入對應紀錄。
+Gmail 已核對擁有者收到同名通知，包含測試場地與虛構資料註記。
+沒有向正式表單試算表寫入資料，也沒有向測試聯絡人寄信。
+證據存於 ignored `.cloudflare-build/evidence/`：`cloud-form-success.jpg`、
+`sandbox-sheet-received.jpg`、`sandbox-notification-received.jpg`、`preview-secret-saved.jpg`。
+
+儲存 Secret 時工具狀態回傳意外包含 sandbox token；不要沿用該 token。
+須由使用者在 Script Properties 更換 `SANDBOX_TOKEN`，再更新 preview Secret 並重新部署。
+不將 token 寫入本文件、Git 或公開前端。正式端點與正式憑證不受此次測試影響。
+
+下一步：測試 token 更換後，完成學生表單、錯誤路徑、影片／SEO 內容與 Function CPU 指標驗收。
+一般方案的真實收件與通知已通過；第二段整體驗收尚未完成。
 
 先核對 Cloudflare 帳戶、既有 Pages 專案、免費方案、帳戶共用 Function 用量與 Git 連結。
 新增獨立預覽專案，build command `pnpm run build:cloudflare`，output `.cloudflare-build/site`。
