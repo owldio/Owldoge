@@ -164,11 +164,13 @@ Gmail 已核對擁有者收到同名通知，包含測試場地與虛構資料�
   五筆回應訊息及 `Cache-Control: no-store` 都正確。未登入同一檢查頁 HTTP 302 到 Access。
   上游斷線／錯誤的代理處理由既有本機測試驗證，雲端未刻意製造 Google 上游故障。
 - 臨時檢查頁獨立 Standards／Spec 審查均零發現，reviewer 亦驗證五筆請求不會聯絡上游。
-  完成文字資源下載後已從最新預覽產物移除，後續部署需驗證別名該路徑 404。
+  完成文字資源下載後已從最新預覽產物移除並重新部署；別名該路徑加上新驗證 query 後確認 HTTP 404。
   舊固定臨時部署仍保留於同一個 Access 保護下，不宣稱已永久刪除。
 - 正式官網／播放器 HTTP 200；公開 DNS 仍為 apex `76.76.21.21`、www `cname.vercel-dns.com`，TTL 300。
 
-第二段預覽的上述驗收已完成；下一步保存正式 DNS／Vercel 回復資料並準備第三段具體切換範圍。
+第二段預覽的上述驗收已完成。最終預覽為 `https://649d0541.owldio-site.pages.dev`，
+別名仍為 `https://migration-preview.owldio-site.pages.dev`，來源 commit `83826bf`。
+正式 DNS／Vercel 回復資料已保存，第三段具體切換範圍如下。
 正式網域、正式表單綁定與 production 部署仍需切換階段處理，不把預覽驗收等同正式遷移完成。
 
 先核對 Cloudflare 帳戶、既有 Pages 專案、免費方案、帳戶共用 Function 用量與 Git 連結。
@@ -183,12 +185,46 @@ Gmail 已核對擁有者收到同名通知，包含測試場地與虛構資料�
 
 ## 第三段：正式切換
 
-雲端預覽通過後保存 Cloudflare 原始 DNS 紀錄、TTL、Vercel deployment ID 和可回復版本。
-核准正式切換後只改官網 apex / www 記錄；nameservers、MX、Email Routing、player、quotation 保留。
-保留 `https://www.owldio.art` canonical 與 apex 到 www 的導向，完成憑證與同網域表單檢查。
-Vercel 保留至少一週，切換後監測 HTTP、錯誤與表單收件；完成後才另行處理舊部署。
+### 已完成的切換準備（尚未執行正式切換）
 
-回復：恢復實際保存的 apex / www DNS 紀錄，重新確認官網與表單；DNS 快取可能延遲回復。
+- 從正確 Cloudflare zone 的 DNS 表格保存 17 筆紀錄到 ignored
+  `.cloudflare-build/evidence/dns-before-cutover.json`；這是 UI 紀錄快照，不宣稱已完成 BIND 匯出。
+  apex 為 A `76.76.21.21`，www 為 CNAME `cname.vercel-dns.com`，兩者均 DNS only、TTL Auto。
+  公開解析觀察到 TTL 300；還原時應使用原介面的 Auto 設定。
+- 正確 Vercel 團隊的 `owldoge` Production 為 Ready；UI deployment ID
+  `9z5cSN1hB92B3nrHqxhu2JzxdJjw`，commit `7d363bfceea5f9401b9a7e310330aff6092445d6`。
+  固定部署 URL `https://owldoge-bnllejnhb-owldios-projects.vercel.app`，
+  回復資訊保存到 ignored `.cloudflare-build/evidence/vercel-rollback.json`。
+  已確認既有 `GOOGLE_SCRIPT_URL` 存在，未揭露或記錄其值。
+- apex 到 www 的 Single Redirect 表單已準備但未儲存或部署：
+  條件 `(http.host eq "owldio.art")`，目標
+  `concat("https://www.owldio.art", http.request.uri.path)`，308、保留 query string。
+  308 保留 HTTP method；規則只匹配 apex，涵蓋 HTTP／HTTPS。
+- 具體變更與順序保存在 ignored `.cloudflare-build/evidence/cutover-proposal.json`。
+  production 發布、自訂網域關聯、DNS 與正式表單測試均等待明確核准。
+
+### 核准後的執行順序與驗收
+
+1. 將既有 Vercel production 的 `GOOGLE_SCRIPT_URL` 複製為 Cloudflare `owldio-site`
+   production 的 server Secret；preview 繼續使用隔離 sandbox，不記錄密鑰值。
+2. 發布 `.cloudflare-build/site` 到 production branch `main`，不可誤用 `preview-site`。
+   確認 robots 允許索引、沒有全站預覽 noindex、canonical／sitemap 維持正式 www 網域；
+   base URL 頁面與資源正常，無效 API 請求不會觸及正式上游。
+3. 先從 Pages Custom domains 關聯 `www.owldio.art`，再由支援的設定流程改其 CNAME
+   指向 `owldio-site.pages.dev`。確認 Active、有效 TLS、頁面／圖片／contact 正常後才繼續。
+4. 同樣從 Pages Custom domains 關聯 `owldio.art`，由該流程將原 A 紀錄改為 Pages CNAME。
+   不可在關聯前單獨改 CNAME，官方文件說明這會造成 522。確認 apex Active／TLS 正常。
+5. 啟用上面準備的 exact-host 308 規則，核對 HTTP／HTTPS、路徑／query 保留與 www canonical。
+6. 執行另經明確核准的一筆「CF正式切換測試」，使用虛構聯絡人與場地；
+   寫入既有正式收件試算表、通知僅送 `owldio.art@gmail.com`，核對實際收件與通知。
+   表單、憑證、公開頁面、資源與索引檢查成功後才宣告正式切換完成。
+
+只改保存的 apex／www 兩筆 DNS；其餘 15 筆、nameservers、MX、Email Routing、TXT、
+player、quotation、menu、acc、acc2、split 保留。不得升級付費方案。
+Vercel 保留至少一週；若需要持續背景監測，另依使用者授權設定，不把本次互動檢查當成常駐監控。
+
+回復：若網域啟用或驗收失敗，停用本次新增的 apex redirect（若已啟用），
+恢復已改動的 apex／www 原 DNS only、Auto TTL 紀錄，確認 Vercel 官網與表單；DNS 快取可能延遲回復。
 
 ## 官方參考
 
@@ -197,3 +233,5 @@ Vercel 保留至少一週，切換後監測 HTTP、錯誤與表單收件；完�
 - [Pages Function 路由](https://developers.cloudflare.com/pages/functions/routing/)
 - [Workers 免費限制](https://developers.cloudflare.com/workers/platform/limits/)
 - [Pages Function 費用](https://developers.cloudflare.com/pages/functions/pricing/)
+- [Pages 自訂網域與 DNS 關聯要求](https://developers.cloudflare.com/pages/configuration/custom-domains/)
+- [Single Redirect 設定](https://developers.cloudflare.com/rules/url-forwarding/single-redirects/settings/)
