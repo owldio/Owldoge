@@ -1,6 +1,6 @@
 # Cloudflare 免費架構分段遷移
 
-日期：2026-10-01（台灣時間）。目前階段：第一段，本機候選版與驗證。
+日期：2026-10-01（台灣時間）。目前階段：第二段雲端預覽已部署並登入，等待 Google 登入以完成隔離表單環境與驗收。
 
 ## 範圍與基準
 
@@ -63,6 +63,74 @@ pnpm run preview:cloudflare
 避免 Next.js 15 Windows Turbopack 的 custom image loader 問題。Vercel 建置仍使用原本 Turbopack。
 
 ## 第二段：Cloudflare 雲端預覽
+
+### 前置檢查紀錄
+
+- 已即時核對 GitHub `origin/main`：仍為 `7d363bfceea5f9401b9a7e310330aff6092445d6`。
+- Wrangler OAuth 登入 `eric0891230@gmail.com`，帳戶 ID `c074dc9e4d1951adf720762c729aea22`。
+- 這個登入可列出四個 Pages 專案：`freentitycard`、`freentity`、`the-seventh-address`、
+  `owldio-quotation-gateway`；本次未修改其中任何專案。
+- API 查詢 `owldio.art` zone 回傳空陣列；帳戶 subscriptions API 回傳 403。
+  因此尚未確認網域帳戶、Workers 付費／免費方案或帳戶共用用量。
+  不能只憑 CLI 可登入就判定帳戶正確或部署不會有費用。
+- 上述 Eric 帳戶是最初的 CLI 登入，不是這次官網部署帳戶；後續已登入正確 Owldio 帳戶（見下）。
+- 已準備 `.cloudflare-build/preview-site`，在候選產物副本加入全站 `X-Robots-Tag: noindex, nofollow`
+  及 `robots.txt` 的 `Disallow: /`。禁止索引不等於存取保護；後續另行配置 Access。
+- 補充本機手機檢查：學生方案 query 仍正確預選，實際 390px viewport 的 document/scroll width
+  均為 390px，未見橫向溢出。這不是雲端或完整手機流程驗收。
+- 前置檢查時未建立／上傳專案；實際部署紀錄如下。
+
+### 雲端部署紀錄
+
+- 使用者已登入並明確同意 Wrangler 授權。CLI 目前帳戶是 `owldio.art@gmail.com`，
+  account ID `94a3e3ebbda98d19f33c4d9e56d0a43f`。
+- 授權限於 user/account/zone read、pages write、workers_tail read 和 offline access。
+  Wrangler 對缺少其他 scopes 的警告不代表本次 Pages 需要那些權限；未擴大授權。
+- Zone `owldio.art` 為 active，zone ID `049c3581d3737f8dc8fbb19b03822081`。
+  儀表板訂閱：Workers Free、網域 Free Plan、Teams Free Base；既有 R2 Paid 仍保留，官網候選版不使用 R2。
+  檢查時每日 Worker requests 為 0/100,000，本期用量費用 $0（不保證未來用量）。
+- 獨立 direct-upload Pages 專案 `owldio-site`，production branch `main`，無 Git connection／custom domain。
+  不覆寫 `owldio-player`、`owldio-menu`、`owl-accounting`、`ledgerleaf-acc2` 或其他帳戶的報價專案。
+- 上傳前已 Restrict previews，Access application `731bab1f-d86a-4599-a909-4dc82048fc76`，
+  規則為 Include Emails `owldio.art@gmail.com`，目的地 `*.owldio-site.pages.dev`。
+- 部署 branch `migration-preview`，候選 commit `0b3337e`，compatibility date `2026-10-01`。
+  499 個 assets 加上 Worker／路由／headers 上傳成功；Pages API 階段狀態需與登入後互動驗收分開。
+  固定部署 URL `https://2e005555.owldio-site.pages.dev`，別名 `https://migration-preview.owldio-site.pages.dev`。
+- 未登入的固定／別名 URL 均 HTTP 302 到 Access；base `https://owldio-site.pages.dev` HTTP 404，未部署 production。
+- 原官網 `https://www.owldio.art` 和播放器 HTTP 200，報價仍 HTTP 302 到其原有 Access。
+  本次未改 DNS、推 Git、升級方案或送正式表單測試。
+- Access 已透過使用者提供的驗證碼登入。七個主要公開頁面 HTTP 200，未知頁面 HTTP 404；
+  六個子頁 canonical 保留正式 `www.owldio.art`，回應帶有 `noindex, nofollow`。
+- 雲端首頁實際觀察到 WebP 圖片、字型、JS/CSS 200/304；手機 contact 390px 無橫向溢出、
+  學生 query 正確預選，觀察期間瀏覽器 error/warn 為空。截圖在 ignored `.cloudflare-build/evidence/`。
+- `llms.txt`、`pricing.md`、robots/sitemaps 的瀏覽器直接導覽被 client inspector 阻擋，
+  尚未完成它們的雲端 HTTP／內容驗收；這是驗證工具限制，不能推論為站台檔案錯誤或宣告通過。
+- Google 尚未登入，真實通知、API 完整錯誤路徑、影片與 CPU 指標仍待驗證。
+
+### 隔離 Apps Script 準備
+
+```powershell
+node tooling/cloudflare/prepare-sandbox.mjs
+node --test tests/cloudflare-sandbox.test.mjs
+```
+
+產物 `.cloudflare-build/google-sandbox/Code.gs` 從現有 Apps Script 產生，移除正式 spreadsheet ID 與固定通知信箱。
+必須貼到**新建的獨立 Apps Script 專案**，不可覆寫正式腳本。
+執行 `setupSandbox` 建立新的 `OWLDIO CF Migration Sandbox 2026-10-01` 試算表，通知僅送腳本擁有者。
+重跑 setup 不重建試算表；來源腳本變動造成 anchor 不符時生成器拒絕產生。
+
+在新專案 Script Properties 取得 `SANDBOX_TOKEN`，以測試 web-app URL 加上
+`?sandboxToken=<token>` 作為 Pages **preview** 的 server-only `GOOGLE_SCRIPT_URL` secret。
+不要把 token 放到 Git、公開前端、截圖或日誌。
+所有 POST 必須具備 token；試算表／郵件函式另檢查 sandbox marker、script ID、擁有者與指定試算表名稱。
+缺少設定、錯誤 token、錯誤 script／owner 都拒絕執行副作用。
+
+生成器隔離測試 7/7、全體測試 30/30、修改檔案 ESLint 與獨立 Standards／Spec 審查通過。
+包含成功 setup／跨執行重跑、成功 mock 寫入與擁有者通知、錯誤試算表名稱、token／script／owner 拒絕路徑。
+尚未建立 Google 雲端資源、設定上游 secret 或驗證真實表單通知。
+
+下一步：完成 Google 登入；建立隔離 Apps Script／試算表、綁定 preview secret 再重新部署與驗證。
+真實收件、通知與 CPU 指標仍未通過。
 
 先核對 Cloudflare 帳戶、既有 Pages 專案、免費方案、帳戶共用 Function 用量與 Git 連結。
 新增獨立預覽專案，build command `pnpm run build:cloudflare`，output `.cloudflare-build/site`。
