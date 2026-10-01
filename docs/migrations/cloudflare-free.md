@@ -103,9 +103,11 @@ pnpm run preview:cloudflare
   六個子頁 canonical 保留正式 `www.owldio.art`，回應帶有 `noindex, nofollow`。
 - 雲端首頁實際觀察到 WebP 圖片、字型、JS/CSS 200/304；手機 contact 390px 無橫向溢出、
   學生 query 正確預選，觀察期間瀏覽器 error/warn 為空。截圖在 ignored `.cloudflare-build/evidence/`。
-- `llms.txt`、`pricing.md`、robots/sitemaps 的瀏覽器直接導覽被 client inspector 阻擋，
-  尚未完成它們的雲端 HTTP／內容驗收；這是驗證工具限制，不能推論為站台檔案錯誤或宣告通過。
-- Google 已登入且建立獨立測試腳本與試算表；真實通知、API 完整錯誤路徑、影片與 CPU 指標仍待驗證。
+- `llms.txt`、`pricing.md`、robots/sitemaps 的瀏覽器直接導覽曾被 client inspector 阻擋。
+  2026-10-02 改用支援的瀏覽器檔案下載功能，五個檔案均成功取回，SHA-256 全部與上傳產物一致。
+  預覽 robots 為 `Disallow: /`，sitemap 維持正式網域；證據 `cloud-text-verified.json`。
+- Google 已登入且建立獨立測試腳本與試算表；一般／學生真實收件、通知、五個雲端拒絕路徑、
+  影片播放與一筆真實 Function CPU 測量已完成，細節如下。正式切換尚未開始。
 
 ### 隔離 Apps Script 準備
 
@@ -144,12 +146,30 @@ Gmail 已核對擁有者收到同名通知，包含測試場地與虛構資料�
 證據存於 ignored `.cloudflare-build/evidence/`：`cloud-form-success.jpg`、
 `sandbox-sheet-received.jpg`、`sandbox-notification-received.jpg`、`preview-secret-saved.jpg`。
 
-儲存 Secret 時工具狀態回傳意外包含 sandbox token；不要沿用該 token。
-須由使用者在 Script Properties 更換 `SANDBOX_TOKEN`，再更新 preview Secret 並重新部署。
-不將 token 寫入本文件、Git 或公開前端。正式端點與正式憑證不受此次測試影響。
+儲存 Secret 時工具狀態回傳意外包含 sandbox token，已提醒使用者更換。
+使用者後續表示目前設定可以；即時檢查確認 token 仍為原本已儲存值，未宣稱已更換，依其選擇繼續隔離測試。
+不將 token 寫入本文件、Git 或公開前端；正式端點與正式憑證不受此次測試影響。
 
-下一步：測試 token 更換後，完成學生表單、錯誤路徑、影片／SEO 內容與 Function CPU 指標驗收。
-一般方案的真實收件與通知已通過；第二段整體驗收尚未完成。
+2026-10-02 後續雲端驗證：
+
+- 成年單人學生方案：API HTTP 200、成功頁、試算表與擁有者 Gmail 通知均確認。
+  虛構申請人「CF學生隔離測試 20261002」，沒有向填表者寄信。
+  驗證既有 Apps Script 記錄的學生方案選擇與申請性質；不宣稱它會儲存所有學生 metadata。
+- Wrangler 即時 trace：該學生申請 CPU `2 ms`、wall time `4010 ms`、outcome `ok`、HTTP 200、零 exception。
+  這是一筆測量，不代表壓力測試或所有請求上限；網路等待不計入 CPU。
+  Workers Free 官方每次 HTTP 請求 CPU 上限 `10 ms`，目前樣本未顯示需要升級。
+- `percussion.mp4` 在預覽實際解碼與播放，720×404、48.788 秒、readyState 4、error 為空，
+  觀察播放進度從 9.32 到 21.47 秒。該舊影片元件目前沒有公開頁面引用，這項為資源播放測試。
+- 受 Access 保護的臨時檢查頁：GET API 405，壞 JSON／非物件 JSON／不完整一般／學生申請皆 400，
+  五筆回應訊息及 `Cache-Control: no-store` 都正確。未登入同一檢查頁 HTTP 302 到 Access。
+  上游斷線／錯誤的代理處理由既有本機測試驗證，雲端未刻意製造 Google 上游故障。
+- 臨時檢查頁獨立 Standards／Spec 審查均零發現，reviewer 亦驗證五筆請求不會聯絡上游。
+  完成文字資源下載後已從最新預覽產物移除，後續部署需驗證別名該路徑 404。
+  舊固定臨時部署仍保留於同一個 Access 保護下，不宣稱已永久刪除。
+- 正式官網／播放器 HTTP 200；公開 DNS 仍為 apex `76.76.21.21`、www `cname.vercel-dns.com`，TTL 300。
+
+第二段預覽的上述驗收已完成；下一步保存正式 DNS／Vercel 回復資料並準備第三段具體切換範圍。
+正式網域、正式表單綁定與 production 部署仍需切換階段處理，不把預覽驗收等同正式遷移完成。
 
 先核對 Cloudflare 帳戶、既有 Pages 專案、免費方案、帳戶共用 Function 用量與 Git 連結。
 新增獨立預覽專案，build command `pnpm run build:cloudflare`，output `.cloudflare-build/site`。
