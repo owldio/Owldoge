@@ -1,0 +1,6 @@
+/llms.txt
+  Content-Type: text/plain; charset=utf-8
+/pricing.md
+  Content-Type: text/markdown; charset=utf-8
+/_images/*
+  Cache-Control: public, max-age=86400

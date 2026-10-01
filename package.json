@@ -7,7 +7,10 @@
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint",
-    "postbuild": "next-sitemap"
+    "postbuild": "next-sitemap",
+    "build:cloudflare": "node tooling/cloudflare/build.mjs",
+    "preview:cloudflare": "node tooling/cloudflare/preview.mjs",
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@radix-ui/react-accordion": "^1.2.12",
@@ -29,12 +32,15 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "esbuild": "^0.28.2",
     "eslint": "^9",
     "eslint-config-next": "15.5.21",
     "eslint-plugin-react": "7.37.5",
     "eslint-plugin-react-hooks": "5.2.0",
+    "sharp": "^0.35.5",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wrangler": "^4.145.0"
   },
   "pnpm": {
     "overrides": {
@@ -45,7 +51,9 @@
     "onlyBuiltDependencies": [
       "@tailwindcss/oxide",
       "sharp",
-      "unrs-resolver"
+      "unrs-resolver",
+      "esbuild",
+      "workerd"
     ]
   }
 }

@@ -19,6 +19,9 @@
 
 # production
 /build
+/.cloudflare-build/
+.dev.vars*
+.wrangler/
 
 # misc
 .DS_Store

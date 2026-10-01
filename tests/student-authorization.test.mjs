@@ -9,7 +9,7 @@ const read = (path) => readFileSync(join(root, path), "utf8");
 const authorization = read("src/lib/student-authorization.ts");
 const applicationNotice = read("src/lib/application-notice.ts");
 const contactPage = read("src/app/contact/page.tsx");
-const submitRoute = read("src/app/api/submit-contact/route.ts");
+const submitRoute = read("src/lib/submit-contact.ts");
 
 test("contact notice clearly defers contract formation", () => {
   assert.match(applicationNotice, /本表單僅供聯絡、檔期查詢、需求蒐集及報價申請/);
