@@ -226,6 +226,48 @@ Vercel 保留至少一週；若需要持續背景監測，另依使用者授權�
 回復：若網域啟用或驗收失敗，停用本次新增的 apex redirect（若已啟用），
 恢復已改動的 apex／www 原 DNS only、Auto TTL 紀錄，確認 Vercel 官網與表單；DNS 快取可能延遲回復。
 
+### 第三段執行結果（2026-10-02）
+
+使用者在完整切換與虛構正式測試範圍確認後回覆「好」，已按上述順序執行。
+前置計畫的獨立 Standards／Spec 審查均零未解決發現，沒有改動應用程式碼。
+
+- 從 Vercel 原正式 `GOOGLE_SCRIPT_URL` 複製到 Pages production，加密 Secret 列已確認。
+  讀取 Vercel 設定的工具輸出意外顯示端點位址；已恢復遮罩，不將值存入 Git 或公開前端。
+  preview 的隔離綁定保留。
+- 使用 `.cloudflare-build/site` 發布 `main`，來源 commit `7d6232c`，production deployment
+  `3e7f2eb1-d0dc-4e90-a480-cbea00d22141`，固定網址 `https://3e7f2eb1.owldio-site.pages.dev`。
+  base production 網址 `https://owldio-site.pages.dev` 已正常服務。
+- 透過 Pages Custom domains 支援流程先切 www，再切 apex；兩者目前 Active、SSL enabled。
+  www 初始化期間曾回傳 522；觸發 DNS 驗證後已恢復 200，並等到 Active 後才切 apex。
+- 兩筆正式 DNS 都是 CNAME `owldio-site.pages.dev`、Proxied、Auto TTL。
+  完整比較切換前／後 17 筆紀錄，其餘 15 筆完全一致；包含 MX、TXT 與其他產品。
+  證據 `dns-after-cutover.json`、`dns-scope-verified.json`。
+- exact-host Single Redirect 已啟用，rule ID `dd2d2d8fb75345b7bb624f3f8b2b7111`。
+  HTTP／HTTPS apex 的 contact 路徑均回傳 308，完整保留 `plan` 與驗證 query；www 不受規則轉址。
+- 正式七個主要頁面 HTTP 200、未知頁面 404、canonical 維持 www；
+  五個文字資源內容與 production 產物一致，未帶全站預覽 noindex。
+  首頁觀察五張圖片載入、零損壞；logo／WebP 實際 HTTP 200。
+- 虛構「CF正式切換測試 20261002」從正式瀏覽器送出，API HTTP 200、成功頁，
+  原正式 `Form_Responses` 第 19 列確認姓名、測試 email、場地與單機方案。
+  Gmail 核對同名通知內容與收件明細，僅寄 `owldio.art@gmail.com`。
+  本次沿用既有正式 Apps Script 部署；它未記錄目前 repo 新版的申請性質欄位，
+  不宣稱此次遷移更新了正式 Apps Script schema 或完整學生 metadata。
+- 驗證時誤送空物件 `{}`，既有非 booking 分支接受並產生一筆空白紀錄。
+  已核對僅含本次時間戳記的第 19 列，透過可復原的 Sheets 列刪除清理；
+  正式測試申請隨之移到第 19 列。匯出工作簿比對確認原有列未變、空白測試列為零、
+  同名正式測試僅一筆。工作簿含原有資料，只留在本機暫存匯出目錄，未納入證據或 Git。
+  正確的不完整 booking 請求回傳 400，GET API 405，均 `Cache-Control: no-store`。
+- 播放器 HTTP 200、報價維持原有 Access 302；Vercel 固定回復部署未刪除，
+  已登入的 Vercel 瀏覽器確認可開啟原官網。匿名請求為 302 到 Vercel SSO，
+  不能將跟隨登入導向後的 200 當成匿名官網成功；原固定部署的驗證保護保留。
+  沒有推 Git、升級方案、使用 R2 或建立常駐背景監控。
+
+正式切換驗收與後續獨立 Standards／Spec 審查已完成，均零未解決發現。
+保留 Vercel 至少一週，日後移除仍是另一項需要使用者明確要求的作業。
+本機 ignored `.cloudflare-build/evidence/` 保存驗證 JSON 與非客戶資料截圖，
+包括 `production-home.jpg`、`production-domains-active.jpg`、`production-form-success.jpg`、
+`production-owner-notification.jpg`；切換結果彙總於 `cutover-proposal.json`。
+
 ## 官方參考
 
 - [Next.js 靜態匯出](https://nextjs.org/docs/app/guides/static-exports)
