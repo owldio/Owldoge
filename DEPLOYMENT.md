@@ -42,7 +42,9 @@ Cloudflare 設定：
 
 ## 網域與回復
 
-正式網域為 `www.owldio.art`，`owldio.art` 以 308 轉向 www 並保留路徑與查詢參數。Git 專案建置成功後，僅移轉 apex/www 的 Pages 綁定與 CNAME；保留郵件與其他子網域記錄。
+正式網域為 `www.owldio.art`，`owldio.art` 的一般頁面以 308 轉向 www 並保留路徑與查詢參數。Git 專案建置成功後，僅移轉 apex/www 的 Pages 綁定與 CNAME；保留郵件與其他子網域記錄。
+
+Cloudflare 的 `OWLDIO apex to www` 轉向條件為 `(http.host eq "owldio.art") and not starts_with(http.request.uri.path, "/.well-known/")`。SSL 網域驗證路徑必須留在原網域，否則可能停在 Pending Validation；不可取消這個例外。此設定依 [Cloudflare DCV 說明](https://developers.cloudflare.com/ssl/edge-certificates/changing-dcv-method/troubleshooting/) 執行。
 
 原本 Direct Upload 專案 `owldio-site` 保留作回復。需要回復時，先確認原專案的 Pages URL 仍正常，再將 apex/www 重新綁回原專案並更新其 CNAME；依 Cloudflare 自訂網域流程完成驗證，不能只改 DNS 而漏掉 Pages 網域綁定。原 Vercel 固定部署的歷史回復紀錄見 `docs/migrations/cloudflare-free.md`。
 
