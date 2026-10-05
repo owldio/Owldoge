@@ -9,6 +9,7 @@ import Navigation from "@/components/Navigation";
 import SiteFooter from "@/components/SiteFooter";
 import HeroBackdrop from "@/components/HeroBackdrop";
 import DatePicker from "@/components/DatePicker";
+import { isContactResponseSuccessful } from "@/lib/contact-response";
 import { RevealLine, HeroRule } from "@/components/HeroReveal";
 import {
   addOns,
@@ -394,7 +395,7 @@ const ContactPage = () => {
         body: JSON.stringify(submitData),
       });
 
-      if (!response.ok) {
+      if (!(await isContactResponseSuccessful(response))) {
         throw new Error(`提交失敗 (${response.status})，請稍後再試或透過 email 聯絡我們`);
       }
 

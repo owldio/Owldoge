@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Send, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { isContactResponseSuccessful } from "@/lib/contact-response";
 
 interface EmailModalProps {
   isOpen: boolean;
@@ -43,7 +44,7 @@ const EmailModal = ({ isOpen, onClose, recipientEmail }: EmailModalProps) => {
         })
       });
 
-      if (!response.ok) {
+      if (!(await isContactResponseSuccessful(response))) {
         throw new Error(`發送失敗 (${response.status})，請稍後再試`);
       }
 

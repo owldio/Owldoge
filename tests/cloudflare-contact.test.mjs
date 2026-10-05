@@ -59,6 +59,29 @@ test('preserves upstream failures instead of returning success', async () => {
   } finally { globalThis.fetch = previous; }
 });
 
+test('rejects HTTP 200 upstream failures and unconfirmed responses without exposing upstream details', async () => {
+  const previous = globalThis.fetch;
+  const invalidResponses = [
+    JSON.stringify({ status: 'error', message: 'Private upstream diagnostic' }),
+    JSON.stringify({ status: 'pending' }),
+    JSON.stringify({ message: 'OK' }),
+    'null', '[]', '"success"', '', '{', '<html>Login required</html>',
+  ];
+  try {
+    for (const requestType of ['booking', 'simple_email']) {
+      for (const body of invalidResponses) {
+        globalThis.fetch = async () => new Response(body, { status: 200 });
+        const response = await worker.fetch(request({
+          requestType, applicationNoticeAccepted: true, applicationNoticeVersion: '1.0',
+        }), env);
+        assert.equal(response.status, 502, `${requestType}: ${body}`);
+        assert.equal(response.headers.get('Cache-Control'), 'no-store');
+        assert.deepEqual(await response.json(), { status: 'error', message: 'Upstream request failed' });
+      }
+    }
+  } finally { globalThis.fetch = previous; }
+});
+
 test('booking and student applications retain non-binding evidence and trusted Cloudflare IP', async () => {
   const previous = globalThis.fetch;
   const forwarded = [];

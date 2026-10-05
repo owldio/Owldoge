@@ -6,6 +6,7 @@ import {
 } from '@/lib/student-authorization';
 import { APPLICATION_NOTICE_VERSION } from '@/lib/application-notice';
 import { addOns, studentCollaborationPlan } from '@/lib/pricing';
+import { isContactResponseSuccessful } from '@/lib/contact-response';
 
 type JsonRecord = Record<string, unknown>;
 
@@ -148,13 +149,14 @@ export async function submitContact(req: Request, GOOGLE_SCRIPT_URL?: string) {
       body: JSON.stringify(enrichedBody),
     });
 
-    const text = await upstream.text();
-    const contentType = upstream.headers.get('content-type') ?? 'application/json';
+    if (!(await isContactResponseSuccessful(upstream))) {
+      return Response.json(
+        { status: 'error', message: 'Upstream request failed' },
+        { status: upstream.ok ? 502 : upstream.status },
+      );
+    }
 
-    return new Response(text, {
-      status: upstream.ok ? 200 : upstream.status,
-      headers: { 'content-type': contentType },
-    });
+    return Response.json({ status: 'success' });
   } catch {
     return Response.json(
       { status: 'error', message: 'Upstream request failed' },
