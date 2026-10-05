@@ -417,13 +417,21 @@ const ContactPage = () => {
           className="w-full max-w-lg text-center"
         >
           <p className="mb-6 font-mono text-[12px] tracking-[0.4em] text-copper-bright">
-            REQUEST RECEIVED — 申請已送出
+            <span className="inline-block whitespace-nowrap">REQUEST</span>
+            {" "}
+            <span className="inline-block whitespace-nowrap">RECEIVED</span>
+            {" "}
+            <span className="inline-block whitespace-nowrap">— 申請已送出</span>
           </p>
           <h1 className="mb-5 font-display text-4xl font-light italic text-copper-bright">
-            預約／報價申請已送出
+            <span className="inline-block whitespace-nowrap">預約</span>
+            <span className="inline-block whitespace-nowrap">／報價</span>
+            <span className="inline-block whitespace-nowrap">申請</span>
+            <span className="inline-block whitespace-nowrap">已送出</span>
           </h1>
           <p className="mb-10 text-sm font-light leading-loose text-parchment-dim">
-            感謝您的申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期確認。
+            感謝您的申請，我們將在 24 小時內與您聯繫，提供詳細報價與檔期
+            <span className="inline-block whitespace-nowrap">確認。</span>
           </p>
 
           <div className="mb-10 border-y border-hairline py-10">
@@ -444,7 +452,8 @@ const ContactPage = () => {
               />
             </a>
             <p className="mx-auto mb-6 max-w-sm text-sm font-light leading-loose text-parchment-dim">
-              表單送出後，請加入 Owldio LINE 官方帳號，讓我們能更即時地與您確認檔期、需求細節與後續安排。
+              表單送出後，請加入 Owldio LINE 官方帳號，讓我們能更即時地與您確認檔期、需求細節與後續
+              <span className="inline-block whitespace-nowrap">安排。</span>
             </p>
             <a
               href={lineOfficialAccountUrl}
@@ -452,8 +461,10 @@ const ContactPage = () => {
               rel="noopener noreferrer"
               className="group inline-flex items-center gap-3 bg-copper px-8 py-3.5 text-sm tracking-[0.14em] text-night transition-colors duration-300 hover:bg-copper-bright"
             >
-              加入 LINE 官方帳號
-              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <span>
+                加入 LINE <span className="inline-block whitespace-nowrap">官方帳號</span>
+              </span>
+              <ArrowUpRight className="h-4 w-4 shrink-0 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </a>
           </div>
 

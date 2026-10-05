@@ -46,6 +46,20 @@
     text-rendering: optimizeLegibility;
   }
 
+  /* Phrase protection is still required; wrap balancing alone cannot prevent CJK orphans. */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    text-wrap: balance;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
   ::selection {
     background: rgb(201 145 77 / 0.35);
     color: var(--color-parchment);
